@@ -1,107 +1,165 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import type { Card, Chip } from '../lib/catalog';
+import type { Card, FilterDef } from '../lib/catalog';
 import ProductCard from './ProductCard';
+import { IconClose, IconFilter, IconSearch } from './icons';
 
-// Сетка товаров с фильтром. Стандарт владельца: чип «Все» первым, выбор показывает только подходящие;
-// на телефоне две карточки в ряд. Раздел можно задать ссылкой: /catalog?part=<id>.
+// Каталог с фильтрами – набор фильтров тот же, что владелец включил в Тильде для этого каталога.
+// Десктоп: колонка фильтров слева. Телефон: кнопка «Фильтры» открывает шторку, две карточки в ряд.
+// Выбор показывает только подходящие товары; внутри одного фильтра значения – «или», между фильтрами – «и».
 
-const PRICES = [
-  { id: 'all', title: 'Любая цена', test: () => true },
-  { id: 'p1', title: 'до 3 000 ₽', test: (n: number) => n < 3000 },
-  { id: 'p2', title: '3 000–5 000 ₽', test: (n: number) => n >= 3000 && n < 5000 },
-  { id: 'p3', title: '5 000–7 000 ₽', test: (n: number) => n >= 5000 && n < 7000 },
-  { id: 'p4', title: 'от 7 000 ₽', test: (n: number) => n >= 7000 },
-];
+type Sel = Record<string, string[]>;
+const norm = (s: string) => s.toLowerCase().replace(/ё/g, 'е');
 
-export default function Catalog({ cards, chips, step = 16, sort: showSort = true, prices = true }: {
-  cards: Card[]; chips?: Chip[]; step?: number; sort?: boolean; prices?: boolean;
-}) {
-  const [chip, setChip] = useState<string>('all');
-  const [sub, setSub] = useState<string>('all');
-  const [price, setPrice] = useState('all');
-  const [order, setOrder] = useState<'default' | 'asc' | 'desc'>('default');
+/** Значения фильтра у карточки. */
+function valuesOf(c: Card, f: FilterDef): string[] {
+  if (f.kind === 'brand') return c.brand ? [c.brand] : [];
+  if (f.kind === 'power') return c.power;
+  if (f.kind === 'char' && f.char) return c.ch[f.char] ? [c.ch[f.char]] : [];
+  return [];
+}
+const byNum = (a: string, b: string) => (parseFloat(a) || 0) - (parseFloat(b) || 0) || a.localeCompare(b, 'ru');
+
+export default function Catalog({ cards, filters, step = 12 }: { cards: Card[]; filters: FilterDef[]; step?: number }) {
+  const [sel, setSel] = useState<Sel>({});
+  const [min, setMin] = useState('');
+  const [max, setMax] = useState('');
+  const [q, setQ] = useState('');
+  const [order, setOrder] = useState<'default' | 'asc' | 'desc' | 'az'>('default');
   const [limit, setLimit] = useState(step);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
-  // ?part=<id> – открыть сразу нужный раздел или подраздел.
-  useEffect(() => {
-    const part = new URLSearchParams(location.search).get('part');
-    if (!part || !chips) return;
-    for (const c of chips) {
-      if (c.id === part) { setChip(c.id); return; }
-      const s = c.children?.find((x) => x.id === part);
-      if (s) { setChip(c.id); setSub(s.id); return; }
+  const prices = cards.map((c) => c.price);
+  const lo = Math.min(...prices), hi = Math.max(...prices);
+  const priceDef = filters.find((f) => f.kind === 'price');
+  const listDefs = filters.filter((f) => f.kind !== 'price');
+
+  // Все значения каждого фильтра по каталогу (порядок: числа по возрастанию, текст по алфавиту).
+  const options = useMemo(() => Object.fromEntries(listDefs.map((f) => {
+    const set = new Set<string>();
+    cards.forEach((c) => valuesOf(c, f).forEach((v) => set.add(v)));
+    return [f.label, [...set].sort(byNum)];
+  })), [cards]);
+
+  const match = (c: Card, skip?: string) => {
+    for (const f of listDefs) {
+      if (f.label === skip) continue;
+      const want = sel[f.label];
+      if (want?.length && !valuesOf(c, f).some((v) => want.includes(v))) return false;
     }
-  }, []);
-
-  const active = chips?.find((c) => c.id === chip);
-  const activeSub = active?.children?.find((c) => c.id === sub);
+    const a = parseInt(min, 10), b = parseInt(max, 10);
+    if (!isNaN(a) && c.price < a) return false;
+    if (!isNaN(b) && c.price > b) return false;
+    if (q.trim().length >= 2) {
+      const hay = norm(`${c.title} ${c.brand} ${Object.values(c.ch).join(' ')}`);
+      if (!norm(q.trim()).split(/\s+/).every((w) => hay.includes(w))) return false;
+    }
+    return true;
+  };
 
   const list = useMemo(() => {
-    const want = activeSub?.ids ?? active?.ids;
-    const test = PRICES.find((x) => x.id === price)!.test;
-    const out = cards.filter((p) => (!want || p.parts.some((x) => want.includes(x))) && test(p.price));
+    const out = cards.filter((c) => match(c));
     if (order === 'asc') out.sort((a, b) => a.price - b.price);
     if (order === 'desc') out.sort((a, b) => b.price - a.price);
+    if (order === 'az') out.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
     return out;
-  }, [cards, chip, sub, price, order]);
+  }, [cards, sel, min, max, q, order]);
 
-  useEffect(() => setLimit(step), [chip, sub, price, order]);
+  // Сколько товаров даст значение при остальных выбранных фильтрах.
+  const count = (f: FilterDef, v: string) => cards.filter((c) => match(c, f.label) && valuesOf(c, f).includes(v)).length;
 
-  const pick = (id: string) => { setChip(id); setSub('all'); };
+  useEffect(() => setLimit(step), [sel, min, max, q, order]);
+
+  const toggle = (label: string, v: string) => {
+    const cur = sel[label] || [];
+    setSel({ ...sel, [label]: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v] });
+  };
+  const chosen = Object.values(sel).reduce((n, a) => n + a.length, 0) + (min || max ? 1 : 0);
+  const reset = () => { setSel({}); setMin(''); setMax(''); setQ(''); };
+
+  const panel = (
+    <div class="flt">
+      {priceDef && (
+        <fieldset class="flt__group">
+          <legend class="flt__title">{priceDef.label}</legend>
+          <div class="flt__price">
+            <input class="input" inputMode="numeric" placeholder={`от ${lo.toLocaleString('ru-RU')}`} value={min} aria-label="Цена от" onInput={(e) => setMin((e.target as HTMLInputElement).value.replace(/\D/g, ''))} />
+            <span aria-hidden="true">–</span>
+            <input class="input" inputMode="numeric" placeholder={`до ${hi.toLocaleString('ru-RU')}`} value={max} aria-label="Цена до" onInput={(e) => setMax((e.target as HTMLInputElement).value.replace(/\D/g, ''))} />
+          </div>
+        </fieldset>
+      )}
+      {listDefs.map((f) => options[f.label]?.length > 0 && (
+        <fieldset class="flt__group">
+          <legend class="flt__title">{f.label}</legend>
+          {options[f.label].map((v) => {
+            const n = count(f, v);
+            const on = (sel[f.label] || []).includes(v);
+            return (
+              <label class={`flt__opt${!n && !on ? ' is-off' : ''}`}>
+                <input type="checkbox" checked={on} disabled={!n && !on} onChange={() => toggle(f.label, v)} />
+                <span>{f.char === 'Отапливаемая площадь, м2' && /^\d/.test(v) ? `${v} м²` : v}</span>
+                <small>{n}</small>
+              </label>
+            );
+          })}
+        </fieldset>
+      ))}
+      {chosen > 0 && <button type="button" class="btn btn--outline btn--sm btn--block" onClick={reset}>Сбросить фильтры</button>}
+    </div>
+  );
 
   return (
     <div class="cat">
-      {chips && chips.length > 0 && (
-        <div class="cat__chips hscroll-m" role="group" aria-label="Разделы каталога">
-          <button type="button" class={`chip${chip === 'all' ? ' is-active' : ''}`} onClick={() => pick('all')}>Все</button>
-          {chips.map((c) => (
-            <button type="button" class={`chip${chip === c.id ? ' is-active' : ''}`} onClick={() => pick(c.id)}>{c.title}</button>
-          ))}
-        </div>
-      )}
-      {active?.children && active.children.length > 0 && (
-        <div class="cat__chips cat__chips--sub hscroll-m" role="group" aria-label="Подразделы">
-          <button type="button" class={`chip chip--sm${sub === 'all' ? ' is-active' : ''}`} onClick={() => setSub('all')}>Все {active.title.toLowerCase()}</button>
-          {active.children.map((c) => (
-            <button type="button" class={`chip chip--sm${sub === c.id ? ' is-active' : ''}`} onClick={() => setSub(c.id)}>{c.title}</button>
-          ))}
-        </div>
-      )}
-      {(prices || showSort) && (
+      <aside class="cat__side" aria-label="Фильтры">{panel}</aside>
+      <div class="cat__main">
         <div class="cat__bar">
-          {prices && (
-            <div class="cat__prices hscroll-m" role="group" aria-label="Цена">
-              {PRICES.map((p) => (
-                <button type="button" class={`chip chip--ghost${price === p.id ? ' is-active' : ''}`} onClick={() => setPrice(p.id)}>{p.title}</button>
-              ))}
-            </div>
-          )}
-          {showSort && (
-            <label class="cat__sort">
-              <span class="sr-only">Сортировка</span>
-              <select value={order} onChange={(e) => setOrder((e.target as HTMLSelectElement).value as any)}>
-                <option value="default">По популярности</option>
-                <option value="asc">Сначала дешевле</option>
-                <option value="desc">Сначала дороже</option>
-              </select>
-            </label>
-          )}
-        </div>
-      )}
-
-      <div class="grid" data-products>
-        {list.slice(0, limit).map((p, i) => <ProductCard p={p} eager={i < 4} key={p.id} />)}
-      </div>
-      {list.length === 0 && (
-        <p class="cat__empty">В этом разделе сейчас нет букетов по выбранной цене. <button type="button" class="link" onClick={() => setPrice('all')}>Показать все цены</button> или <button type="button" class="link" data-lead>попросите флориста собрать</button>.</p>
-      )}
-      {list.length > limit && (
-        <div class="cat__more">
-          <button type="button" class="btn btn--outline" onClick={() => setLimit(limit + step)}>
-            Показать ещё <span class="cat__left">{Math.min(step, list.length - limit)} из {list.length - limit}</span>
+          <label class="cat__search">
+            <IconSearch size={18} />
+            <input type="search" placeholder="Поиск в каталоге" value={q} onInput={(e) => setQ((e.target as HTMLInputElement).value)} aria-label="Поиск в каталоге" />
+          </label>
+          <button type="button" class="chip cat__fbtn" onClick={() => setSheetOpen(true)}>
+            <IconFilter /> Фильтры{chosen > 0 && <b>{chosen}</b>}
           </button>
+          <label class="cat__sort">
+            <span class="sr-only">Сортировка</span>
+            <select value={order} onChange={(e) => setOrder((e.target as HTMLSelectElement).value as any)}>
+              <option value="default">По умолчанию</option>
+              <option value="asc">Сначала дешевле</option>
+              <option value="desc">Сначала дороже</option>
+              <option value="az">По названию</option>
+            </select>
+          </label>
         </div>
-      )}
+        <p class="cat__found">Найдено: {list.length} из {cards.length}</p>
+
+        <div class="grid" data-products>
+          {list.slice(0, limit).map((p, i) => <ProductCard p={p} eager={i < 3} key={p.id} />)}
+        </div>
+        {list.length === 0 && (
+          <p class="cat__empty">По выбранным фильтрам товаров нет. <button type="button" class="link" onClick={reset}>Сбросить фильтры</button> или <button type="button" class="link" data-lead="Подбор оборудования">оставьте заявку</button> – подберём под ваш дом.</p>
+        )}
+        {list.length > limit && (
+          <div class="cat__more">
+            <button type="button" class="btn btn--outline" onClick={() => setLimit(limit + step)}>
+              Показать ещё <span class="cat__left">{Math.min(step, list.length - limit)} из {list.length - limit}</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div class={`dr dr--right${sheetOpen ? ' is-open' : ''}`} aria-hidden={!sheetOpen}>
+        <div class="dr__bg" onClick={() => setSheetOpen(false)} />
+        <div class="dr__panel" role="dialog" aria-modal="true" aria-label="Фильтры">
+          <div class="dr__head">
+            <div class="dr__title">Фильтры</div>
+            <button type="button" class="dr__close" aria-label="Закрыть" onClick={() => setSheetOpen(false)}><IconClose /></button>
+          </div>
+          <div class="dr__body">{panel}</div>
+          <div class="dr__foot">
+            <button type="button" class="btn btn--navy btn--block" onClick={() => setSheetOpen(false)}>Показать {list.length}</button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

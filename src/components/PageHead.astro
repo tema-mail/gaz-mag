@@ -1,0 +1,17 @@
+---
+// Заголовок внутренней страницы: хлебные крошки + H1 (+ подзаголовок).
+import Crumbs from './Crumbs.astro';
+const { crumbs, title, lead } = Astro.props as { crumbs: { label: string; href?: string }[]; title: string; lead?: string };
+---
+<div class="container ph">
+  <Crumbs items={crumbs} />
+  <h1 class="h1 ph__t">{title}</h1>
+  {lead && <p class="lead ph__l">{lead}</p>}
+  <slot />
+</div>
+<style>
+  .ph { padding-top: 40px; }
+  .ph__t { margin-top: 18px; }
+  .ph__l { margin-top: 14px; }
+  @media (max-width: 1023px) { .ph { padding-top: 20px; } .ph__t { margin-top: 12px; } }
+</style>

@@ -2,13 +2,14 @@ import { signal, computed, effect } from '@preact/signals';
 
 // Корзина и избранное – общие для всех островов страницы и живут между страницами (localStorage).
 
+/** Позиция корзины. id – вариант (edition) или сам товар; variant – «Мощность: 24 кВт». */
 export interface CartItem {
-  id: string; title: string; price: number; img: string; path: string; qty: number; max?: number | null;
+  id: string; title: string; price: number; img: string; path: string; qty: number; max?: number | null; variant?: string;
 }
 export interface FavItem { id: string; title: string; price: number; img: string; path: string; descr?: string }
 
-const CART_KEY = 'mv_cart';
-const FAV_KEY = 'mv_fav';
+const CART_KEY = 'gm_cart';
+const FAV_KEY = 'gm_fav';
 const isBrowser = typeof window !== 'undefined';
 
 function load<T>(key: string, fallback: T): T {
@@ -26,7 +27,7 @@ export const cartCount = computed(() => cart.value.reduce((s, i) => s + i.qty, 0
 export const cartTotal = computed(() => cart.value.reduce((s, i) => s + i.qty * i.price, 0));
 
 // Какие шторки открыты: одна на всю страницу.
-export type Sheet = null | 'cart' | 'fav' | 'search' | 'menu' | 'lead';
+export type Sheet = null | 'cart' | 'fav' | 'search' | 'menu' | 'lead' | 'filters';
 export const sheet = signal<Sheet>(null);
 /** Сообщение-тост после добавления в корзину. */
 export const toast = signal<{ text: string; key: number } | null>(null);
@@ -64,4 +65,7 @@ export function toggleFav(p: FavItem) {
   favs.value = isFav(p.id) ? favs.value.filter((x) => x.id !== p.id) : [...favs.value, p];
 }
 
-export const fmt = (n: number) => n.toLocaleString('ru-RU').replace(/ /g, ' ') + ' ₽';
+export const fmt = (n: number) => n.toLocaleString('ru-RU').replace(/[\u00a0\u202f]/g, ' ') + ' ₽';
+
+/** Тема заявки для попапа: кнопка с data-lead="Акция …" подставляет её, без значения – общая заявка. */
+export const leadTopic = signal('Заявка с сайта');

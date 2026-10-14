@@ -1,0 +1,65 @@
+---
+// Акции на главной – слайдер баннеров, как на оригинале: заголовок, оговорка, «Подробнее» и «Заказать».
+// Прокрутка – CSS scroll-snap, стрелки и точки – маленький скрипт.
+import { PROMOS } from '../lib/promos';
+import { img } from '../lib/img';
+import { u } from '../lib/url';
+---
+<div class="ps" data-ps>
+  <div class="ps__track hscroll" data-ps-track>
+    {PROMOS.map((p) => (
+      <article class="ps__slide soft-card">
+        <div class="ps__text">
+          <h3 class="ps__t">{p.short}</h3>
+          {p.note && <p class="ps__note">({p.note})</p>}
+          <div class="ps__btns">
+            <a class="btn btn--navy" href={u(p.href)}>Подробнее</a>
+            <button type="button" class="btn btn--outline" data-lead={`Акция: ${p.title}`}>Заказать</button>
+          </div>
+        </div>
+        <img class="ps__img" src={img(p.image)} alt="" loading="lazy" />
+      </article>
+    ))}
+  </div>
+  <button type="button" class="ps__arrow ps__arrow--prev" aria-label="Предыдущая акция" data-ps-prev>‹</button>
+  <button type="button" class="ps__arrow ps__arrow--next" aria-label="Следующая акция" data-ps-next>›</button>
+  <div class="ps__dots">{PROMOS.map((_, i) => <button type="button" aria-label={`Акция ${i + 1}`} data-ps-dot={i} />)}</div>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ps]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-ps-track]')!;
+    const slides = [...track.children] as HTMLElement[];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-ps-dot]')];
+    const cur = () => Math.round(track.scrollLeft / track.clientWidth);
+    const go = (i: number) => track.scrollTo({ left: ((i + slides.length) % slides.length) * track.clientWidth, behavior: 'smooth' });
+    root.querySelector('[data-ps-prev]')?.addEventListener('click', () => go(cur() - 1));
+    root.querySelector('[data-ps-next]')?.addEventListener('click', () => go(cur() + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+    const mark = () => dots.forEach((d, i) => d.classList.toggle('is-on', i === cur()));
+    track.addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
+    mark();
+  });
+</script>
+<style>
+  .ps { position: relative; }
+  .ps__track { gap: 0; border-radius: var(--radius-xl); }
+  .ps__slide { width: 100%; display: grid; grid-template-columns: 1fr 1fr; align-items: end; min-height: 380px; border-radius: var(--radius-xl); }
+  .ps__text { display: grid; gap: 16px; justify-items: start; align-self: center; padding: 40px 0 40px 56px; }
+  .ps__t { font-size: clamp(28px, 3.4vw, 46px); }
+  .ps__note { font-size: 14px; color: var(--text); margin-top: -8px; }
+  .ps__btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .ps__img { width: 100%; height: 380px; object-fit: contain; object-position: bottom right; }
+  .ps__arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(255,255,255,.9); color: var(--navy); font-size: 28px; line-height: 1; box-shadow: var(--shadow); }
+  .ps__arrow--prev { left: -22px; }
+  .ps__arrow--next { right: -22px; }
+  .ps__dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+  .ps__dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: var(--line); transition: width .3s var(--ease), background-color .3s; }
+  .ps__dots button.is-on { width: 52px; background: var(--navy); }
+  @media (max-width: 1023px) {
+    .ps__slide { grid-template-columns: 1fr; min-height: 0; text-align: center; }
+    .ps__text { justify-items: center; padding: 28px 18px 8px; }
+    .ps__btns { justify-content: center; }
+    .ps__img { height: 220px; object-position: bottom center; }
+    .ps__arrow { display: none; }
+  }
+</style>

@@ -33,12 +33,8 @@ export const IconPlus = () => (<svg width="16" height="16" viewBox="0 0 24 24" {
 export const IconTrash = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" {...P} aria-hidden="true"><path d="M4 7h16M9 7V5h6v2M6.5 7l1 12.5h9l1-12.5" /></svg>
 );
-/** Цветок-иконка на кнопках «Выбрать букет» – как на оригинале. */
-export const IconFlower = ({ size = 18 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-    <g style={{ fill: 'var(--flower, #fecbde)' }}><circle cx="12" cy="6.5" r="4.5" /><circle cx="17.2" cy="10.3" r="4.5" /><circle cx="15.2" cy="16.5" r="4.5" /><circle cx="8.8" cy="16.5" r="4.5" /><circle cx="6.8" cy="10.3" r="4.5" /></g>
-    <circle cx="12" cy="12" r="2.6" fill="#fff" />
-  </svg>
+export const IconFilter = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...P} aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
 );
 
 export const Social = ({ id, size = 18 }: { id: string; size?: number }) => {
@@ -51,7 +47,6 @@ export const Social = ({ id, size = 18 }: { id: string; size?: number }) => {
   if (id === 'tg') return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.7 4.3 2.9 11.2c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.7 5.4c.2.6.4.8.8.8.4 0 .6-.2.9-.4l2.2-2.2 4.6 3.4c.8.5 1.5.2 1.7-.8l3-14.2c.3-1.3-.5-1.9-1.5-1.8zM9.4 14.1l8.5-7.7-6.6 8.6-.3 3-1.6-3.9z" /></svg>
   );
-  // MAX – облачко сообщения
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3a8.5 8.5 0 0 0-7.5 12.6L3.3 20a.6.6 0 0 0 .7.7l4.4-1.2A8.5 8.5 0 1 0 12 3zm0 4.2a4.3 4.3 0 1 1 0 8.6 4.3 4.3 0 0 1 0-8.6z" /></svg>
   );

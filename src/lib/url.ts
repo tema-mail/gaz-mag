@@ -6,3 +6,6 @@ export function u(path: string): string {
   if (BASE && path.startsWith(BASE + '/')) return path;
   return BASE + (path.startsWith('/') ? path : '/' + path);
 }
+
+/** Картинка товара нужной ширины; у 16 товаров на оригинале нет фото – показываем заглушку. */
+export const thumb = (img: string | undefined, w: 480 | 1000 = 480) => (img ? u(`${img}-${w}.webp`) : u('/img/no-photo.svg'));

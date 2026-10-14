@@ -1,81 +1,99 @@
 ---
 import { SITE, SOCIALS, NAV } from '../lib/site';
 import { u } from '../lib/url';
+import { img } from '../lib/img';
 import { Social } from '../islands/icons';
 import HeaderActions from '../islands/HeaderActions';
 import MobileMenu from '../islands/MobileMenu';
-import { menuTiles } from '../lib/menu';
-const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const LOGO = 'https://static.tildacdn.com/tild6433-3131-4230-a438-613664356533/_1-2.png';
+const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '').replace(/\/$/, '') || '/';
+const active = (href: string, children?: { href: string }[]) =>
+  href === path || (children || []).some((c) => c.href === path) || (href !== '/' && path.startsWith(href + '/'));
 ---
 <header class="hdr">
   <div class="container hdr__top">
-    <a class="hdr__addr" href={u('/contact')}>
-      <span class="hdr__pin" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
-      </span>
-      <span>г. {SITE.city}.<br />{SITE.address}</span>
-    </a>
-    <a class="hdr__logo" href={u('/')} aria-label="Milovini Flowers – на главную">
-      <img src={u('/img/logo.svg')} alt="Milovini Flowers" width="291" height="21" />
+    <a class="hdr__logo" href={u('/')} aria-label="Магазин газового оборудования – на главную">
+      <img src={img(LOGO, 800)} alt="" width="44" height="44" />
+      <span>Магазин газового<br class="hdr__br" /> оборудования</span>
     </a>
     <div class="hdr__right">
       <div class="hdr__socials">
         {SOCIALS.map((s) => (
-          <a class="hdr__soc" href={s.href} target="_blank" rel="noopener" aria-label={s.label}><Social id={s.id} size={15} /></a>
+          <a class="icon-btn" href={s.href} target="_blank" rel="noopener nofollow" aria-label={s.label}><Social id={s.id} size={16} /></a>
         ))}
       </div>
-      <div class="hdr__phone">
-        <a href={SITE.phoneHref}>{SITE.phone.replace(/-/g, ' ')}</a>
-        <a class="hdr__call" href={SITE.phoneHref}>Связаться с нами</a>
-      </div>
+      {SITE.phones.map((p) => <a class="hdr__phone" href={p.href}>{p.text}</a>)}
+      <HeaderActions client:idle variant="desktop" />
     </div>
-    <div class="hdr__mobile-actions">
+    <div class="hdr__mobile">
       <HeaderActions client:idle variant="mobile" />
-      <MobileMenu client:idle tiles={menuTiles} />
+      <MobileMenu client:idle />
     </div>
   </div>
-  <div class="container hdr__bottom">
+  <div class="container">
     <nav class="hdr__nav" aria-label="Основное меню">
       {NAV.map((n) => (
-        <a href={u(n.href)} class:list={['hdr__link', { 'is-active': n.href === path }]}>{n.label}</a>
+        <div class:list={['hdr__item', { 'has-sub': n.children }]}>
+          <a href={u(n.href)} class:list={['hdr__link', { 'is-active': active(n.href, n.children) }]} aria-haspopup={n.children ? 'true' : undefined}>
+            {n.label}{n.children && <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>}
+          </a>
+          {n.children && (
+            <div class="hdr__sub">
+              {n.children.map((c) => <a href={u(c.href)} class:list={{ 'is-active': c.href === path }}>{c.label}</a>)}
+            </div>
+          )}
+        </div>
       ))}
     </nav>
-    <HeaderActions client:idle variant="desktop" />
   </div>
 </header>
 
 <style>
-  .hdr { position: relative; z-index: 40; background: var(--white); }
-  .hdr__top {
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;
-    height: 64px; border-bottom: 1px solid #d9d4d6;
+  .hdr { position: relative; z-index: 40; background: var(--bg); }
+  .hdr__top { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 80px; }
+  .hdr__logo { display: flex; align-items: center; gap: 14px; font: 700 13px/1.35 var(--body-font); text-transform: uppercase; color: var(--ink); }
+  .hdr__logo img { width: 44px; height: 44px; border-radius: 50%; }
+  .hdr__br { display: none; }
+  .hdr__right { display: flex; align-items: center; gap: 8px; }
+  .hdr__socials { display: flex; gap: 8px; margin-right: 4px; }
+  .hdr__socials .icon-btn { width: 40px; height: 40px; }
+  .hdr__phone {
+    display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 999px;
+    background: var(--navy); color: var(--white); font: 700 11px/1 var(--body-font); letter-spacing: .1em; white-space: nowrap;
+    transition: background-color .2s;
   }
-  .hdr__addr { display: flex; align-items: center; gap: 12px; font-size: 12px; line-height: 1.3; color: var(--ink); }
-  .hdr__pin { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--pink); color: var(--mauve); flex: none; }
-  .hdr__logo img { height: 28px; width: auto; }
-  .hdr__right { display: flex; justify-content: flex-end; align-items: center; gap: 28px; }
-  .hdr__socials { display: flex; gap: 8px; }
-  .hdr__soc { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--pink); color: var(--mauve); transition: background-color .2s, color .2s; }
-  .hdr__soc:hover { background: var(--mauve); color: var(--white); }
-  .hdr__phone { display: grid; justify-items: end; gap: 2px; }
-  .hdr__phone a:first-child { font: 700 14px/1.2 var(--body-font); color: var(--ink); white-space: nowrap; }
-  .hdr__call { font-size: 12px; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
-  .hdr__bottom { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 64px; }
-  .hdr__nav { display: flex; flex-wrap: wrap; gap: 4px 18px; }
-  .hdr__link { font-size: 12px; color: var(--ink); position: relative; padding: 4px 0; white-space: nowrap; }
-  .hdr__link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--mauve); transition: right .25s var(--ease); }
-  .hdr__link:hover::after, .hdr__link.is-active::after { right: 0; }
-  .hdr__link.is-active { color: var(--mauve); }
-  .hdr__mobile-actions { display: none; }
+  .hdr__phone:hover { background: var(--navy-dark); }
+  .hdr__nav {
+    display: flex; justify-content: space-around; align-items: center; height: 50px;
+    background: var(--white); border-radius: 999px; box-shadow: 0 2px 14px rgba(30, 41, 78, .05);
+  }
+  .hdr__item { position: relative; height: 100%; display: flex; align-items: center; }
+  .hdr__link {
+    display: inline-flex; align-items: center; gap: 6px; padding: 0 12px; height: 100%;
+    font: 700 13px/1 var(--body-font); text-transform: uppercase; color: var(--ink); letter-spacing: .02em; transition: color .2s;
+  }
+  .hdr__link:hover, .hdr__link.is-active { color: var(--navy-2); }
+  .hdr__link.is-active { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+  .hdr__sub {
+    position: absolute; top: 100%; left: 50%; min-width: 300px; padding: 10px; display: grid; gap: 2px;
+    background: var(--white); border-radius: var(--radius-m); box-shadow: var(--shadow);
+    opacity: 0; visibility: hidden; transform: translate(-50%, 8px); transition: opacity .2s, transform .2s var(--ease), visibility .2s;
+  }
+  .hdr__item:hover .hdr__sub, .hdr__item:focus-within .hdr__sub { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+  .hdr__sub a { padding: 10px 14px; border-radius: 10px; font-size: 14px; color: var(--ink); }
+  .hdr__sub a:hover, .hdr__sub a.is-active { background: var(--soft); color: var(--navy); }
+  .hdr__mobile { display: none; }
 
-  @media (max-width: 1365px) { .hdr__nav { gap: 4px 12px; } .hdr__link { font-size: 11.5px; } }
+  @media (max-width: 1199px) { .hdr__socials { display: none; } }
 
-  /* Телефон и планшет: компактная липкая шапка – логотип, избранное, корзина, меню */
+  /* Телефон и планшет: липкая шапка – логотип, корзина, меню */
   @media (max-width: 1023px) {
-    .hdr { position: sticky; top: 0; box-shadow: 0 1px 0 rgba(0,0,0,.06); }
-    .hdr__top { grid-template-columns: 1fr auto; height: var(--header-h); border-bottom: 0; }
-    .hdr__addr, .hdr__right, .hdr__bottom { display: none; }
-    .hdr__logo img { height: 17px; }
-    .hdr__mobile-actions { display: flex; align-items: center; gap: 8px; }
+    .hdr { position: sticky; top: 0; box-shadow: 0 1px 0 rgba(0, 0, 0, .06); }
+    .hdr__top { height: var(--header-h); }
+    .hdr__logo { font-size: 11px; gap: 10px; }
+    .hdr__logo img { width: 40px; height: 40px; }
+    .hdr__br { display: inline; }
+    .hdr__right, .hdr__nav { display: none; }
+    .hdr__mobile { display: flex; align-items: center; gap: 8px; }
   }
 </style>

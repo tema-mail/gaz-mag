@@ -2,24 +2,29 @@
 import '../styles/global.css';
 import '../styles/islands.css';
 import '../styles/catalog.css';
-import '../styles/order.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Contacts from '../components/Contacts.astro';
 import Sheets from '../islands/Sheets';
-import StickyOrder from '../islands/StickyOrder';
 import { u } from '../lib/url';
 
 interface Props {
   title: string;
   description?: string;
   image?: string;
-  /** Без кнопки «Заказать букет» снизу (страница заказа). */
-  noSticky?: boolean;
   noindex?: boolean;
+  /** Без общего блока «Контакты» перед подвалом (у посадочной своя развязка). */
+  noContacts?: boolean;
+  /** Посадочная без шапки и подвала сайта – как /hubert-dy на оригинале. */
+  bare?: boolean;
 }
-const { title, description = 'Доставка цветов в Самаре 24/7 от 60 минут. Букеты и композиции от флористов Milovini, фото перед доставкой, гарантия свежести 48 часов.', image, noSticky = false, noindex = false } = Astro.props;
+const {
+  title,
+  description = 'Продажа газового оборудования в Болотном: газовые котлы, водонагреватели, бойлеры, радиаторы, датчики загазованности. Подключение газа и монтаж отопления.',
+  image, noindex = false, noContacts = false, bare = false,
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-// Показная копия на GitHub Pages закрыта от поиска, чтобы не дублировать живой milovinisamara.ru.
+// Показная копия на GitHub Pages закрыта от поиска, чтобы не дублировать живой gaz-mag.ru.
 const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
 ---
 <!doctype html>
@@ -35,32 +40,32 @@ const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
-    <meta name="theme-color" content="#fecbde" />
-    <link rel="icon" href={u('/favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#1e294e" />
+    <link rel="icon" href={u('/favicon.png')} type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@300..700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
     <a class="sr-only" href="#main">К содержимому</a>
-    <Header />
+    {!bare && <Header />}
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    {!bare && !noContacts && <Contacts />}
+    {!bare && <Footer />}
     <Sheets client:idle />
-    {!noSticky && <StickyOrder client:idle />}
     <div class="cookie" id="cookie" hidden>
-      <p>Используя данный сайт, вы даёте согласие на использование файлов cookie, помогающих нам сделать его удобнее для вас.</p>
-      <button type="button" class="btn btn--mauve btn--sm" id="cookie-ok">Хорошо</button>
+      <p>Мы используем файлы cookie и рекомендательные технологии. Пользуясь сайтом, вы соглашаетесь с <a href={u('/policy')}>Политикой обработки персональных данных</a>.</p>
+      <button type="button" class="btn btn--navy btn--sm" id="cookie-ok">Принимаю</button>
     </div>
     <script>
       // Плашка cookie – один раз; появление секций при прокрутке.
       const c = document.getElementById('cookie');
-      try { if (c && !localStorage.getItem('mv_cookie')) c.hidden = false; } catch {}
+      try { if (c && !localStorage.getItem('gm_cookie')) c.hidden = false; } catch {}
       document.getElementById('cookie-ok')?.addEventListener('click', () => {
         if (c) c.hidden = true;
-        try { localStorage.setItem('mv_cookie', '1'); } catch {}
+        try { localStorage.setItem('gm_cookie', '1'); } catch {}
       });
       const io = new IntersectionObserver((es) => es.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }

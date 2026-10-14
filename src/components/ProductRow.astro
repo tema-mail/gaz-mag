@@ -1,0 +1,9 @@
+---
+// Лента товаров («Специальные предложения», товары акции): на десктопе сетка 4 в ряд, на телефоне – две в ряд.
+import ProductCard from '../islands/ProductCard';
+import type { Card } from '../lib/catalog';
+const { cards, cta } = Astro.props as { cards: Card[]; cta?: string };
+---
+<div class="grid grid--4" data-products>
+  {cards.map((c) => <ProductCard client:visible p={c} cta={cta} />)}
+</div>

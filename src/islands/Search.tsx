@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { fmt, sheet } from '../lib/store';
-import { u } from '../lib/url';
+import { thumb, u } from '../lib/url';
 import Drawer from './Drawer';
 import { IconSearch } from './icons';
 
@@ -8,7 +8,7 @@ import { IconSearch } from './icons';
 interface Hit { id: string; t: string; d: string; p: number; i: string; u: string }
 
 const norm = (s: string) => s.toLowerCase().replace(/ё/g, 'е');
-const QUICK = ['Розы', 'Гортензия', 'Корзина', 'Пионы', 'Хризантема', 'Шары', 'Открытка'];
+const QUICK = ['Котёл', 'HUBERT', 'Двухконтурный', 'Водонагреватель', 'Бойлер', 'Счётчик', 'Стабилизатор', 'Дымоход'];
 
 export default function Search() {
   const open = sheet.value === 'search';
@@ -23,7 +23,7 @@ export default function Search() {
   const hits = useMemo(() => {
     const s = norm(q.trim());
     if (!index || s.length < 2) return [];
-    const words = s.split(/\s+/);
+    const words = s.split(/\s+/).map((w) => w.replace(/(ый|ий|ой|ая|ое|ые|ел|ла|ло|лы|а|ы|и|е|у|ю|я)$/u, '') || w);
     return index.filter((h) => { const hay = norm(h.t + ' ' + h.d); return words.every((w) => hay.includes(w)); }).slice(0, 40);
   }, [q, index]);
 
@@ -32,7 +32,7 @@ export default function Search() {
       <form class="srch" onSubmit={(e) => e.preventDefault()} role="search">
         <IconSearch />
         <input
-          class="srch__input" type="search" placeholder="Название букета или цветок" value={q}
+          class="srch__input" type="search" placeholder="Название, марка или мощность" value={q}
           onInput={(e) => setQ((e.target as HTMLInputElement).value)} aria-label="Что ищем"
         />
       </form>
@@ -43,7 +43,7 @@ export default function Search() {
       ) : !index ? (
         <p class="srch__note">Загружаем каталог…</p>
       ) : hits.length === 0 ? (
-        <p class="srch__note">Ничего не нашли. Напишите нам – флорист соберёт букет под ваш запрос. <button type="button" class="link" data-lead>Оставить заявку</button></p>
+        <p class="srch__note">Ничего не нашли. Оставьте заявку – подберём оборудование под ваш запрос. <button type="button" class="link" data-lead="Подбор оборудования">Оставить заявку</button></p>
       ) : (
         <>
           <p class="srch__note">Найдено: {hits.length}{hits.length === 40 ? '+' : ''}</p>
@@ -51,7 +51,7 @@ export default function Search() {
             {hits.map((h) => (
               <li>
                 <a href={u(h.u)} class="srch__item">
-                  <img src={u(h.i + '-480.webp')} alt="" loading="lazy" />
+                  <img src={thumb(h.i)} alt="" loading="lazy" />
                   <span class="srch__title">{h.t}</span>
                   <span class="srch__price">{fmt(h.p)}</span>
                 </a>

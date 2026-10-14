@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'preact/hooks';
 import type { Card } from '../lib/catalog';
 import { addToCart, cart, favs, fmt, sheet, toggleFav } from '../lib/store';
-import { u } from '../lib/url';
-import { IconBag, IconHeart } from './icons';
+import { thumb, u } from '../lib/url';
+import { IconHeart } from './icons';
 
-// Карточка товара в сетках. Сердечко – в избранное, «В корзину» – сразу в корзину.
-export default function ProductCard({ p, eager = false }: { p: Card; eager?: boolean }) {
+// Карточка товара в сетках – как на оригинале: фото на белом, название, цена, сердечко.
+// Товар с вариантами (мощность, объём) ведёт на страницу выбрать вариант, без вариантов – сразу в корзину.
+export default function ProductCard({ p, eager = false, cta = 'Подробнее' }: { p: Card; eager?: boolean; cta?: string }) {
   // Состояние «в корзине / в избранном» – только после гидратации (в HTML сборки его нет).
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
@@ -18,34 +19,35 @@ export default function ProductCard({ p, eager = false }: { p: Card; eager?: boo
     <article class="pc">
       <a class="pc__media" href={href} aria-label={p.title}>
         <img
-          class="pc__img" src={u(p.img + '-480.webp')} srcset={`${u(p.img + '-480.webp')} 480w, ${u(p.img + '-1000.webp')} 1000w`}
-          sizes="(max-width: 1023px) 50vw, 25vw" alt={p.title} loading={eager ? 'eager' : 'lazy'} decoding="async"
+          class="pc__img" src={thumb(p.img)} srcset={p.img ? `${thumb(p.img)} 480w, ${thumb(p.img, 1000)} 1000w` : undefined}
+          sizes="(max-width: 1023px) 50vw, 300px" alt={p.title} loading={eager ? 'eager' : 'lazy'} decoding="async"
         />
-        {p.img2 && <img class="pc__img2" src={u(p.img2 + '-480.webp')} alt="" loading="lazy" decoding="async" />}
-        {p.mark && <span class="pc__mark">{p.mark}</span>}
       </a>
       <button
         type="button" class={`pc__fav${fav ? ' is-on' : ''}`} aria-pressed={fav}
         aria-label={fav ? 'Убрать из избранного' : 'В избранное'}
-        onClick={() => toggleFav({ ...item, descr: p.descr })}
+        onClick={() => toggleFav(item)}
       >
         <IconHeart filled={fav} size={20} />
       </button>
       <div class="pc__body">
         <a class="pc__title" href={href}>{p.title}</a>
-        {p.descr && <p class="pc__descr">{p.descr}</p>}
         <div class="pc__price">
+          {p.variants && <span>от</span>}
           <b>{fmt(p.price)}</b>
           {p.priceOld && <s>{fmt(p.priceOld)}</s>}
         </div>
         <div class="pc__actions">
-          <button
-            type="button" class={`btn btn--sm ${inCart ? 'btn--outline' : 'btn--pink'} pc__buy`}
-            onClick={() => (inCart ? (sheet.value = 'cart') : addToCart({ ...item, max: p.stock }))}
-          >
-            <IconBag size={16} /> <span>{inCart ? 'В корзине' : 'В корзину'}</span>
-          </button>
-          <a class="btn btn--sm btn--outline pc__more" href={href}>Подробнее</a>
+          {p.variants ? (
+            <a class="btn btn--sm btn--navy" href={href}>{cta}</a>
+          ) : (
+            <button
+              type="button" class={`btn btn--sm ${inCart ? 'btn--outline' : 'btn--navy'}`}
+              onClick={() => (inCart ? (sheet.value = 'cart') : addToCart(item))}
+            >
+              {inCart ? 'В корзине' : 'В корзину'}
+            </button>
+          )}
         </div>
       </div>
     </article>

@@ -1,0 +1,84 @@
+---
+// 53 карточки товаров по адресам оригинала: /<каталог>/tproduct/<uid>-<slug>.
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import ProductBuy from '../islands/ProductBuy';
+import ProductCard from '../islands/ProductCard';
+import Gallery from '../islands/Gallery';
+import { CATALOGS, SITE } from '../lib/site';
+import { catalogOf, listCards, products, toCard } from '../lib/catalog';
+import { thumb, u } from '../lib/url';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { product: p.path.slice(1) }, props: { p } }));
+}
+const { p } = Astro.props;
+const cat = CATALOGS.find((c) => c.slug === catalogOf(p));
+const related = (cat ? listCards(cat.slug) : []).filter((c) => c.id !== p.id).slice(0, 4);
+const card = toCard(p);
+const prices = p.editions.length ? p.editions.map((e) => e.price ?? 0) : [p.price ?? 0];
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Product', name: p.title, image: p.images.map((i) => new URL(thumb(i, 1000), Astro.site).href),
+  ...(p.brand ? { brand: { '@type': 'Brand', name: p.brand } } : {}),
+  offers: { '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: prices.length },
+};
+---
+<Base title={`${p.title} – купить в Болотном`} description={`${p.title}${p.brand ? `, ${p.brand}` : ''}: цена ${card.price.toLocaleString('ru-RU')} ₽. Характеристики, доставка, подключение и монтаж – ${SITE.name}, Болотное.`} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
+  <div class="container pp">
+    <Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: '/catalogcentr' }, ...(cat ? [{ label: cat.title, href: '/' + cat.slug }] : []), { label: p.title }]} />
+    <div class="pp__grid">
+      <Gallery client:visible images={p.images} alt={p.title} />
+      <div class="pp__info">
+        {p.brand && <p class="pp__brand">{p.brand}</p>}
+        <h1 class="pp__t">{p.title}</h1>
+        {p.descr && <p class="pp__descr">{p.descr}</p>}
+        <ProductBuy client:load p={{ id: p.id, title: p.title, price: card.price, priceOld: p.priceOld, img: p.images[0] ?? '', path: p.path, options: p.options, editions: p.editions }} />
+        <ul class="pp__perks">
+          <li>Подключение газа и монтаж отопления – <a href={u('/montag')}>подробнее</a></li>
+          <li>Установка газового котла – <a href={u('/ustanovka-kotla')}>подробнее</a></li>
+          <li>Скидки пенсионерам, юрлицам и при покупке от 100 тыс. – <a href={u('/akcii')}>все акции</a></li>
+        </ul>
+      </div>
+    </div>
+    {p.chars.length > 0 && (
+      <section class="pp__chars">
+        <h2 class="h3">Характеристики</h2>
+        <dl>
+          {p.chars.map((c) => <div><dt>{c.t}</dt><dd>{c.v}</dd></div>)}
+        </dl>
+      </section>
+    )}
+    {p.text && <section class="pp__text prose" set:html={p.text} />}
+  </div>
+  {related.length > 0 && (
+    <section class="section container">
+      <h2 class="h2">Смотрите также</h2>
+      <div class="grid grid--4 rel">
+        {related.map((r) => <ProductCard client:visible p={r} />)}
+      </div>
+    </section>
+  )}
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Base>
+<style>
+  .pp { padding-top: 32px; }
+  .pp__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; margin-top: 24px; align-items: start; }
+  .pp__info { display: grid; gap: 18px; }
+  .pp__brand { font: 700 12px/1 var(--body-font); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .pp__t { font: 700 clamp(22px, 2.4vw, 32px)/1.25 var(--body-font); text-transform: none; }
+  .pp__perks { list-style: none; margin: 4px 0 0; padding: 18px 20px; display: grid; gap: 8px; border-radius: var(--radius-m); background: var(--soft); font-size: 14px; }
+  .pp__perks a { color: var(--navy); text-decoration: underline; }
+  .pp__chars { margin-top: 56px; max-width: 860px; }
+  .pp__chars dl { margin: 18px 0 0; display: grid; }
+  .pp__chars dl > div { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .pp__chars dt { color: var(--muted); }
+  .pp__chars dd { margin: 0; color: var(--ink); font-weight: 500; }
+  .pp__text { margin-top: 32px; }
+  .rel { margin-top: 28px; }
+  @media (max-width: 1023px) {
+    .pp { padding-top: 16px; }
+    .pp__grid { grid-template-columns: 1fr; gap: 24px; margin-top: 14px; }
+    .pp__chars { margin-top: 40px; }
+    .pp__chars dl > div { gap: 12px; font-size: 14px; }
+  }
+</style>

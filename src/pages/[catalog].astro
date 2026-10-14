@@ -1,0 +1,20 @@
+---
+// 6 каталогов по адресам оригинала: /catalog_boilers, /catalog_gaz_waterheaters, … /gas.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Catalog from '../islands/Catalog';
+import { CATALOGS } from '../lib/site';
+import { filterDefs, listCards } from '../lib/catalog';
+
+export function getStaticPaths() {
+  return CATALOGS.map((c) => ({ params: { catalog: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const cards = listCards(c.slug);
+---
+<Base title={`Каталог / ${c.title}`} description={`${c.title} в Болотном: ${cards.length} товаров в каталоге, фильтры по марке, цене и характеристикам. Доставка, подключение и монтаж.`}>
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: '/catalogcentr' }, { label: c.title }]} title={c.title} />
+  <section class="section--tight container">
+    <Catalog client:load cards={cards} filters={filterDefs(c.slug)} />
+  </section>
+</Base>

@@ -1,26 +1,26 @@
 ---
 import { SITE, SOCIALS, FOOTER } from '../lib/site';
 import { u } from '../lib/url';
+import { img } from '../lib/img';
 import { Social } from '../islands/icons';
+const LOGO = 'https://static.tildacdn.com/tild6433-3131-4230-a438-613664356533/_1-2.png';
 const cols = [
   { title: 'Меню', items: FOOTER.menu },
   { title: 'Каталог', items: FOOTER.catalog },
-  { title: 'Покупателям', items: FOOTER.buyers },
-  { title: 'Информация', items: FOOTER.info },
+  { title: 'Документы', items: FOOTER.legal },
 ];
 ---
 <footer class="ftr">
   <div class="container ftr__grid">
     <div class="ftr__brand">
-      <a href={u('/')} class="ftr__logo"><img src={u('/img/logo.svg')} alt="Milovini Flowers" width="291" height="21" /></a>
-      <p class="ftr__tag">Доставка цветов в Самаре</p>
+      <a href={u('/')} class="ftr__logo"><img src={img(LOGO, 800)} alt="" width="44" height="44" /><span>Магазин газового оборудования</span></a>
       <div class="ftr__contacts">
-        <a href={SITE.phoneHref} class="ftr__phone">{SITE.phone}</a>
-        <span>{SITE.city}, {SITE.address}</span>
-        <span>{SITE.hours}</span>
+        {SITE.phones.map((p) => <a href={p.href} class="ftr__phone">{p.text}</a>)}
+        <span>{SITE.address}</span>
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
       </div>
       <div class="ftr__socials">
-        {SOCIALS.map((s) => <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}><Social id={s.id} size={18} /></a>)}
+        {SOCIALS.map((s) => <a href={s.href} target="_blank" rel="noopener nofollow" aria-label={s.label}><Social id={s.id} size={18} /></a>)}
       </div>
     </div>
     {cols.map((c) => (
@@ -31,34 +31,28 @@ const cols = [
     ))}
   </div>
   <div class="container ftr__legal">
-    <span>© {new Date().getFullYear()} {SITE.name}. {SITE.owner}, ИНН {SITE.inn}</span>
+    <span>© {new Date().getFullYear()} {SITE.name}. {SITE.owner}, ИНН {SITE.inn}, ОГРНИП {SITE.ogrnip}</span>
   </div>
-  <div class="ftr__mark" aria-hidden="true"><img src={u('/img/logo-footer.svg')} alt="" /></div>
 </footer>
 
 <style>
-  .ftr { position: relative; margin-top: 110px; background: var(--mauve); color: rgba(255,255,255,.88); overflow: hidden; }
-  .ftr__grid { display: grid; grid-template-columns: 1.4fr repeat(4, auto); gap: 40px 56px; padding-top: 64px; }
-  .ftr__logo img { height: 22px; width: auto; filter: brightness(0) invert(1); }
-  .ftr__tag { margin-top: 12px; font-size: 13px; }
-  .ftr__contacts { display: grid; gap: 4px; margin-top: 40px; font-size: 14px; }
-  .ftr__phone { font-weight: 600; font-size: 16px; color: #fff; }
+  .ftr { margin-top: 88px; background: var(--navy); color: rgba(255, 255, 255, .82); padding-bottom: 32px; }
+  .ftr__grid { display: grid; grid-template-columns: 1.3fr repeat(3, auto); gap: 40px 56px; padding-top: 56px; }
+  .ftr__logo { display: flex; align-items: center; gap: 14px; font: 700 13px/1.3 var(--body-font); text-transform: uppercase; color: #fff; }
+  .ftr__logo img { width: 44px; height: 44px; border-radius: 50%; }
+  .ftr__contacts { display: grid; gap: 6px; margin-top: 24px; font-size: 14px; }
+  .ftr__phone { font-weight: 700; font-size: 16px; color: #fff; }
   .ftr__socials { display: flex; gap: 8px; margin-top: 20px; }
-  .ftr__socials a { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.14); color: #fff; transition: background-color .2s, color .2s; }
-  .ftr__socials a:hover { background: #fff; color: var(--mauve); }
-  .ftr__h { font: 600 13px/1 var(--body-font); letter-spacing: .28em; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
+  .ftr__socials a { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: var(--navy); transition: transform .2s var(--ease); }
+  .ftr__socials a:hover { transform: translateY(-2px); }
+  .ftr__h { font: 700 12px/1 var(--body-font); letter-spacing: .16em; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
   .ftr__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
   .ftr__col a { font-size: 14px; transition: color .2s; }
-  .ftr__col a:hover { color: var(--pink); }
-  .ftr__legal { padding-top: 48px; font-size: 12px; opacity: .7; }
-  .ftr__mark { padding: 24px 0 0; opacity: .18; }
-  .ftr__mark img { width: 104%; max-width: none; margin-left: -2%; filter: brightness(0) invert(1); transform: translateY(18%); }
+  .ftr__col a:hover { color: #fff; text-decoration: underline; }
+  .ftr__legal { padding-top: 40px; font-size: 12px; opacity: .65; }
   @media (max-width: 1023px) {
-    .ftr { margin-top: 72px; padding-bottom: 80px; }
-    .ftr__grid { grid-template-columns: 1fr 1fr; gap: 32px 20px; padding-top: 44px; }
+    .ftr { margin-top: 56px; }
+    .ftr__grid { grid-template-columns: 1fr 1fr; gap: 32px 20px; padding-top: 40px; }
     .ftr__brand { grid-column: 1 / -1; }
-    .ftr__contacts { margin-top: 24px; }
-    .ftr__legal { padding-top: 32px; }
-    .ftr { padding-bottom: 0; }
   }
 </style>
