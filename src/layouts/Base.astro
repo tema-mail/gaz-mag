@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import '../styles/islands.css';
+import '../styles/catalog.css';
+import '../styles/order.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Sheets from '../islands/Sheets';
+import StickyOrder from '../islands/StickyOrder';
+import { u } from '../lib/url';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  /** Без кнопки «Заказать букет» снизу (страница заказа). */
+  noSticky?: boolean;
+  noindex?: boolean;
+}
+const { title, description = 'Доставка цветов в Самаре 24/7 от 60 минут. Букеты и композиции от флористов Milovini, фото перед доставкой, гарантия свежести 48 часов.', image, noSticky = false, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// Показная копия на GitHub Pages закрыта от поиска, чтобы не дублировать живой milovinisamara.ru.
+const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {closed && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    <meta name="theme-color" content="#fecbde" />
+    <link rel="icon" href={u('/favicon.svg')} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@300..700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="sr-only" href="#main">К содержимому</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <Sheets client:idle />
+    {!noSticky && <StickyOrder client:idle />}
+    <div class="cookie" id="cookie" hidden>
+      <p>Используя данный сайт, вы даёте согласие на использование файлов cookie, помогающих нам сделать его удобнее для вас.</p>
+      <button type="button" class="btn btn--mauve btn--sm" id="cookie-ok">Хорошо</button>
+    </div>
+    <script>
+      // Плашка cookie – один раз; появление секций при прокрутке.
+      const c = document.getElementById('cookie');
+      try { if (c && !localStorage.getItem('mv_cookie')) c.hidden = false; } catch {}
+      document.getElementById('cookie-ok')?.addEventListener('click', () => {
+        if (c) c.hidden = true;
+        try { localStorage.setItem('mv_cookie', '1'); } catch {}
+      });
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+      }), { rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

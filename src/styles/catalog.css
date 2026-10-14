@@ -1,0 +1,71 @@
+/* Сетка товаров и карточка. Стандарт владельца: на телефоне две карточки в ряд. */
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 20px; }
+@media (max-width: 1279px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1023px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 10px; } }
+
+.pc { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.pc__media { position: relative; display: block; aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden; background: var(--bg-soft); isolation: isolate; }
+.pc__img, .pc__img2 { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .45s, transform .8s var(--ease); }
+.pc__img2 { opacity: 0; }
+@media (hover: hover) {
+  .pc:hover .pc__img2 { opacity: 1; }
+  .pc:hover .pc__img { transform: scale(1.03); }
+}
+.pc__mark { position: absolute; top: 12px; left: 12px; padding: 6px 10px; border-radius: 999px; background: var(--mauve); color: #fff; font: 600 12px/1 var(--body-font); }
+.pc__fav {
+  position: absolute; top: 12px; right: 12px; z-index: 2; width: 42px; height: 42px; border: 0; border-radius: 50%;
+  background: rgba(255,255,255,.94); color: var(--ink); display: grid; place-items: center; transition: transform .2s, color .2s;
+}
+.pc__fav:hover { transform: scale(1.08); }
+.pc__fav.is-on { color: var(--mauve); }
+.pc__fav.is-on svg { animation: pop .35s var(--ease); }
+@keyframes pop { 50% { transform: scale(1.3); } }
+.pc__body { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; flex: 1; }
+.pc__title { font: 500 17px/1.3 var(--body-font); color: var(--ink); }
+.pc__title:hover { color: var(--mauve); }
+.pc__descr { font: 400 14px/1.45 var(--head-font); color: var(--text); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pc__price { display: flex; align-items: baseline; gap: 10px; margin-top: auto; padding-top: 6px; }
+.pc__price b { font: 700 19px/1 var(--body-font); color: var(--ink); }
+.pc__price s { font-size: 14px; color: var(--muted); }
+.pc__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.pc__actions .btn { padding: 0 10px; }
+@media (max-width: 1023px) {
+  .pc__media { border-radius: 16px; }
+  .pc__fav { top: 8px; right: 8px; width: 36px; height: 36px; }
+  .pc__fav svg { width: 18px; height: 18px; }
+  .pc__mark { top: 8px; left: 8px; font-size: 11px; padding: 5px 8px; }
+  .pc__body { gap: 4px; padding-top: 10px; }
+  .pc__title { font-size: 14px; }
+  .pc__descr { font-size: 12px; -webkit-line-clamp: 2; }
+  .pc__price b { font-size: 16px; }
+  .pc__price s { font-size: 12px; }
+  .pc__actions { grid-template-columns: 1fr; }
+  .pc__more { display: none; }
+  .pc__buy { --h: 40px; font-size: 12.5px; gap: 6px; }
+}
+
+.cat { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.cat__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.cat__chips--sub { margin-top: -6px; }
+.chip--sm { height: 32px; font-size: 12px; padding: 0 14px; }
+.chip--ghost { border-color: var(--line); color: var(--ink); }
+.chip--ghost.is-active { background: var(--ink); border-color: var(--ink); color: #fff; }
+.cat__bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }
+.cat__prices { display: flex; flex-wrap: wrap; gap: 8px; }
+.cat__sort select {
+  height: 38px; padding: 0 38px 0 16px; border: 1px solid var(--line); border-radius: 999px; background: #fff;
+  appearance: none; font-size: 13px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a677a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.cat__empty { padding: 32px 0; font-size: 15px; }
+.cat__more { display: flex; justify-content: center; margin-top: 24px; }
+.cat__left { font-weight: 400; opacity: .7; font-size: 13px; }
+@media (max-width: 1023px) {
+  .hscroll-m { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); }
+  .hscroll-m::-webkit-scrollbar { display: none; }
+  .hscroll-m > * { flex: none; }
+  .cat__bar { flex-direction: column; align-items: stretch; gap: 10px; min-width: 0; }
+  .cat__chips, .cat__prices { min-width: 0; }
+  .cat__sort select { width: 100%; }
+}

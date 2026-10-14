@@ -1,0 +1,168 @@
+{
+ "catalog_boilers": [
+  {
+   "label": "Торговая марка",
+   "control": "checkbox",
+   "name": "brand"
+  },
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  },
+  {
+   "label": "Камера сгорания",
+   "control": "checkbox",
+   "name": "charact:6696994"
+  },
+  {
+   "label": "Количество контуров",
+   "control": "checkbox",
+   "name": "charact:6803882"
+  },
+  {
+   "label": "Мощность",
+   "control": "checkbox",
+   "name": "option:2103430"
+  },
+  {
+   "label": "Отапливаемая площадь, м2",
+   "control": "checkbox",
+   "name": "charact:6841190"
+  },
+  {
+   "label": "Тип дымохода",
+   "control": "checkbox",
+   "name": "charact:6803894"
+  }
+ ],
+ "catalog_gaz_waterheaters": [
+  {
+   "label": "Торговая марка",
+   "control": "checkbox",
+   "name": "brand"
+  },
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  },
+  {
+   "label": "Камера сгорания",
+   "control": "checkbox",
+   "name": "charact:6696994"
+  },
+  {
+   "label": "Тип дымохода",
+   "control": "checkbox",
+   "name": "charact:6803894"
+  }
+ ],
+ "catalog_el_waterheaters": [
+  {
+   "label": "Торговая марка",
+   "control": "checkbox",
+   "name": "brand"
+  },
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  }
+ ],
+ "catalog_indirect_boilers": [
+  {
+   "label": "Торговая марка",
+   "control": "checkbox",
+   "name": "brand"
+  },
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  }
+ ],
+ "catalog_other": [
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  }
+ ],
+ "gas": [
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  }
+ ],
+ "specials": [
+  {
+   "label": "Торговая марка",
+   "control": "checkbox",
+   "name": "brand"
+  },
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  },
+  {
+   "label": "Камера сгорания",
+   "control": "checkbox",
+   "name": "charact:6696994"
+  },
+  {
+   "label": "Количество контуров",
+   "control": "checkbox",
+   "name": "charact:6803882"
+  },
+  {
+   "label": "Мощность",
+   "control": "checkbox",
+   "name": "option:2103430"
+  },
+  {
+   "label": "Отапливаемая площадь, м2",
+   "control": "checkbox",
+   "name": "charact:6841190"
+  },
+  {
+   "label": "Тип дымохода",
+   "control": "checkbox",
+   "name": "charact:6803894"
+  }
+ ],
+ "hubert": [
+  {
+   "label": "Торговая марка",
+   "control": "checkbox",
+   "name": "brand"
+  },
+  {
+   "label": "Цена",
+   "control": "range",
+   "name": "price"
+  },
+  {
+   "label": "Камера сгорания",
+   "control": "checkbox",
+   "name": "charact:6696994"
+  },
+  {
+   "label": "Количество контуров",
+   "control": "checkbox",
+   "name": "charact:6803882"
+  },
+  {
+   "label": "Отапливаемая площадь, м2",
+   "control": "checkbox",
+   "name": "charact:6841190"
+  },
+  {
+   "label": "Тип дымохода",
+   "control": "checkbox",
+   "name": "charact:6803894"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+---
+import { u } from '../lib/url';
+const { items } = Astro.props as { items: { label: string; href?: string }[] };
+const ld = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: items.map((i, n) => ({ '@type': 'ListItem', position: n + 1, name: i.label, ...(i.href ? { item: new URL(u(i.href), Astro.site).href } : {}) })),
+};
+---
+<nav class="crumbs" aria-label="Хлебные крошки">
+  {items.map((i, n) => (
+    <>
+      {n > 0 && <span aria-hidden="true">/</span>}
+      {i.href ? <a href={u(i.href)}>{i.label}</a> : <span aria-current="page">{i.label}</span>}
+    </>
+  ))}
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+<style>
+  .crumbs { display: flex; flex-wrap: wrap; gap: 6px; font-size: 13px; color: var(--mauve); opacity: .85; }
+  .crumbs a:hover { text-decoration: underline; }
+</style>

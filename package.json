@@ -1,0 +1,22 @@
+{
+  "name": "gaz-mag",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "data": "node scripts/fetch-data.mjs"
+  },
+  "dependencies": {
+    "@astrojs/preact": "^6.0.6",
+    "@preact/signals": "^2.0.0",
+    "astro": "^7.3.8",
+    "preact": "^10.29.8"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "sharp": true
+  }
+}
