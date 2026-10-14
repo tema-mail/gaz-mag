@@ -179,3 +179,23 @@
 .hq__opt input { accent-color: var(--navy); width: 18px; height: 18px; margin: 0; flex: none; }
 .hq__nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; }
 @media (max-width: 1023px) { .hq { padding: 18px 14px; } .hq__q { font-size: 20px; } .hq__opts { grid-template-columns: 1fr; } .hq__nav .btn { flex: 1; } }
+
+/* Окно согласия на cookie – по центру экрана */
+.cc { position: fixed; inset: 0; z-index: 130; display: grid; place-items: center; padding: 16px; }
+.cc__bg { position: absolute; inset: 0; background: rgba(15, 20, 40, .55); backdrop-filter: blur(2px); }
+.cc__box {
+  position: relative; width: min(560px, 100%); max-height: calc(100vh - 32px); overflow-y: auto;
+  display: grid; gap: 16px; padding: 32px; border-radius: var(--radius-l); background: #fff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .25); font-size: 14px; line-height: 1.55; animation: cc-in .35s var(--ease);
+}
+@keyframes cc-in { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+.cc__title { font-size: 28px; }
+.cc__opts { display: grid; gap: 10px; padding: 14px; border-radius: var(--radius-m); background: var(--soft); }
+.cc__opt { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.cc__opt input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--navy); flex: none; }
+.cc__docs { font-size: 13px; color: var(--muted); }
+.cc__docs a { color: var(--navy); text-decoration: underline; }
+.cc__btns { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.cc__btns .btn { flex: 1 1 180px; }
+.cc__set { margin: 4px auto 0; font-size: 14px; }
+@media (max-width: 767px) { .cc__box { padding: 22px 18px; } .cc__title { font-size: 23px; } .cc__btns .btn { flex-basis: 100%; } }

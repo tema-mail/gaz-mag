@@ -27,6 +27,8 @@ function Qty({ id, qty, max }: { id: string; qty: number; max?: number | null })
 /** Оформление в шторке корзины – поля как в корзине Тильды: имя, e-mail, телефон. */
 function Checkout() {
   const [f, setF] = useState({ name: '', email: '', phone: '', comment: '' });
+  // Согласие на обработку ПДн – отдельной пустой галочкой, кнопка неактивна без неё (КоАП 13.11).
+  const [agree, setAgree] = useState(false);
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
   const set = (k: keyof typeof f) => (e: Event) => {
@@ -38,6 +40,7 @@ function Checkout() {
     e.preventDefault();
     if (!f.name.trim()) return setErr('Укажите имя');
     if (!phoneOk(f.phone)) return setErr('Укажите телефон полностью');
+    if (!agree) return setErr('Нужно согласие на обработку персональных данных');
     setBusy(true);
     const order = cart.value.map((i) => `${i.title}${i.variant ? ` (${i.variant})` : ''} – ${i.qty} шт. × ${fmt(i.price)}`).join('\n');
     const ok = await sendForm('Заказ из корзины', {
@@ -55,10 +58,14 @@ function Checkout() {
       <input class="input" type="email" placeholder="Ваш e-mail" autoComplete="email" value={f.email} onInput={set('email')} aria-label="Ваш e-mail" />
       <input class="input" type="tel" inputMode="tel" placeholder="Ваш телефон" autoComplete="tel" value={f.phone} onInput={set('phone')} aria-label="Ваш телефон" />
       <textarea class="input" placeholder="Комментарий: адрес доставки, нужен ли монтаж" value={f.comment} onInput={set('comment')} aria-label="Комментарий" rows={2} />
+      <label class="check">
+        <input type="checkbox" checked={agree} onChange={(e) => setAgree((e.target as HTMLInputElement).checked)} />
+        <span>Даю <a href={u('/agreement')} target="_blank">согласие на обработку персональных данных</a> и ознакомлен(а) с <a href={u('/policy')} target="_blank">политикой обработки персональных данных</a></span>
+      </label>
       {err && <p class="form-err" role="alert">{err}</p>}
       <div class="cs__total"><span>Итого</span><b>{fmt(cartTotal.value)}</b></div>
-      <button class="btn btn--navy btn--block" type="submit" disabled={busy}>{busy ? 'Отправляем…' : 'Оформить заказ'}</button>
-      <p class="form-note">Нажимая кнопку, вы соглашаетесь с <a href={u('/policy')} target="_blank">политикой конфиденциальности</a> и <a href={u('/oferta')} target="_blank">договором оферты</a>. Менеджер перезвонит и подтвердит наличие, доставку и оплату.</p>
+      <button class="btn btn--navy btn--block" type="submit" disabled={busy || !agree}>{busy ? 'Отправляем…' : 'Оформить заказ'}</button>
+      <p class="form-note">Оформляя заказ, вы принимаете условия <a href={u('/oferta')} target="_blank">договора оферты</a>. Менеджер перезвонит и подтвердит наличие, доставку и оплату.</p>
     </form>
   );
 }

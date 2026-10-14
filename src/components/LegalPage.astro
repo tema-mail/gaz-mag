@@ -3,14 +3,26 @@
 import Base from '../layouts/Base.astro';
 import PageHead from './PageHead.astro';
 import legal from '../data/legal.json';
+import { SITE } from '../lib/site';
 const { doc, title } = Astro.props as { doc: 'policy' | 'oferta' | 'agreement'; title: string };
 const d = (legal as Record<string, { title: string; html: string }>)[doc];
 ---
 <Base title={title} description={`${title} – Магазин газового оборудования, gaz-mag.ru`} noContacts>
   <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: title }]} title={title} />
+  {doc !== 'oferta' && (
+    <section class="section--tight container">
+      <div class="op">
+        <b>Оператор персональных данных</b>
+        <span>{SITE.owner}, ИНН {SITE.inn}, ОГРНИП {SITE.ogrnip}</span>
+        <span>E-mail для обращений и отзыва согласия: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></span>
+      </div>
+    </section>
+  )}
   <section class="section--tight container prose legal" set:html={d.html} />
 </Base>
 <style>
   .legal { font-size: 15px; }
+  .op { display: grid; gap: 4px; max-width: 860px; padding: 18px 22px; border-radius: var(--radius-m); background: var(--soft); font-size: 15px; }
+  .op a { color: var(--navy); text-decoration: underline; }
   .legal :global(a) { color: var(--navy); text-decoration: underline; word-break: break-word; }
 </style>

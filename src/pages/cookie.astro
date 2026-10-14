@@ -1,0 +1,50 @@
+---
+// /cookie – политика cookie: что сайт реально хранит в браузере и что ставит Яндекс.Карта.
+// Текст описывает фактическое поведение кода (src/lib/store.ts, src/lib/consent.ts, Contacts.astro) – менять вместе с ним.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { SITE } from '../lib/site';
+import { u } from '../lib/url';
+---
+<Base title="Политика cookie – Магазин газового оборудования" description="Какие cookie и данные браузера использует сайт gaz-mag.ru, зачем, как отказаться и изменить выбор." noContacts>
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Политика cookie' }]} title="Политика cookie" />
+  <section class="section--tight container prose ck">
+    <p>Оператор: {SITE.owner}, ИНН {SITE.inn}, ОГРНИП {SITE.ogrnip}, e-mail <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+    <p>Cookie и данные локального хранилища браузера – небольшие записи, которые сайт сохраняет на вашем устройстве. Ниже – полный список того, что использует этот сайт.</p>
+
+    <h2 class="h3">1. Необходимые – работают всегда</h2>
+    <p>Без них не работает магазин. Хранятся только в вашем браузере, на сервер не передаются.</p>
+    <table>
+      <thead><tr><th>Запись</th><th>Зачем</th><th>Срок</th></tr></thead>
+      <tbody>
+        <tr><td>gm_cart</td><td>Товары в корзине</td><td>Пока вы не очистите корзину или данные браузера</td></tr>
+        <tr><td>gm_fav</td><td>Избранные товары</td><td>Пока вы не удалите их или данные браузера</td></tr>
+        <tr><td>gm_consent</td><td>Ваш выбор по cookie и дата выбора</td><td>Пока вы не измените выбор или не очистите данные браузера</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="h3">2. Сервисы Яндекса – только с вашего согласия</h2>
+    <p>Карта проезда в разделе «Контакты» загружается с сервиса Яндекс Карты. При загрузке Яндекс сохраняет свои cookie и собирает статистику (Яндекс Метрика внутри карты). Эти данные обрабатывает ООО «Яндекс» по своей <a href="https://yandex.ru/legal/confidential/" target="_blank" rel="noopener">политике конфиденциальности</a>.</p>
+    <p>Пока вы не дали согласие, карта не загружается и Яндекс ничего не получает – на её месте кнопка «Показать карту».</p>
+
+    <h2 class="h3">3. Чего на сайте нет</h2>
+    <p>Своих счётчиков статистики и рекламных пикселей на сайте нет.</p>
+
+    <h2 class="h3">4. Как изменить выбор или отказаться</h2>
+    <ul>
+      <li>Нажмите <button type="button" class="link" data-cookie-settings>«Настройки cookie»</button> (кнопка есть и в подвале каждой страницы) и выберите «Только необходимые».</li>
+      <li>Удалите cookie и данные сайта в настройках браузера – корзина и избранное при этом очистятся.</li>
+      <li>Отозвать согласие на обработку персональных данных можно письмом на <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</li>
+    </ul>
+
+    <p>Связанные документы: <a href={u('/policy')}>Политика обработки персональных данных</a> · <a href={u('/agreement')}>Согласие на обработку персональных данных</a>.</p>
+  </section>
+</Base>
+<style>
+  .ck a { color: var(--navy); text-decoration: underline; }
+  .ck table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; background: #fff; border-radius: var(--radius-m); overflow: hidden; }
+  .ck th, .ck td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .ck th { color: var(--muted); font-weight: 600; }
+  .ck td:first-child { font-family: ui-monospace, monospace; white-space: nowrap; }
+  @media (max-width: 767px) { .ck td:first-child { white-space: normal; } }
+</style>

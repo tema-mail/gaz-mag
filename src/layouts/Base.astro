@@ -6,6 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Contacts from '../components/Contacts.astro';
 import Sheets from '../islands/Sheets';
+import CookieConsent from '../islands/CookieConsent';
 import { u } from '../lib/url';
 
 interface Props {
@@ -55,17 +56,11 @@ const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
     {!bare && !noContacts && <Contacts />}
     {!bare && <Footer />}
     <Sheets client:idle />
-    <div class="cookie" id="cookie" hidden>
-      <p>Мы используем файлы cookie и рекомендательные технологии. Пользуясь сайтом, вы соглашаетесь с <a href={u('/policy')}>Политикой обработки персональных данных</a>.</p>
-      <button type="button" class="btn btn--navy btn--sm" id="cookie-ok">Принимаю</button>
-    </div>
+    <CookieConsent client:load />
     <script>
-      // Плашка cookie – один раз; появление секций при прокрутке.
-      const c = document.getElementById('cookie');
-      try { if (c && !localStorage.getItem('gm_cookie')) c.hidden = false; } catch {}
-      document.getElementById('cookie-ok')?.addEventListener('click', () => {
-        if (c) c.hidden = true;
-        try { localStorage.setItem('gm_cookie', '1'); } catch {}
+      // Появление секций при прокрутке; кнопки «Настройки cookie» открывают окно согласия.
+      document.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('[data-cookie-settings]')) window.dispatchEvent(new Event('gm-consent-open'));
       });
       const io = new IntersectionObserver((es) => es.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }

@@ -26,7 +26,10 @@ const cols = [
     {cols.map((c) => (
       <nav class="ftr__col" aria-label={c.title}>
         <p class="ftr__h">{c.title}</p>
-        <ul>{c.items.map((i) => <li><a href={u(i.href)}>{i.label}</a></li>)}</ul>
+        <ul>
+          {c.items.map((i) => <li><a href={u(i.href)}>{i.label}</a></li>)}
+          {c.title === 'Документы' && <li><button type="button" class="ftr__btn" data-cookie-settings>Настройки cookie</button></li>}
+        </ul>
       </nav>
     ))}
   </div>
@@ -48,7 +51,8 @@ const cols = [
   .ftr__h { font: 700 12px/1 var(--body-font); letter-spacing: .16em; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
   .ftr__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
   .ftr__col a { font-size: 14px; transition: color .2s; }
-  .ftr__col a:hover { color: #fff; text-decoration: underline; }
+  .ftr__col a:hover, .ftr__btn:hover { color: #fff; text-decoration: underline; }
+  .ftr__btn { padding: 0; border: 0; background: none; font-size: 14px; color: inherit; text-align: left; }
   .ftr__legal { padding-top: 40px; font-size: 12px; opacity: .65; }
   @media (max-width: 1023px) {
     .ftr { margin-top: 56px; }

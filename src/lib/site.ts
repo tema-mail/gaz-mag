@@ -68,8 +68,9 @@ export const FOOTER = {
   ],
   catalog: CATALOGS.map((c) => ({ label: c.short, href: '/' + c.slug })),
   legal: [
-    { label: 'Политика конфиденциальности', href: '/policy' },
-    { label: 'Пользовательское соглашение', href: '/agreement' },
+    { label: 'Политика обработки персональных данных', href: '/policy' },
+    { label: 'Согласие на обработку персональных данных', href: '/agreement' },
+    { label: 'Политика cookie', href: '/cookie' },
     { label: 'Договор оферты', href: '/oferta' },
   ],
 };
