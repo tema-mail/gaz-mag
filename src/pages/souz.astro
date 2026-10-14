@@ -1,0 +1,65 @@
+---
+// /souz – черновая страница оригинала (закрыта в robots.txt Тильды, из меню не ведёт). Переносим как есть, с noindex.
+// На оригинале – заготовка: заглушки в тексте («Термостат …//») и цены-заполнители 60 000 / 100 000 руб. – см. ТЕХДОЛГ.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { img } from '../lib/img';
+const T = 'https://static.tildacdn.com/';
+const BOILER = T + 'tild3663-3832-4565-a665-646538373633/29072.png';
+const THERMO = T + 'tild3131-3631-4235-b432-356365623535/Group_2_1.png';
+const perks = [
+  ['Управление котлом', 'С телефона управляйте температурой в доме. Можно управлять газовыми или электрическими котлами. Подключается как внешний термостат.'],
+  ['Контроль электричества', 'Контроль отключения/включения электричества с оповещением. При отключении электричества прибор работает на резервном аккумуляторе до 12 часов.'],
+  ['Тишина и покой', 'Обеспечивает сверхтихие режимы работы.'],
+  ['Контроль температуры в помещении', 'С помощью проводного датчика температуры можно контролировать температуру в доме со своего телефона, находясь даже за 1000 километров.'],
+  ['Мобильные приложения', 'Доступны приложения для Android и iOS.'],
+  ['SIM-карта в комплекте', 'SIM-карта в комплекте с выгодным тарифом. Стоимость SMS-сообщения по тарифу 15 копеек.'],
+  ['Экономия на отоплении', 'В ваше отсутствие задавайте экономную температуру. Возможно экономить на отоплении, особенно если вы постоянно не живёте в доме.'],
+  ['Установка тревожных порогов температуры', 'С помощью проводного датчика температуры можно контролировать температуру в доме со своего телефона.'],
+];
+const specs: [string, string][] = [
+  ['Макс. тепловая мощность', '16 кВт'], ['Отапливаемая площадь', '160 кв.м'], ['Расход природного газа', '1.78 куб.м/час'],
+  ['Рабочее давление', '2 бар'], ['Высота × Ширина × Глубина', '710 × 300 × 470 мм'], ['Диаметр дымохода', '115 мм'], ['Подключение отопительного контура', '3/2"'],
+];
+---
+<Base title="СОЮЗ" noindex>
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'СОЮЗ' }]} title="СОЮЗ ТГ – газовый настенный двухконтурный котёл от 10 до 24 кВт" lead="Настенный газовый двухконтурный котёл с закрытой камерой сгорания, для отопления и нагрева воды в контуре ГВС. Раздельный теплообменник, медные трубы контура отопления, электронный манометр, встроенный расширительный бак, автоматический воздухоотводчик." />
+  <section class="section--tight container sz">
+    <img src={img(BOILER)} alt="Котёл СОЮЗ ТГ" />
+    <div class="sz__info">
+      <p class="sz__price">60 000 руб.</p>
+      <p>Есть на складе</p>
+      <button type="button" class="btn btn--navy" data-lead="СОЮЗ ТГ: заказ">Заказать</button>
+      <dl>{specs.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+    </div>
+  </section>
+  <section class="section container sz-th">
+    <img src={img(THERMO, 800)} alt="" loading="lazy" />
+    <div>
+      <h2 class="h2">Термостат</h2>
+      <p>Предназначен для управления вашим котлом с помощью приложения мобильного телефона в любое время суток из любой точки мира. Термостат подключается к Wi-Fi и позволяет регулировать настройки всех видов котлов, которые имеют возможность подключения термостата. Предусмотрен слот для установки SIM-карты в термостат для взаимодействия с котлом через СМС-сообщения.</p>
+      <p><b>Российская разработка.</b> Разработан в России специально для применения на территории РФ.</p>
+    </div>
+  </section>
+  <section class="section container">
+    <h2 class="h2">Ключевые преимущества</h2>
+    <div class="sz-perks">{perks.map(([t, d]) => <div class="soft-card"><h3 class="h3">{t}</h3><p>{d}</p></div>)}</div>
+  </section>
+</Base>
+<style>
+  .sz { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .sz > img { width: 100%; max-height: 520px; object-fit: contain; background: #fff; border-radius: var(--radius-l); padding: 24px; }
+  .sz__info { display: grid; gap: 14px; justify-items: start; }
+  .sz__price { font: 600 32px/1 var(--body-font); color: var(--ink); }
+  .sz__info dl { margin: 10px 0 0; width: 100%; }
+  .sz__info dl > div { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .sz__info dt { color: var(--muted); }
+  .sz__info dd { margin: 0; }
+  .sz-th { display: grid; grid-template-columns: .8fr 1.2fr; gap: 40px; align-items: center; }
+  .sz-th > div { display: grid; gap: 14px; }
+  .sz-th img { width: 100%; max-height: 420px; object-fit: contain; }
+  .sz-perks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 28px; }
+  .sz-perks > div { display: grid; gap: 8px; align-content: start; padding: 22px; border-radius: var(--radius-l); font-size: 14px; }
+  .sz-perks .h3 { font-size: 18px; }
+  @media (max-width: 1023px) { .sz, .sz-th { grid-template-columns: 1fr; gap: 20px; } .sz-perks { grid-template-columns: 1fr 1fr; gap: 10px; } .sz-perks > div { padding: 14px; } }
+</style>

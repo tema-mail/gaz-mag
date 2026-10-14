@@ -1,11 +1,10 @@
 ---
 // Частые вопросы: раскрываются по клику, разметка FAQPage для поиска.
-import SectionHead from './SectionHead.astro';
 const { items, title = 'Часто задаваемые вопросы' } = Astro.props as { items: { q: string; a: string }[]; title?: string };
 const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) };
 ---
 <section class="section container">
-  <SectionHead title={title} />
+  <h2 class="h2 faq__h">{title}</h2>
   <div class="faq">
     {items.map((i, n) => (
       <details class="faq__item">
@@ -17,13 +16,14 @@ const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: i
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 </section>
 <style>
-  .faq { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
-  .faq__item + .faq__item { border-top: 1px solid var(--ink); }
-  summary { display: flex; align-items: center; gap: 6px; padding: 30px 0; cursor: pointer; list-style: none; font: 400 19px/1.3 var(--body-font); color: var(--mauve); }
+  .faq { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .faq__item + .faq__item { border-top: 1px solid var(--line); }
+  .faq__h { margin-bottom: 24px; }
+  summary { display: flex; align-items: center; gap: 6px; padding: 30px 0; cursor: pointer; list-style: none; font: 600 18px/1.35 var(--body-font); color: var(--navy); }
   summary::-webkit-details-marker { display: none; }
   .faq__q { flex: 1; }
   .faq__plus { position: relative; width: 28px; height: 28px; flex: none; }
-  .faq__plus::before, .faq__plus::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: var(--mauve); transition: transform .3s var(--ease); }
+  .faq__plus::before, .faq__plus::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: var(--navy); transition: transform .3s var(--ease); }
   .faq__plus::after { transform: rotate(90deg); }
   details[open] .faq__plus::after { transform: rotate(0); }
   .faq__a { padding: 0 60px 28px 0; font-size: 15px; line-height: 1.6; max-width: 900px; }

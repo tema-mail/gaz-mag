@@ -22,7 +22,7 @@ export interface Product {
 
 /** Карточка товара для островов: только то, что нужно сетке, фильтрам и корзине. */
 export interface Card {
-  id: string; path: string; title: string; brand: string;
+  id: string; path: string; title: string; brand: string; descr: string;
   price: number; priceOld: number | null; img: string; sort: number;
   /** Характеристики для фильтров: название → значение. */
   ch: Record<string, string>;
@@ -53,8 +53,8 @@ function powers(p: Product): string[] {
 }
 
 export const toCard = (p: Product): Card => ({
-  id: p.id, path: p.path, title: p.title, brand: p.brand,
-  price: p.price ?? 0, priceOld: p.priceOld, img: p.images[0] ?? '', sort: p.sort,
+  id: p.id, path: p.path, title: p.title, brand: p.brand, descr: p.descr,
+  price: Math.min(p.price ?? 0, ...p.editions.map((e) => e.price ?? Infinity)), priceOld: p.priceOld, img: p.images[0] ?? '', sort: p.sort,
   ch: Object.fromEntries(p.chars.map((c) => [c.t, c.v])),
   power: powers(p),
   variants: p.editions.length > 1,

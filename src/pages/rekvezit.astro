@@ -1,0 +1,38 @@
+---
+// /rekvezit – юридическая страница «Реквизиты счёта», данные оригинала.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+const rows: [string, string][] = [
+  ['Полное наименование', 'Индивидуальный предприниматель Меньшиков Антон Юрьевич'],
+  ['Сокращённое наименование', 'ИП Меньшиков А.Ю.'],
+  ['ИНН', '5435 5029 8025'],
+  ['ОГРНИП', '32354 76000 64716'],
+  ['Юридический адрес', '632080, Россия, Новосибирская обл., Северный р-н, с. Северное, ул. Ленина, д. 80/7, кв. 2'],
+  ['Тел. / факс', '+7-913-712-74-74, +7-913-458-45-67'],
+  ['ОКВЭД', 'основной: 47.52.79, дополнительный: 47.19.1'],
+  ['Расчётный счёт', '4080 2810 0200 0001 7529'],
+  ['Банк', 'ООО «Банк Точка»'],
+  ['ИНН банка', '9721 1944 61'],
+  ['КПП банка', '997 950 001'],
+  ['Корреспондентский счёт банка', '3010 1810 7453 7452 5104'],
+  ['БИК', '044 525 104'],
+  ['Юридический адрес банка', '109456, Россия, г. Москва, 1-й Вешняковский пр., д. 1, стр. 8, 1 этаж, пом. № 43'],
+  ['Директор', 'Меньшиков Антон Юрьевич'],
+  ['E-mail', 'Gazmag.bolotnoe@yandex.ru'],
+];
+---
+<Base title="Реквизиты счёта – Магазин газового оборудования" description="Реквизиты ИП Меньшиков Антон Юрьевич для оплаты по счёту: ИНН, ОГРНИП, расчётный счёт, банк.">
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Реквизиты счёта' }]} title="Реквизиты счёта" />
+  <section class="section--tight container">
+    <table class="rq">
+      <tbody>{rows.map(([k, v]) => <tr><th scope="row">{k}</th><td>{v}</td></tr>)}</tbody>
+    </table>
+  </section>
+</Base>
+<style>
+  .rq { width: 100%; max-width: 900px; border-collapse: collapse; background: #fff; border-radius: var(--radius-m); overflow: hidden; font-size: 15px; }
+  .rq th, .rq td { padding: 14px 20px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .rq th { width: 38%; font-weight: 500; color: var(--muted); }
+  .rq td { color: var(--ink); }
+  @media (max-width: 767px) { .rq th, .rq td { display: block; width: auto; padding: 4px 14px; border: 0; } .rq th { padding-top: 12px; } .rq tr { display: block; border-bottom: 1px solid var(--line); padding-bottom: 10px; } }
+</style>

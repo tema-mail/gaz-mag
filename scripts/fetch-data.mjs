@@ -181,6 +181,8 @@ async function pageImages() {
   for (const f of files) {
     const src = await readFile(f, 'utf8');
     for (const m of src.matchAll(/https:\/\/static\.tildacdn\.com\/[^\s"'`)]+/g)) urls.add(m[0]);
+    // Ссылки, собранные как T + 'tild…/file.png'
+    for (const m of src.matchAll(/['"`](tild[0-9a-f]{4}-[0-9a-f-]+\/[^'"`\s]+)['"`]/g)) urls.add('https://static.tildacdn.com/' + m[1]);
   }
   const mapFile = path.join(DATA, 'images.json');
   const map = existsSync(mapFile) ? JSON.parse(await readFile(mapFile, 'utf8')) : {};

@@ -1,0 +1,24 @@
+---
+// Блок заявки на тёмной плашке – как «Заявка на подключение!» на /montag оригинала.
+import LeadForm from '../islands/LeadForm';
+import { img } from '../lib/img';
+const { title = 'Заявка на подключение!', text = 'Оставьте заявку и наши специалисты свяжутся с Вами в ближайшее время.', form, image } =
+  Astro.props as { title?: string; text?: string; form: string; image?: string };
+---
+<section class="section container">
+  <div class="ls navy-card">
+    <div class="ls__text">
+      <h2 class="h2">{title}</h2>
+      <p>{text}</p>
+      {image && <img src={img(image, 800)} alt="" loading="lazy" />}
+    </div>
+    <div class="ls__form"><LeadForm client:visible form={form} button="Оставить заявку" dark /></div>
+  </div>
+</section>
+<style>
+  .ls { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 48px; }
+  .ls__text { display: grid; gap: 16px; align-content: start; }
+  .ls__text p { color: #d0d9f3; max-width: 460px; }
+  .ls__text img { width: 100%; max-width: 380px; max-height: 240px; object-fit: contain; object-position: left bottom; margin-top: 8px; }
+  @media (max-width: 1023px) { .ls { grid-template-columns: 1fr; gap: 20px; padding: 28px 18px; } .ls__text img { display: none; } }
+</style>

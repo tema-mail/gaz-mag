@@ -1,4 +1,4 @@
-// Сайт может жить в подпапке (GitHub Pages: /milovini-samara). Все внутренние ссылки и картинки – через u().
+// Сайт может жить в подпапке (GitHub Pages: /gaz-mag). Все внутренние ссылки и картинки – через u().
 const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
 export function u(path: string): string {

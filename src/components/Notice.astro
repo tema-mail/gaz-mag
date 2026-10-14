@@ -1,0 +1,25 @@
+---
+// Техническая страница-сообщение: «Спасибо», 404.
+import { u } from '../lib/url';
+const { title, text, code } = Astro.props as { title: string; text: string; code?: string };
+---
+<section class="container nt-wrap">
+  <div class="nt navy-card">
+    {code && <p class="nt__code">{code}</p>}
+    <h1 class="h1">{title}</h1>
+    <p>{text}</p>
+    <div class="nt__btns">
+      <a class="btn btn--white" href={u('/')}>На главную</a>
+      <a class="btn btn--outline nt__ghost" href={u('/catalogcentr')}>В каталог</a>
+    </div>
+  </div>
+</section>
+<style>
+  .nt-wrap { padding-top: 32px; }
+  .nt { display: grid; gap: 18px; justify-items: start; padding: 64px 56px; }
+  .nt p { color: #d0d9f3; max-width: 560px; font-size: 17px; }
+  .nt__code { font: 500 80px/1 var(--head-font); color: #fff !important; opacity: .3; }
+  .nt__btns { display: flex; flex-wrap: wrap; gap: 10px; }
+  .nt__ghost { border-color: #fff; color: #fff; }
+  @media (max-width: 1023px) { .nt { padding: 36px 20px; } }
+</style>

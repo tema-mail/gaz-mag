@@ -1,0 +1,126 @@
+---
+// /hubert-dy – посадочная «Акция на котёл + монтаж», как на оригинале: без меню сайта, свои телефоны и реквизиты.
+// Срок «до 31 января» и цены 46 500 → 43 000 ₽ – с оригинала как есть (в магазине сейчас 44 910 ₽) – см. ТЕХДОЛГ.
+import Base from '../layouts/Base.astro';
+import LeadForm from '../islands/LeadForm';
+import { SITE } from '../lib/site';
+import { img } from '../lib/img';
+import { u } from '../lib/url';
+const T = 'https://static.tildacdn.com/';
+const BOILER = T + 'tild3633-3132-4432-a364-316633313636/Group_1.png';
+const CALC = T + 'tild6237-6531-4237-b261-656430613434/Red_Calculator_1.png';
+const PHOTOS = [
+  T + 'tild3836-6234-4863-a134-636330633539/photo.jpg',
+  T + 'tild3464-6363-4863-b466-313161613464/D1Dnm20zLBM.jpg',
+  T + 'tild3462-3164-4565-a634-343437396331/360_F_362021935_yexu.jpg',
+];
+const perks = [
+  ['Экономия на отоплении', 'Газовые котлы обеспечивают высокую эффективность, что позволяет сократить расходы на отопление до 30% по сравнению с электрическими сетями.'],
+  ['Надёжность оборудования', 'Мы привозим только сертифицированные газовые котлы от проверенных производителей, которые служат долго и требуют минимального обслуживания.'],
+  ['Полное обслуживание', 'Мы предлагаем услуги по обслуживанию и ремонту, чтобы ваша система отопления работала без сбоев в любое время года.'],
+  ['Индивидуальный подход', 'Наши эксперты помогут вам подобрать оптимальное решение для вашего дома, учесть его площадь, особенности и ваши предпочтения.'],
+];
+---
+<Base title="Акция на котёл + монтаж – HUBERT Smart AGB 10-24DY со скидкой" description="Настенный газовый котёл HUBERT Smart AGB 10-24DY со скидкой: привезём, подключим газовое оборудование, установка со скидкой. Болотное." bare>
+  <header class="dy-top container">
+    <a class="dy-logo" href={u('/')}>Магазин газового оборудования</a>
+    <div class="dy-phones">{SITE.phones.map((p) => <a href={p.href}>{p.text}</a>)}</div>
+  </header>
+
+  <section class="container">
+    <div class="dy-hero navy-card">
+      <div class="dy-hero__text">
+        <p class="dy-kicker">Нужен газовый котёл?</p>
+        <h1 class="h1">Купите со скидкой настенный газовый котёл HUBERT Smart AGB 10-24DY</h1>
+        <p class="dy-sub">Привезём, подключим газовое оборудование для отопления вашего объекта</p>
+        <div class="dy-price">
+          <p>Акция до 31 января:</p>
+          <p>старая цена <s>46 500 ₽</s></p>
+          <p class="dy-price__new">новая цена 43 000 ₽</p>
+        </div>
+        <div class="dy-btns">
+          <a class="btn btn--white" href="#dy-form">Получить расчёт + закрепить акцию</a>
+          <a class="btn btn--outline dy-ghost" href={u('/catalog_boilers/tproduct/709793657-712633437052-nastennii-gazovii-kotel-hubert-smart-agb')}>Котёл в каталоге</a>
+        </div>
+        <p class="dy-small">*товар можно приобрести в рассрочку от Яндекс – условия уточняйте у менеджера</p>
+      </div>
+      <img class="dy-hero__img" src={img(BOILER)} alt="Котёл HUBERT Smart AGB 10-24DY" />
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="dy-perks">
+      {perks.map(([t, d]) => <div class="dy-perk soft-card reveal"><h2 class="h3">{t}</h2><p>{d}</p></div>)}
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="dy-serv">
+      <div>
+        <h2 class="h2">Мы также предлагаем услуги по установке оборудования со скидкой* и комплектующие</h2>
+        <p class="dy-small">*Условия предоставления скидки уточняйте у менеджера</p>
+        <a class="btn btn--navy" href={u('/ustanovka-kotla')}>Установка котлов</a>
+      </div>
+      <div class="dy-photos">{PHOTOS.map((p) => <img src={img(p, 800)} alt="" loading="lazy" />)}</div>
+    </div>
+  </section>
+
+  <section class="section container" id="dy-form">
+    <div class="dy-form navy-card">
+      <div class="dy-form__text">
+        <img src={img(CALC, 800)} alt="" loading="lazy" />
+        <h2 class="h2">Получить расчёт + закрепить акцию</h2>
+        <p>Мы сделаем Вам индивидуальное предложение по оборудованию. Позвоните менеджеру по номеру <a href={SITE.phones[0].href}>{SITE.phones[0].text}</a> или оставьте свой номер телефона и имя – мы вам перезвоним.</p>
+      </div>
+      <LeadForm client:visible form="Акция HUBERT 10-24DY + монтаж" button="Отправить" dark />
+    </div>
+  </section>
+
+  <footer class="dy-foot container">
+    <p>{SITE.owner} · ОГРНИП {SITE.ogrnip} · ИНН {SITE.inn}</p>
+    <p>Магазин газового оборудования – ваш надёжный партнёр в мире тепла и комфорта! {SITE.addressShort}</p>
+    <p><a href={u('/policy')}>Политика конфиденциальности</a> · <a href={u('/')}>Сайт магазина</a></p>
+  </footer>
+</Base>
+<style>
+  .dy-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 20px; padding-bottom: 20px; }
+  .dy-logo { font: 700 13px/1.3 var(--body-font); text-transform: uppercase; color: var(--ink); }
+  .dy-phones { display: flex; gap: 8px; flex-wrap: wrap; }
+  .dy-phones a { padding: 10px 18px; border-radius: 999px; background: var(--navy); color: #fff; font: 700 12px/1 var(--body-font); letter-spacing: .06em; }
+  .dy-hero { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 24px; padding: 56px 48px; }
+  .dy-hero__text { display: grid; gap: 16px; justify-items: start; }
+  .dy-kicker { font: 500 22px/1 var(--head-font); text-transform: uppercase; color: #c9d3f5; }
+  .dy-sub { font-size: 17px; color: #d0d9f3; }
+  .dy-price { padding: 16px 20px; border-radius: 16px; background: rgba(255,255,255,.1); font-size: 16px; }
+  .dy-price__new { font: 500 30px/1.1 var(--head-font); color: #fff; margin-top: 4px; }
+  .dy-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+  .dy-ghost { border-color: #fff; color: #fff; }
+  .dy-small { font-size: 12px; opacity: .75; }
+  .dy-hero__img { width: 100%; max-height: 460px; object-fit: contain; }
+  .dy-perks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .dy-perk { display: grid; gap: 10px; align-content: start; padding: 28px 22px; border-radius: var(--radius-l); }
+  .dy-perk .h3 { font-size: 21px; }
+  .dy-serv { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .dy-serv > div:first-child { display: grid; gap: 16px; justify-items: start; }
+  .dy-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dy-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-m); }
+  .dy-photos img:first-child { grid-row: span 2; aspect-ratio: auto; height: 100%; }
+  .dy-form { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 48px; }
+  .dy-form__text { display: grid; gap: 14px; align-content: start; }
+  .dy-form__text img { width: 90px; }
+  .dy-form__text p { color: #d0d9f3; }
+  .dy-form__text a { color: #fff; text-decoration: underline; }
+  .dy-foot { display: grid; gap: 6px; padding-top: 48px; padding-bottom: 40px; font-size: 13px; color: var(--muted); }
+  .dy-foot a { text-decoration: underline; }
+  @media (max-width: 1023px) {
+    .dy-top { flex-direction: column; align-items: flex-start; }
+    .dy-hero { grid-template-columns: 1fr; padding: 28px 20px; }
+    .dy-hero__img { max-height: 260px; }
+    .dy-perks { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .dy-perk { padding: 18px 14px; }
+    .dy-perk .h3 { font-size: 17px; }
+    .dy-perk p { font-size: 13px; }
+    .dy-serv, .dy-form { grid-template-columns: 1fr; }
+    .dy-form { padding: 28px 18px; gap: 20px; }
+  }
+</style>

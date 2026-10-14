@@ -1,0 +1,79 @@
+---
+// Страница каждой акции: /akcii/pensioneram, /akcii/yur-licam-i-montazhnikam, /akcii/montazh-ot-8000,
+// /akcii/pokupka-ot-100000, /akcii/stabilizator-v-podarok. Акция «котёл + монтаж» – своя посадочная /hubert-dy.
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import LeadSection from '../../components/LeadSection.astro';
+import ProductRow from '../../components/ProductRow.astro';
+import { PROMOS } from '../../lib/promos';
+import { CATALOGS } from '../../lib/site';
+import { listCards } from '../../lib/catalog';
+import { img } from '../../lib/img';
+import { u } from '../../lib/url';
+
+export function getStaticPaths() {
+  return PROMOS.filter((p) => p.href.startsWith('/akcii/')).map((p) => ({ params: { promo: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const cats = CATALOGS.filter((c) => p.catalogs.includes(c.slug));
+// Товары под акцию: котлы HUBERT для акции HUBERT, иначе – «Специальные предложения» магазина.
+const goods = (p.slug === 'stabilizator-v-podarok' ? listCards('hubert') : listCards('specials')).slice(0, 4);
+const others = PROMOS.filter((x) => x.slug !== p.slug);
+---
+<Base title={`${p.title} – акция магазина газового оборудования`} description={p.descr}>
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Акции', href: '/akcii' }, { label: p.short }]} title={p.title} />
+
+  <section class="section--tight container">
+    <div class="pr soft-card">
+      <div class="pr__text">
+        {p.note && <p class="pr__note">{p.note}</p>}
+        <ul class="pr__points">{p.points.map((x) => <li>{x}</li>)}</ul>
+        {p.slug === 'montazh-ot-8000' && <p>Что входит в монтаж котла – на странице <a href={u('/ustanovka-kotla')}>«Установка газовых котлов»</a>.</p>}
+        <div class="pr__btns">
+          <button type="button" class="btn btn--navy" data-lead={`Акция: ${p.title}`}>Воспользоваться акцией</button>
+          <a class="btn btn--outline" href="#contacts">Позвонить</a>
+        </div>
+      </div>
+      <img src={img(p.image)} alt="" />
+    </div>
+  </section>
+
+  {cats.length > 0 && (
+    <section class="section container">
+      <h2 class="h3">Выбрать товар в каталоге</h2>
+      <div class="pr-cats">{cats.map((c) => <a class="chip" href={u('/' + c.slug)}>{c.title}</a>)}</div>
+    </section>
+  )}
+
+  {goods.length > 0 && (
+    <section class="section container">
+      <h2 class="h2 pr-h">{p.slug === 'stabilizator-v-podarok' ? 'Котлы HUBERT' : 'Специальные предложения'}</h2>
+      <ProductRow cards={goods} />
+    </section>
+  )}
+
+  <LeadSection title="Закрепить акцию" form={`Акция: ${p.title}`} text="Оставьте телефон – менеджер перезвонит и расскажет условия акции." />
+
+  <section class="section container">
+    <h2 class="h3">Другие акции</h2>
+    <ul class="pr-other">{others.map((x) => <li><a href={u(x.href)}>{x.short}</a></li>)}</ul>
+  </section>
+</Base>
+<style>
+  .pr { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 24px; border-radius: var(--radius-xl); }
+  .pr__text { display: grid; gap: 18px; padding: 44px 0 44px 44px; align-self: center; }
+  .pr__note { justify-self: start; padding: 6px 14px; border-radius: 999px; background: #fff; color: var(--navy); font-weight: 600; font-size: 14px; }
+  .pr__points { margin: 0; padding-left: 20px; display: grid; gap: 10px; font-size: 16px; }
+  .pr__text a { color: var(--navy); text-decoration: underline; }
+  .pr__btns { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pr img { width: 100%; max-height: 420px; object-fit: contain; object-position: bottom right; }
+  .pr-cats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .pr-h { margin-bottom: 28px; }
+  .pr-other { margin: 16px 0 0; padding-left: 20px; display: grid; gap: 8px; }
+  .pr-other a { color: var(--navy); text-decoration: underline; }
+  @media (max-width: 1023px) {
+    .pr { grid-template-columns: 1fr; gap: 0; }
+    .pr__text { padding: 24px 18px 8px; }
+    .pr img { max-height: 240px; object-position: bottom center; }
+  }
+</style>

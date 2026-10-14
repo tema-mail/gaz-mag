@@ -1,0 +1,21 @@
+---
+// Нумерованные карточки: этапы работ, «Мы выполняем», «Мы гарантируем».
+const { items, title } = Astro.props as { items: { t: string; d?: string }[]; title?: string };
+---
+<div class="st">
+  {title && <h2 class="h2 st__h">{title}</h2>}
+  <ol class="st__list">
+    {items.map((i, n) => (
+      <li class="st__item reveal"><span class="st__n">{String(n + 1).padStart(2, '0')}</span><b>{i.t}</b>{i.d && <p>{i.d}</p>}</li>
+    ))}
+  </ol>
+</div>
+<style>
+  .st__h { margin-bottom: 28px; }
+  .st__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .st__item { display: grid; gap: 10px; align-content: start; padding: 26px 22px; border-radius: var(--radius-l); background: #fff; border: 1px solid var(--line); }
+  .st__n { font: 500 30px/1 var(--head-font); color: var(--navy); opacity: .35; }
+  .st__item b { font-size: 16px; color: var(--ink); line-height: 1.35; }
+  .st__item p { font-size: 14px; }
+  @media (max-width: 1023px) { .st__list { grid-template-columns: 1fr; gap: 10px; } .st__item { padding: 18px; } }
+</style>

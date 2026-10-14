@@ -8,7 +8,7 @@ export default function LeadPopup() {
   const topic = leadTopic.value;
   return (
     <Drawer open={sheet.value === 'lead'} onClose={() => (sheet.value = null)} side="center" label="Заявка">
-      <div class="lead">
+      <div class="lp">
         <button type="button" class="lead__x" aria-label="Закрыть" onClick={() => (sheet.value = null)}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
         </button>

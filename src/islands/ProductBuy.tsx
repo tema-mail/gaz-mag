@@ -58,13 +58,13 @@ export default function ProductBuy({ p }: { p: P }) {
           <span>{qty}</span>
           <button type="button" aria-label="Больше" onClick={() => setQty(qty + 1)}><IconPlus /></button>
         </div>
-        <button type="button" class="btn btn--navy pb__add" onClick={() => addToCart(item, qty)}>
+        <button type="button" class="btn btn--navy pb__add" disabled={p.options.length > 0 && !ed} onClick={() => addToCart(item, qty)}>
           <IconBag size={18} /> В корзину
         </button>
         <button
           type="button" class={`pb__fav${fav ? ' is-on' : ''}`} aria-pressed={fav}
           aria-label={fav ? 'Убрать из избранного' : 'В избранное'}
-          onClick={() => toggleFav({ id: p.id, title: p.title, price: p.price, img: p.img, path: p.path })}
+          onClick={() => toggleFav({ id: p.id, title: p.title, price, img: p.img, path: p.path })}
         >
           <IconHeart filled={fav} size={22} />
         </button>

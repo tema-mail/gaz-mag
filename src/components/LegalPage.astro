@@ -1,0 +1,16 @@
+---
+// Юридическая страница из src/data/legal.json (тексты попапов оригинала: политика, оферта, соглашение).
+import Base from '../layouts/Base.astro';
+import PageHead from './PageHead.astro';
+import legal from '../data/legal.json';
+const { doc, title } = Astro.props as { doc: 'policy' | 'oferta' | 'agreement'; title: string };
+const d = (legal as Record<string, { title: string; html: string }>)[doc];
+---
+<Base title={title} description={`${title} – Магазин газового оборудования, gaz-mag.ru`} noContacts>
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: title }]} title={title} />
+  <section class="section--tight container prose legal" set:html={d.html} />
+</Base>
+<style>
+  .legal { font-size: 15px; }
+  .legal :global(a) { color: var(--navy); text-decoration: underline; word-break: break-word; }
+</style>

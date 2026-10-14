@@ -1,0 +1,236 @@
+---
+// /hubert – страница бренда как на оригинале: первый экран, главное о котлах, каталог HUBERT с фильтрами,
+// серии DY/DP/DL, квиз подбора, акция HUBERT, популярные модели, где купить, частые вопросы.
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Faq from '../components/Faq.astro';
+import Catalog from '../islands/Catalog';
+import HubertQuiz from '../islands/HubertQuiz';
+import ProductCard from '../islands/ProductCard';
+import { filterDefs, listCards, productById, toCard } from '../lib/catalog';
+import { NSK_POINT, SITE } from '../lib/site';
+import { img } from '../lib/img';
+import { u } from '../lib/url';
+const T = 'https://static.tildacdn.com/';
+const HERO = T + 'tild6432-3539-4265-b861-643463356137/Group_1.png';
+const PROMO = T + 'tild3364-6135-4863-b835-636431323734/_2026-10-06_11273672.png';
+const cards = listCards('hubert');
+const popular = [
+  { tag: 'Для частного дома', id: '402136040242', specs: ['мощность 18 кВт, отапливаемая площадь 180 м²', 'настенный двухконтурный котёл, закрытая камера сгорания', 'коаксиальный дымоход, диаметр 60/100 (80/80)', 'работает на газе, ГВС – да, страна-производитель – Россия', 'размеры 370 × 250 × 670 мм, вес 25,8 кг'] },
+  { tag: 'Для квартиры', id: '712633437052', specs: ['мощность 10–24 кВт, отапливаемая площадь 110–260 м²', 'настенный двухконтурный котёл – отопление и горячее водоснабжение', 'закрытая камера сгорания, коаксиальный дымоход 60/100', 'работает на газе, ГВС – да, страна-производитель – Россия'] },
+].map((x) => ({ ...x, card: toCard(productById.get(x.id)!) }));
+const faq = [
+  { q: 'Чем HUBERT DY отличается от DP и DL?', a: 'DY – серия без встроенного Wi-Fi. DP поддерживает дистанционное управление. В DL набор функций и доступные мощности зависят от конкретной модели.' },
+  { q: 'Какую мощность котла выбрать?', a: 'Мощность зависит не только от площади, но и от теплопотерь, типа объекта и системы отопления. Квиз даёт предварительную рекомендацию, которую нужно проверить со специалистом.' },
+  { q: 'Можно ли использовать сжиженный газ?', a: 'Некоторые модели HUBERT можно перевести на сжиженный газ. Для этого требуется подходящий комплект и настройка специалистом.' },
+  { q: 'Котёл обеспечивает горячую воду?', a: 'Представленные двухконтурные модели используются для отопления и горячего водоснабжения. Производительность зависит от выбранной мощности.' },
+  { q: 'Что нужно купить для монтажа?', a: 'Состав зависит от объекта и подключения. Обычно могут потребоваться дымоход, краны, соединительные элементы, газовый счётчик и другие комплектующие.' },
+  { q: 'Где купить котёл HUBERT?', a: 'Заказ можно оформить на сайте и получить в Новосибирске или Болотном.' },
+];
+---
+<Base title="Газовые котлы HUBERT для дома и квартиры – купить в Болотном и Новосибирске" description="Настенные газовые котлы HUBERT: серии DY, DP и DL, гарантия производителя до 5 лет, 300+ сервисных центров. Каталог с ценами, подбор котла, получение в Болотном и Новосибирске.">
+  <div class="container hb-crumbs"><Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Котлы HUBERT' }]} /></div>
+
+  <section class="container">
+    <div class="hb-hero navy-card">
+      <div class="hb-hero__text">
+        <h1 class="h1">Газовые котлы HUBERT</h1>
+        <p class="hb-hero__sub">для дома и квартиры</p>
+        <p>HUBERT – российский бренд отопительного оборудования. Настенные газовые котлы подходят для автономного отопления частных домов и квартир, а также обеспечивают горячее водоснабжение.</p>
+        <div class="hb-hero__btns">
+          <a class="btn btn--white" href="#hubert-catalog">Смотреть каталог</a>
+          <a class="btn btn--outline hb-hero__ghost" href="#hubert-quiz">Подобрать котёл</a>
+        </div>
+        <ul class="hb-stats">
+          <li><b>до 5 лет</b><span>гарантия</span></li>
+          <li><b>до 30%</b><span>экономия, энергоэффективность</span></li>
+          <li><b>300+</b><span>сервисных центров по всей России</span></li>
+        </ul>
+      </div>
+      <img class="hb-hero__img" src={img(HERO)} alt="Настенный газовый котёл HUBERT" />
+    </div>
+  </section>
+
+  <section class="section container">
+    <h2 class="h2">Главное о котлах HUBERT</h2>
+    <div class="hb-main">
+      {[
+        ['Отопление и горячая вода', 'Двухконтурные котлы одновременно поддерживают работу системы отопления и нагревают воду для бытовых нужд.'],
+        ['Для радиаторов и тёплого пола', 'В котлах предусмотрены отдельные температурные режимы для радиаторного отопления и системы тёплого пола.'],
+        ['Управление под ваши задачи', 'В линейке есть модели с электронным управлением, Wi-Fi и программированием. Точный набор функций зависит от выбранной серии и мощности.'],
+        ['Гарантия и сервис', 'Гарантия производителя – до 5 лет. При необходимости можно обратиться в авторизованные сервисные центры HUBERT.'],
+      ].map(([t, d], i) => (
+        <div class="hb-main__item soft-card reveal"><span>0{i + 1}</span><h3 class="h3">{t}</h3><p>{d}</p></div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section container" id="hubert-catalog">
+    <h2 class="h2">Каталог HUBERT</h2>
+    <p class="lead hb-lead">Выберите подходящий котёл для отопления и горячего водоснабжения. Точные функции и характеристики – на странице модели после выбора мощности.</p>
+    <Catalog client:visible cards={cards} filters={filterDefs('hubert')} />
+  </section>
+
+  <section class="section container">
+    <h2 class="h2">Чем отличаются котлы HUBERT DY, DP и DL</h2>
+    <div class="hb-series">
+      {[
+        ['HUBERT DY', 'Базовая серия для отопления и горячего водоснабжения без встроенного Wi-Fi.', 'дистанционное управление не требуется.'],
+        ['HUBERT DP', 'Серия с дистанционным управлением через Wi-Fi.', 'важно менять температуру и режим работы котла удалённо.'],
+        ['HUBERT DL', 'Серия с расширенными возможностями управления и программирования. Наличие Wi-Fi зависит от выбранной модели.', 'нужна большая мощность или настройка работы котла по времени.'],
+      ].map(([t, d, w]) => (
+        <div class="hb-series__item reveal"><h3 class="h3">{t}</h3><p>{d}</p><p class="hb-series__fit"><b>Подойдёт, если:</b> {w}</p></div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section container" id="hubert-quiz">
+    <div class="hb-quiz soft-card">
+      <div class="hb-quiz__intro">
+        <h2 class="h2">Как подобрать газовый котёл HUBERT</h2>
+        <p class="lead">Ответьте на несколько вопросов – специалист предварительно определит подходящую серию и мощность и свяжется с вами.</p>
+      </div>
+      <HubertQuiz client:visible />
+    </div>
+  </section>
+
+  <section class="section container">
+    <a class="hb-promo navy-card" href={u('/akcii/stabilizator-v-podarok')}>
+      <div class="hb-promo__text">
+        <p class="hb-promo__tag">Акция от HUBERT</p>
+        <h2 class="h2">Стабилизатор в подарок!</h2>
+        <p class="hb-promo__code">По промокоду <b>GAZMAG</b></p>
+        <span class="btn btn--white">Условия акции</span>
+      </div>
+      <img src={img(PROMO)} alt="" loading="lazy" />
+    </a>
+  </section>
+
+  <section class="section container">
+    <div class="hb-swap soft-card">
+      <div>
+        <h2 class="h3">Меняете старый котёл на новый?</h2>
+        <p>Подберём подходящий газовый котёл HUBERT для замены вашего старого оборудования.</p>
+      </div>
+      <div class="hb-swap__btns">
+        <button type="button" class="btn btn--navy" data-lead="HUBERT: замена старого котла">Да</button>
+        <a class="btn btn--outline" href="#hubert-catalog">Нет</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <h2 class="h2">Котлы, которые выбирают чаще всего</h2>
+    <div class="hb-pop">
+      {popular.map((x) => (
+        <div class="hb-pop__item">
+          <ProductCard client:visible p={x.card} cta="Выбрать мощность" />
+          <div class="hb-pop__specs">
+            <p class="hb-pop__tag">{x.tag}</p>
+            <ul>{x.specs.map((s) => <li>{s}</li>)}</ul>
+            <button type="button" class="btn btn--outline btn--sm" data-lead={`Проверить выбор со специалистом: ${x.card.title}`}>Проверить выбор со специалистом</button>
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="hb-note">Необходимые товары для монтажа – дымоходы, счётчики, датчики загазованности – в каталоге <a href={u('/gas')}>«Датчики загазованности и модули управления»</a> и <a href={u('/catalog_other')}>«Радиаторы и иные товары для отопления»</a>.</p>
+  </section>
+
+  <section class="section container">
+    <h2 class="h2">Где купить котёл HUBERT</h2>
+    <p class="lead hb-lead">Выберите удобный город для получения заказа.</p>
+    <div class="hb-where">
+      <div class="hb-where__item soft-card">
+        <h3 class="h3">Новосибирск</h3>
+        <dl>
+          <dt>Адрес</dt><dd>{NSK_POINT.address}</dd>
+          <dt>Телефон</dt><dd>{NSK_POINT.contact}: <a href={NSK_POINT.phone.href}>{NSK_POINT.phone.text}</a></dd>
+          <dt>Режим работы</dt><dd>{NSK_POINT.hours}</dd>
+          <dt>Условия получения</dt><dd>Самовывоз. Условия доставки и получения уточняйте по телефону.</dd>
+        </dl>
+        <a class="btn btn--outline btn--sm" href={NSK_POINT.route} target="_blank" rel="noopener">Построить маршрут</a>
+      </div>
+      <div class="hb-where__item soft-card">
+        <h3 class="h3">Болотное</h3>
+        <dl>
+          <dt>Адрес</dt><dd>{SITE.address}</dd>
+          <dt>Телефон</dt><dd>{SITE.phones.map((p, i) => <>{i > 0 && ', '}<a href={p.href}>{p.text}</a></>)}</dd>
+          <dt>Условия получения</dt><dd>Самовывоз из магазина. Условия доставки уточняйте по телефону.</dd>
+        </dl>
+        <a class="btn btn--outline btn--sm" href={'https://yandex.ru/maps/?text=' + encodeURIComponent('Болотное, улица Забабонова, 55А')} target="_blank" rel="noopener">Построить маршрут</a>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq} title="Частые вопросы о газовых котлах HUBERT" />
+</Base>
+<style>
+  .hb-crumbs { padding: 28px var(--gutter) 18px; }
+  .hb-hero { display: grid; grid-template-columns: 1.1fr .9fr; align-items: end; gap: 24px; padding: 56px 0 0 48px; background: radial-gradient(circle at 80% 30%, #2d3d72, var(--navy) 60%); }
+  .hb-hero__text { display: grid; gap: 16px; padding-bottom: 48px; max-width: 600px; }
+  .hb-hero__sub { font: 500 24px/1.1 var(--head-font); text-transform: uppercase; color: #c9d3f5; margin-top: -8px; }
+  .hb-hero__btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .hb-hero__ghost { border-color: #fff; color: #fff; }
+  .hb-hero__ghost:hover { background: #fff; color: var(--navy); }
+  .hb-stats { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .hb-stats b { display: block; font: 500 30px/1 var(--head-font); color: #fff; }
+  .hb-stats span { font-size: 13px; color: #c9d3f5; }
+  .hb-hero__img { width: 100%; max-height: 520px; object-fit: contain; object-position: bottom; }
+  .hb-main { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+  .hb-main__item { display: grid; gap: 12px; align-content: start; padding: 28px 24px; border-radius: var(--radius-l); }
+  .hb-main__item span { font: 500 36px/1 var(--head-font); color: var(--navy); opacity: .35; }
+  .hb-main__item .h3 { font-size: 22px; }
+  .hb-lead { margin: 12px 0 28px; }
+  .hb-series { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+  .hb-series__item { display: grid; gap: 12px; align-content: start; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius-l); background: #fff; }
+  .hb-series__fit { padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; }
+  .hb-quiz { display: grid; grid-template-columns: .9fr 1.1fr; gap: 40px; padding: 48px; }
+  .hb-quiz__intro { display: grid; gap: 16px; align-content: start; }
+  .hb-promo { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 24px; padding: 40px 48px; transition: transform .25s var(--ease); }
+  .hb-promo:hover { transform: translateY(-2px); }
+  .hb-promo__text { display: grid; gap: 14px; justify-items: start; }
+  .hb-promo__tag { font: 700 12px/1 var(--body-font); letter-spacing: .14em; text-transform: uppercase; color: #c9d3f5; }
+  .hb-promo__code { font-size: 18px; }
+  .hb-promo__code b { padding: 4px 10px; border-radius: 8px; background: #fff; color: var(--navy); letter-spacing: .08em; }
+  .hb-promo img { width: 100%; max-height: 320px; object-fit: contain; }
+  .hb-swap { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 36px 48px; border-radius: var(--radius-l); }
+  .hb-swap > div:first-child { display: grid; gap: 8px; }
+  .hb-swap__btns { display: flex; gap: 10px; }
+  .hb-pop { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 28px; }
+  .hb-pop__item { display: grid; grid-template-columns: 260px 1fr; gap: 20px; padding: 16px; border-radius: var(--radius-l); background: #fff; }
+  .hb-pop__item .pc { padding: 0; }
+  .hb-pop__item .pc:hover { box-shadow: none; }
+  .hb-pop__specs { display: grid; gap: 12px; align-content: start; font-size: 14px; }
+  .hb-pop__tag { font: 700 12px/1 var(--body-font); letter-spacing: .12em; text-transform: uppercase; color: var(--navy); }
+  .hb-pop__specs ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .hb-pop__specs .btn { justify-self: start; }
+  .hb-note { margin-top: 20px; font-size: 14px; }
+  .hb-note a { color: var(--navy); text-decoration: underline; }
+  .hb-where { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .hb-where__item { display: grid; gap: 16px; align-content: start; justify-items: start; padding: 32px; border-radius: var(--radius-l); }
+  .hb-where dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 14px; }
+  .hb-where dt { color: var(--muted); }
+  .hb-where dd { margin: 0; }
+  .hb-where a:not(.btn) { color: var(--navy); }
+  @media (max-width: 1023px) {
+    .hb-crumbs { padding-top: 16px; }
+    .hb-hero { grid-template-columns: 1fr; padding: 28px 20px 0; }
+    .hb-hero__text { padding-bottom: 0; }
+    .hb-hero__sub { font-size: 20px; }
+    .hb-stats b { font-size: 24px; }
+    .hb-hero__img { max-height: 300px; }
+    .hb-main, .hb-series, .hb-where, .hb-pop { grid-template-columns: 1fr; }
+    .hb-main { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .hb-main__item { padding: 18px 16px; }
+    .hb-main__item .h3 { font-size: 17px; }
+    .hb-main__item p { font-size: 13px; }
+    .hb-quiz { grid-template-columns: 1fr; gap: 20px; padding: 28px 16px; }
+    .hb-promo { grid-template-columns: 1fr; padding: 28px 20px; }
+    .hb-swap { flex-direction: column; align-items: stretch; padding: 24px 20px; }
+    .hb-swap__btns .btn { flex: 1; }
+    .hb-pop__item { grid-template-columns: 1fr; }
+    .hb-where__item { padding: 22px 18px; }
+    .hb-where dl { grid-template-columns: 1fr; gap: 2px; }
+    .hb-where dd { margin-bottom: 8px; }
+  }
+</style>

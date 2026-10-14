@@ -32,6 +32,7 @@ export default function ProductCard({ p, eager = false, cta = 'Подробне�
       </button>
       <div class="pc__body">
         <a class="pc__title" href={href}>{p.title}</a>
+        {p.descr && <p class="pc__descr">{p.descr}</p>}
         <div class="pc__price">
           {p.variants && <span>от</span>}
           <b>{fmt(p.price)}</b>

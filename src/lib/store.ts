@@ -14,7 +14,10 @@ const isBrowser = typeof window !== 'undefined';
 
 function load<T>(key: string, fallback: T): T {
   if (!isBrowser) return fallback;
-  try { return JSON.parse(localStorage.getItem(key) || '') as T; } catch { return fallback; }
+  try {
+    const v = JSON.parse(localStorage.getItem(key) || '');
+    return Array.isArray(fallback) && !Array.isArray(v) ? fallback : (v as T);
+  } catch { return fallback; }
 }
 function save(key: string, v: unknown) {
   try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* приватный режим */ }

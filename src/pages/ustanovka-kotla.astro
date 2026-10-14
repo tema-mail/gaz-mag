@@ -1,0 +1,84 @@
+---
+// /ustanovka-kotla – новая страница «Установка газовых котлов» (задание владельца 14.10.2026).
+// Своё намерение – поставить котёл, отдельно от подключения дома к газу (/montag). Факты – только с оригинала:
+// состав монтажа котла, виды котлов, цена от 8 тыс. (акция), гарантия, обслуживание и ремонт.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Steps from '../components/Steps.astro';
+import LeadSection from '../components/LeadSection.astro';
+import Faq from '../components/Faq.astro';
+import ProductRow from '../components/ProductRow.astro';
+import { listCards } from '../lib/catalog';
+import { u } from '../lib/url';
+const boilers = listCards('specials').filter((c) => /кот[её]л/i.test(c.title)).slice(0, 4);
+const faq = [
+  { q: 'Какие работы входят в монтаж газового котла?', a: 'Монтаж газового котла включает в себя установку котла, подключение его к системе отопления и газопроводу, а также настройку и тестирование работы системы.' },
+  { q: 'Какие виды газовых котлов вы устанавливаете?', a: 'Мы устанавливаем различные виды газовых котлов, включая одноконтурные и двухконтурные котлы, котлы с открытой и закрытой камерой сгорания, настенные и напольные.' },
+  { q: 'Сколько стоит установка котла?', a: 'Монтаж отопления и подключение котла – от 8 тыс. рублей. Точную стоимость для вашего объекта назовёт менеджер.' },
+  { q: 'Можно купить котёл и заказать установку в одном месте?', a: 'Да. Котёл, дымоход, счётчик газа, датчики загазованности и комплектующие можно купить в магазине и сразу заказать установку.' },
+];
+---
+<Base title="Установка газовых котлов в Болотном – от 8 тыс. рублей" description="Установка настенных и напольных, одно- и двухконтурных газовых котлов: монтаж, подключение к отоплению и газопроводу, настройка и тестирование. От 8 тыс. рублей, гарантия на работы.">
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Монтаж', href: '/montag' }, { label: 'Установка газовых котлов' }]} title="Установка газовых котлов" lead="Установим газовый котёл, подключим его к системе отопления и газопроводу, настроим и проверим работу системы. Монтаж отопления и подключение котла – от 8 тыс. рублей.">
+    <div class="uk-cta">
+      <button type="button" class="btn btn--navy" data-lead="Заявка на установку газового котла">Заказать установку</button>
+      <a class="btn btn--outline" href={u('/catalog_boilers')}>Выбрать котёл</a>
+    </div>
+  </PageHead>
+
+  <section class="section container">
+    <Steps title="Что входит в установку" items={[
+      { t: 'Установка котла' },
+      { t: 'Подключение к системе отопления' },
+      { t: 'Подключение к газопроводу' },
+      { t: 'Настройка и тестирование работы системы' },
+    ]} />
+  </section>
+
+  <section class="section container">
+    <h2 class="h2">Какие котлы устанавливаем</h2>
+    <div class="uk-types">
+      {['Одноконтурные и двухконтурные', 'С открытой и закрытой камерой сгорания', 'Настенные и напольные']
+        .map((t) => <div class="uk-types__item soft-card reveal"><h3 class="h3">{t}</h3></div>)}
+    </div>
+  </section>
+
+  {boilers.length > 0 && (
+    <section class="section container">
+      <div class="uk-head">
+        <h2 class="h2">Выбрать котёл</h2>
+        <a class="btn btn--outline btn--sm" href={u('/catalog_boilers')}>Все котлы</a>
+      </div>
+      <ProductRow cards={boilers} />
+    </section>
+  )}
+
+  <section class="section container">
+    <div class="uk-why soft-card">
+      <h2 class="h2">Почему у нас</h2>
+      <ul>
+        <li>Быстрая установка оборудования сертифицированными специалистами</li>
+        <li>Без ожидания очереди на монтаж</li>
+        <li>Стоимость услуг ниже, чем у государственных компаний</li>
+        <li>Гарантия на все выполненные работы</li>
+        <li>Обслуживание и ремонт газовых котлов и водонагревателей – по индивидуальной заявке</li>
+      </ul>
+      <p>Нужен газ в дом с нуля? Проект, подключение к сети и ввод трубы – на странице <a href={u('/montag')}>«Подключение к газовым сетям и монтаж отопления»</a>.</p>
+    </div>
+  </section>
+
+  <LeadSection title="Заявка на установку котла" form="Заявка на установку газового котла" text="Оставьте телефон – специалист уточнит модель котла и объект и рассчитает стоимость установки." />
+
+  <Faq items={faq} title="Вопросы об установке котла" />
+</Base>
+<style>
+  .uk-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .uk-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+  .uk-types__item { display: grid; gap: 10px; padding: 28px 24px; border-radius: var(--radius-l); }
+  .uk-types__item .h3 { font-size: 22px; }
+  .uk-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+  .uk-why { display: grid; gap: 16px; padding: 44px 48px; border-radius: var(--radius-l); }
+  .uk-why ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 16px; }
+  .uk-why a { color: var(--navy); text-decoration: underline; }
+  @media (max-width: 1023px) { .uk-types { grid-template-columns: 1fr; gap: 10px; } .uk-why { padding: 26px 18px; } }
+</style>

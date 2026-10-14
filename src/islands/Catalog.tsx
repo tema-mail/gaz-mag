@@ -29,7 +29,7 @@ export default function Catalog({ cards, filters, step = 12 }: { cards: Card[]; 
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const prices = cards.map((c) => c.price);
-  const lo = Math.min(...prices), hi = Math.max(...prices);
+  const lo = prices.length ? Math.min(...prices) : 0, hi = prices.length ? Math.max(...prices) : 0;
   const priceDef = filters.find((f) => f.kind === 'price');
   const listDefs = filters.filter((f) => f.kind !== 'price');
 

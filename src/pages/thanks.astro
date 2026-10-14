@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import Notice from '../components/Notice.astro';
+import { LEADS_ENABLED } from '../lib/forms';
+---
+<Base title="Спасибо" noindex>
+  <Notice title="Спасибо" text={LEADS_ENABLED ? 'Ваши данные успешно отправлены, в ближайшее время с вами свяжется менеджер.' : 'Это демо-версия сайта: заявки пока не отправляются. Позвоните нам – менеджер ответит на вопросы.'} />
+</Base>
