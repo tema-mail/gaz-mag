@@ -97,8 +97,12 @@ function build(messages) {
   run('npm', ['run', 'build'], { cwd: WORK });
   run('node', ['scripts/lock-admin.mjs'], { cwd: WORK });
   const id = `${new Date().toISOString().replace(/\D/g, '').slice(0, 14)}-${sha}`;
-  rmSync(`${REL}/${id}`, { recursive: true, force: true });
-  renameSync(`${WORK}/dist`, `${REL}/${id}`);
+  // /work и /releases – разные тома: сначала копия во временную папку тома выкладок, потом атомарное переименование в нём же
+  const tmp = `${REL}/.incoming-${id}`;
+  rmSync(tmp, { recursive: true, force: true }); rmSync(`${REL}/${id}`, { recursive: true, force: true });
+  cpSync(`${WORK}/dist`, tmp, { recursive: true });
+  renameSync(tmp, `${REL}/${id}`);
+  rmSync(`${WORK}/dist`, { recursive: true, force: true });
   switchTo(id);
   prune();
   commitContent(messages.length ? messages.join('\n') : `Сборка кода ${sha}`);
