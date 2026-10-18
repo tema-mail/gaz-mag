@@ -27,7 +27,7 @@ const ld = {
 ---
 <Base title={p.seoTitle || productSeoTitle(p.title)} description={p.seoDescr || productSeoDescr(p.title, p.brand)} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
   <div class="container pp">
-    <Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, ...(cat ? [{ label: cat.title, href: cat.href }] : []), { label: p.title }]} />
+    <Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, ...(cat ? [{ label: cat.short, href: cat.href }] : []), { label: p.title }]} />
     <div class="pp__grid">
       <Gallery client:visible images={p.images} alt={p.title} />
       <div class="pp__info">

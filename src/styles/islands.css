@@ -95,6 +95,11 @@
 .lead__title { font-size: 32px; padding-right: 48px; }
 .lead__text { font-size: 14px; }
 @media (max-width: 767px) { .lead__title { font-size: 25px; } }
+/* Мобильное меню – основа (восстановлено 18.10.2026: выпало при чистке стилей 14.10, меню не вставало поверх страницы) */
+.mm {
+  position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column; background: #fff;
+  transform: translateX(100%); visibility: hidden; transition: transform .4s var(--ease), visibility 0s .4s;
+}
 .mm.is-open { transform: none; visibility: visible; transition: transform .4s var(--ease); }
 .mm__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; padding: 0 16px; border-bottom: 1px solid var(--line); flex: none; }
 .mm__logo img { height: 16px; width: auto; }
@@ -199,3 +204,14 @@
 .cc__btns .btn { flex: 1 1 180px; }
 .cc__set { margin: 4px auto 0; font-size: 14px; }
 @media (max-width: 767px) { .cc__box { padding: 22px 18px; } .cc__title { font-size: 23px; } .cc__btns .btn { flex-basis: 100%; } }
+
+/* Тост */
+.toast {
+  position: fixed; z-index: 120; left: 50%; bottom: 24px; transform: translate(-50%, 140%);
+  display: flex; align-items: center; gap: 16px; padding: 12px 12px 12px 22px; border-radius: 999px;
+  background: var(--ink); color: #fff; font-size: 14px; box-shadow: 0 12px 40px rgba(0,0,0,.2);
+  transition: transform .4s var(--ease); max-width: calc(100% - 32px);
+}
+.toast.is-show { transform: translate(-50%, 0); }
+.toast span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.toast button { border: 0; border-radius: 999px; background: var(--white); color: var(--navy); font-weight: 600; font-size: 13px; padding: 9px 16px; flex: none; }

@@ -15,7 +15,7 @@ const { c } = Astro.props;
 const cards = listCards(c.slug);
 ---
 <Base title={c.seoTitle} description={c.seoDescr}>
-  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, { label: c.title }]} title={c.h1} lead={`${cards.length} ${cards.length % 10 === 1 && cards.length % 100 !== 11 ? 'товар' : cards.length % 10 >= 2 && cards.length % 10 <= 4 && (cards.length % 100 < 10 || cards.length % 100 >= 20) ? 'товара' : 'товаров'} в каталоге. Магазин в Болотном, ${SITE.addressShort.replace('г. Болотное, ', '')}; работаем по Новосибирску и Болотному.`} />
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, { label: c.short }]} title={c.h1} lead={`${cards.length} ${cards.length % 10 === 1 && cards.length % 100 !== 11 ? 'товар' : cards.length % 10 >= 2 && cards.length % 10 <= 4 && (cards.length % 100 < 10 || cards.length % 100 >= 20) ? 'товара' : 'товаров'} в каталоге. Магазин в Болотном, ${SITE.addressShort.replace('г. Болотное, ', '')}; работаем по Новосибирску и Болотному.`} />
   <section class="section--tight container">
     <Catalog client:load cards={cards} filters={filterDefs(c.slug)} />
   </section>

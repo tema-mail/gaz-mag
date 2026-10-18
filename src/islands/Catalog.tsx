@@ -91,6 +91,11 @@ export default function Catalog({ cards, filters, step = 12 }: { cards: Card[]; 
       {listDefs.map((f) => options[f.label]?.length > 0 && (
         <fieldset class="flt__group">
           <legend class="flt__title">{f.label}</legend>
+          {/* стандарт владельца: «Все» первым – выбран, пока в группе ничего не отмечено; нажатие снимает выбор группы */}
+          <label class="flt__opt">
+            <input type="checkbox" checked={!(sel[f.label] || []).length} onChange={() => setSel({ ...sel, [f.label]: [] })} />
+            <span>Все</span>
+          </label>
           {options[f.label].map((v) => {
             const n = count(f, v);
             const on = (sel[f.label] || []).includes(v);

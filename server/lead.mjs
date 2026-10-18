@@ -172,7 +172,8 @@ createServer(async (req, res) => {
     const key = u.replace(/\/+$/, '') || '/';
     const map = await redirects();
     // точный прежний адрес; иначе тильдовский товар по номеру (окончание адреса у Тильды любое)
-    const to = map[key] || map[`tilda:${key.match(/tproduct\/\d+-(\d+)/)?.[1]}`];
+    const tid = key.match(/tproduct\/\d+-(\d+)/)?.[1] || key.match(/tproduct\/(\d+)$/)?.[1];
+    const to = map[key] || map[`tilda:${tid}`];
     const query = raw.includes('?') ? raw.slice(raw.indexOf('?')) : ''; // utm и прочие метки – сохраняем
     if (to) { res.writeHead(301, { Location: to + query, 'Cache-Control': 'public, max-age=86400' }); return res.end(); }
     res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
