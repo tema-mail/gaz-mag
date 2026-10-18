@@ -33,10 +33,37 @@ services:
       - /opt/gaz-mag/data:/data
       # карта 301 и 404.html текущей выкладки – только чтение
       - /opt/gaz-mag/releases:/releases:ro
+      # боевой режим: данные сайта (товары, фото) правит админка через /api/admin/*, задания сборщику – в очередь
+      - /opt/gaz-mag/content:/content
+      - /opt/gaz-mag/queue:/queue
+      - /opt/gaz-mag/state:/state:ro
     read_only: true
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]
     mem_limit: 96m
+    networks: [proxy]
+  # Сборщик боевого режима: код с GitHub (только чтение) + данные сервера → сайт; включает выкладку атомарно.
+  gaz-mag-builder:
+    build: ./builder
+    image: gaz-mag-builder:local
+    container_name: gaz-mag-builder
+    restart: unless-stopped
+    user: "10501:10501"
+    env_file: [/opt/gaz-mag/lead.env]
+    environment:
+      HOME: /cache
+      npm_config_cache: /cache/npm
+    volumes:
+      - /opt/gaz-mag/repo:/repo
+      - /opt/gaz-mag/content:/content
+      - /opt/gaz-mag/releases:/releases
+      - /opt/gaz-mag/queue:/queue
+      - /opt/gaz-mag/state:/state
+      - /opt/gaz-mag/work:/work
+      - /opt/gaz-mag/cache:/cache
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 1536m
     networks: [proxy]
 networks:
   proxy:

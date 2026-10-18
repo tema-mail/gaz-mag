@@ -1,5 +1,8 @@
-// Сохранение админки в репозиторий GitHub: данные каталога лежат в src/data/*.json,
-// после коммита GitHub Actions пересобирает сайт (~1 минута). Ключ доступа хранится только в браузере владельца.
+// Сохранение админки. Режим 'разработка': коммит в GitHub (ключ владельца в браузере), GitHub Actions пересобирает сайт.
+// Режим 'бой' (src/lib/stage.ts): те же функции ходят на сервер gaz-mag (/api/admin/*, логин кабинета) – ключа GitHub нет,
+// сайт собирает сборщик на сервере. Остальной код раздела «Товары» от режима не зависит.
+import { PROD } from '../../lib/stage';
+import { adminAuth } from './auth';
 export const REPO = 'tema-mail/gaz-mag';
 export const BRANCH = 'main';
 export const PRODUCTS_PATH = 'src/data/products.json';
@@ -7,7 +10,7 @@ export const UPLOADS_DIR = 'data-src/uploads';
 // свой ключ на каждый кабинет: адрес tema-mail.github.io общий, и хранилище браузера у кабинетов одно
 const KEY = 'gm_admin_gh_token';
 
-export const getToken = () => { try { return localStorage.getItem(KEY) || ''; } catch { return ''; } };
+export const getToken = () => { if (PROD) return 'server'; try { return localStorage.getItem(KEY) || ''; } catch { return ''; } };
 export const setToken = (t: string) => { try { t ? localStorage.setItem(KEY, t) : localStorage.removeItem(KEY); } catch {} };
 
 async function api<T = any>(path: string, init: RequestInit = {}): Promise<T> {
@@ -46,7 +49,15 @@ export function humanError(e: any): string {
 }
 
 /** Свежий JSON из ветки main (а не из собранного сайта – он отстаёт на время сборки). */
+let serverVersion = '';
+async function server<T = any>(path: string, init: RequestInit = {}): Promise<T> {
+  const res = await fetch(path, { cache: 'no-store', ...init, headers: { Authorization: adminAuth(), 'Content-Type': 'application/json', ...(init.headers || {}) } });
+  if (!res.ok) throw new Error(res.status === 409 ? 'conflict 409' : res.status === 401 ? 'Сервер не принял вход кабинета – выйдите и войдите снова' : `сервер ${res.status}`);
+  return res.json();
+}
+
 export async function readJson<T>(path: string): Promise<T> {
+  if (PROD) { const d = await server<{ version: string; products: T }>('/api/admin/products'); serverVersion = d.version; return d.products; }
   const r = await api<{ content: string }>(`/contents/${path}?ref=${BRANCH}&t=${Date.now()}`);
   return JSON.parse(utf8b64(r.content));
 }
@@ -54,7 +65,16 @@ export async function readJson<T>(path: string): Promise<T> {
 export interface FileChange { path: string; text?: string; base64?: string }
 
 /** Все изменения – одним коммитом (Git Data API), чтобы сайт пересобирался один раз. */
+let savedAt = '';
 export async function commit(files: FileChange[], message: string): Promise<string> {
+  if (PROD) {
+    // фото – отдельными запросами, потом товары с проверкой версии (409 – кто-то сохранил раньше: persist перечитает и повторит)
+    for (const f of files.filter((x) => x.path !== PRODUCTS_PATH)) await server('/api/admin/upload', { method: 'POST', body: JSON.stringify({ name: f.path.split('/').pop(), data: f.base64 ?? btoa(unescape(encodeURIComponent(f.text ?? ''))) }) });
+    const prod = files.find((x) => x.path === PRODUCTS_PATH);
+    savedAt = new Date().toISOString();
+    if (prod) { const d = await server<{ version: string }>('/api/admin/products', { method: 'PUT', body: JSON.stringify({ base: serverVersion, products: JSON.parse(prod.text || '[]'), message }) }); serverVersion = d.version; }
+    return 'server-' + savedAt;
+  }
   for (let attempt = 0; attempt < 2; attempt++) {
     const ref = await api<{ object: { sha: string } }>(`/git/ref/heads/${BRANCH}`);
     const head = await api<{ tree: { sha: string } }>(`/git/commits/${ref.object.sha}`);
@@ -77,6 +97,12 @@ export async function commit(files: FileChange[], message: string): Promise<stri
 
 /** Статус сборки сайта, запущенной конкретным коммитом (пока её нет – null). */
 export async function buildOf(sha: string): Promise<{ status: string; conclusion: string | null; url: string } | null> {
+  if (PROD) {
+    // сборщик на сервере: готово, когда статус «done» записан после нашего сохранения
+    const st = await server<{ state?: string; ok?: boolean; at?: string }>('/api/admin/build');
+    if (st.state === 'done' && st.at && st.at > sha.replace('server-', '')) return { status: 'completed', conclusion: st.ok ? 'success' : 'failure', url: '' };
+    return { status: 'in_progress', conclusion: null, url: '' };
+  }
   const r = await api<{ workflow_runs: { status: string; conclusion: string | null; html_url: string; head_sha: string }[] }>(`/actions/runs?branch=${BRANCH}&per_page=10`);
   const run = r.workflow_runs.find((x) => x.head_sha === sha);
   return run ? { status: run.status, conclusion: run.conclusion, url: run.html_url } : null;

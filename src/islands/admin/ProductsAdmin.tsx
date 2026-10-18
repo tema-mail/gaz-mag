@@ -6,6 +6,7 @@ import GhConnect from './GhConnect';
 import { PRODUCTS_PATH, UPLOADS_DIR, buildOf, commit, humanError, fileToBase64, getToken, readJson, type FileChange } from './gh';
 import { productPath, uniqueSlug } from '../../lib/routes';
 import { productSeoDescr, productSeoTitle } from '../../lib/seo';
+import { PROD } from '../../lib/stage';
 
 // Раздел «Товары» – перенос с кабинета-стандарта Milovini (эталон Elite Rose, магазин Тильды). С подключённым ключом
 // GitHub изменения сохраняются в src/data/products.json одним коммитом «Админка: …», сайт пересобирается и выкладывается
@@ -103,10 +104,14 @@ export default function ProductsAdmin({ items, lists, base }: { items: Product[]
     if (!connected) { setStatus({ kind: 'error', text: 'Изменение видно только у вас – подключите сохранение, чтобы оно попало на сайт' }); return; }
     setStatus({ kind: 'saving', text: 'Сохраняем…' });
     try {
-      const fresh = await readJson<Product[]>(PRODUCTS_PATH);
-      const next = mut(fresh);
-      if (JSON.stringify(next) === JSON.stringify(fresh) && !extra.length) return setStatus({ kind: 'done', text: 'Изменений нет – сохранять нечего' });
-      const sha = await commit([{ path: PRODUCTS_PATH, text: JSON.stringify(next, null, 1).replace(/—/g, '–') + '\n' }, ...extra], `Админка: ${message}`);
+      let fresh: Product[] = [], next: Product[] = [], sha = '';
+      for (let attempt = 0; ; attempt++) {
+        fresh = await readJson<Product[]>(PRODUCTS_PATH);
+        next = mut(fresh);
+        if (JSON.stringify(next) === JSON.stringify(fresh) && !extra.length) return setStatus({ kind: 'done', text: 'Изменений нет – сохранять нечего' });
+        try { sha = await commit([{ path: PRODUCTS_PATH, text: JSON.stringify(next, null, 1).replace(/—/g, '–') + '\n' }, ...extra], `Админка: ${message}`); break; }
+        catch (e: any) { if (!String(e.message).includes('409') || attempt >= 2) throw e; } // кто-то сохранил раньше – правка ляжет на свежие данные
+      }
       saves.current++;
       setRaw(next);
       setStatus({ kind: 'building', text: 'Сохранено. Сайт обновляется – обычно 1–2 минуты', sha });
@@ -174,9 +179,9 @@ export default function ProductsAdmin({ items, lists, base }: { items: Product[]
         {connected ? (
           <>
             <span class="sync__dot" />
-            <span>Сохранение подключено – изменения попадают на сайт</span>
+            <span>{PROD ? 'Боевой сайт: изменения сохраняются на сервере и сразу попадают на сайт' : 'Сохранение подключено – изменения попадают на сайт'}</span>
             {status.kind !== 'idle' && <span class={`sync__st sync__st--${status.kind}`}>{status.text}{status.url && <> · <a href={status.url} target="_blank" rel="noopener">журнал сборки</a></>}</span>}
-            <button class="btn ghost" onClick={() => setShowConnect(true)}>Ключ</button>
+            {!PROD && <button class="btn ghost" onClick={() => setShowConnect(true)}>Ключ</button>}
           </>
         ) : (
           <>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
+import { adminAuth } from './auth';
 
 /* «Заявки» – перенос с кабинета-стандарта Milovini (доска – эталон ALEX KROWN v1 / EV SIBIR). Магазин без онлайн-оплаты:
    заказ из корзины = заявка (references/contracts.md), у заявки товары и категория – по ним считается спрос.
@@ -31,13 +32,7 @@ function fromServer(r: any): Lead {
   };
 }
 
-/** Вход кабинета из замка – для Basic-авторизации к серверу заявок. */
-function auth(): string {
-  try {
-    const a = JSON.parse(sessionStorage.getItem('gm_admin_auth') || localStorage.getItem('gm_admin_keep') || 'null');
-    return a ? 'Basic ' + btoa(unescape(encodeURIComponent(`${a.login}:${a.pass}`))) : '';
-  } catch { return ''; }
-}
+const auth = adminAuth;
 
 const leadsCsv = (rows: Lead[], cat: (s: string) => string) => {
   const q = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;

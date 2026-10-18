@@ -6,7 +6,7 @@
 // Окружение: TG_TOKEN, TG_CHAT (через запятую), ADMIN_LOGIN, ADMIN_PASS, PORT (8090), ORIGIN (https://gaz-mag.ru).
 import { createServer } from 'node:http';
 import { appendFile, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
-import { timingSafeEqual } from 'node:crypto';
+import { createHash, timingSafeEqual } from 'node:crypto';
 
 const PORT = Number(process.env.PORT || 8090);
 const DATA = process.env.DATA_DIR || '/data';
@@ -66,6 +66,54 @@ async function redirects() {
 }
 async function page404() {
   try { return await readFile(`${RELEASE}/404.html`, 'utf8'); } catch { return '<h1>404 – страница не найдена</h1>'; }
+}
+
+// ── Боевой режим: данные сайта правит админка на сервере (владелец 18.10.2026 «убирай цепочку GitHub»). ──
+// /content/products.json – источник правды в бою; запись – с проверкой версии (кто-то сохранил раньше → 409);
+// после записи – задание сборщику в /queue (gaz-mag-builder соберёт и выложит сайт, история – git в /content).
+const CONTENT = process.env.CONTENT_DIR || '/content';
+const QUEUE = process.env.QUEUE_DIR || '/queue';
+const STATE_DIR = process.env.STATE_DIR || '/state';
+const sha = (t) => createHash('sha1').update(t).digest('hex').slice(0, 16);
+async function readBody(req, limit) {
+  let size = 0; const chunks = [];
+  for await (const c of req) { size += c.length; if (size > limit) throw Object.assign(new Error('too big'), { code: 413 }); chunks.push(c); }
+  return Buffer.concat(chunks).toString('utf8');
+}
+async function queueBuild(message) {
+  await writeFile(`${QUEUE}/${Date.now()}${String(Math.random()).slice(2, 6)}-build`, message.slice(0, 300) + '\n');
+}
+async function adminApi(req, res) {
+  const url = req.url.split('?')[0];
+  if (url === '/api/admin/products' && req.method === 'GET') {
+    const text = await readFile(`${CONTENT}/products.json`, 'utf8');
+    return send(res, 200, { ok: true, version: sha(text), products: JSON.parse(text) });
+  }
+  if (url === '/api/admin/products' && req.method === 'PUT') {
+    const body = JSON.parse(await readBody(req, 4 * 1024 * 1024));
+    if (!Array.isArray(body.products) || !body.products.every((p) => p && p.id && p.title && p.path)) return send(res, 422, { ok: false, error: 'products' });
+    const cur = await readFile(`${CONTENT}/products.json`, 'utf8');
+    if (body.base !== sha(cur)) return send(res, 409, { ok: false, error: 'conflict' });
+    const next = JSON.stringify(body.products, null, 1).replace(/\u2014/g, '\u2013') + '\n';
+    await writeFile(`${CONTENT}/products.json.tmp`, next);
+    await rename(`${CONTENT}/products.json.tmp`, `${CONTENT}/products.json`);
+    await queueBuild(String(body.message || 'Админка: правка товаров'));
+    return send(res, 200, { ok: true, version: sha(next) });
+  }
+  if (url === '/api/admin/upload' && req.method === 'POST') {
+    const body = JSON.parse(await readBody(req, 14 * 1024 * 1024));
+    const name = String(body.name || '');
+    if (!/^[\w-]{1,80}\.(jpe?g|png|webp)$/i.test(name)) return send(res, 422, { ok: false, error: 'name' });
+    await mkdir(`${CONTENT}/uploads`, { recursive: true });
+    await writeFile(`${CONTENT}/uploads/${name}`, Buffer.from(String(body.data || ''), 'base64'));
+    return send(res, 200, { ok: true });
+  }
+  if (url === '/api/admin/build' && req.method === 'GET') {
+    let st = {};
+    try { st = JSON.parse(await readFile(`${STATE_DIR}/status.json`, 'utf8')); } catch {}
+    return send(res, 200, { ok: true, ...st });
+  }
+  return send(res, 404, { ok: false });
 }
 
 const phoneOk = (v) => String(v || '').replace(/\D/g, '').length >= 10;
@@ -128,6 +176,12 @@ createServer(async (req, res) => {
     return res.end(await page404());
   }
   if (req.url === '/api/health') return send(res, 200, { ok: true, telegram: Boolean(TG_TOKEN && TG_CHATS.length), admin: Boolean(ADMIN) });
+
+  // Кабинет, боевой режим: товары, фото, статус сборки – только с паролем кабинета.
+  if (req.url.startsWith('/api/admin/')) {
+    if (!authed(req)) { if (limited('auth:' + ip0)) return send(res, 429, { ok: false, error: 'rate' }); return send(res, 401, { ok: false }); }
+    try { return await adminApi(req, res); } catch (e) { return send(res, e.code === 413 ? 413 : 500, { ok: false, error: e.code === 413 ? 'too big' : 'server' }); }
+  }
 
   // Кабинет: список заявок и смена этапа – только с паролем; неверный пароль считается в лимит попыток.
   if (req.url === '/api/leads' || req.url.startsWith('/api/leads/')) {

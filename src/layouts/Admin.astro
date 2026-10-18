@@ -8,6 +8,7 @@
 import '../styles/admin.css';
 import { u } from '../lib/url';
 import { allProducts } from '../lib/catalog';
+import { PROD } from '../lib/stage';
 type Tab = 'pages' | 'products' | 'leads' | 'metrika' | 'seo' | 'positions' | 'recommendations';
 interface Props { title: string; active: Tab }
 const { title, active } = Astro.props;
@@ -37,7 +38,7 @@ const tabs: [Tab, string, string, string][] = [
       {tabs.map(([key, href, label, n]) => (
         <a class:list={['tab', { on: active === key }]} href={u(href)}>{label}{n && (n === '🔒' ? <span class="lk" aria-label="раздел закрыт"> 🔒</span> : <span class="n">{n}</span>)}</a>
       ))}
-      <span class="site">Сайт: <a href={site} target="_blank" rel="noopener">{site.replace(/^https?:\/\//, '')}</a></span>
+      <span class="site" title={PROD ? 'Боевой режим: данные на сервере, сайт собирается на сервере' : 'Режим разработки: сохранение через GitHub'}>{PROD ? '🟢 Боевой сайт · ' : '🛠 Разработка · '}Сайт: <a href={site} target="_blank" rel="noopener">{site.replace(/^https?:\/\//, '')}</a></span>
       {/* выход из кабинета (вход – scripts/lock-admin.mjs), стирает оба входа – как «Выйти» у EV / ALEX KROWN */}
       <button type="button" class="logout" onclick="try{sessionStorage.removeItem('gm_admin_auth');localStorage.removeItem('gm_admin_keep')}catch(e){};location.reload()" style="background:none;border:0;color:rgba(255,255,255,.75);font:inherit;font-size:13px;cursor:pointer;padding:0">Выйти</button>
     </nav>

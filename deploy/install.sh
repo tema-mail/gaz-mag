@@ -17,17 +17,23 @@ SSH=(ssh -i "$KEY" -o BatchMode=yes "$HOST")
   mkdir -p /opt/gaz-mag/releases /opt/gaz-mag/server /opt/gaz-mag/data /home/gazmag-deploy/.ssh
   chown gazmag-deploy:gazmag-deploy /opt/gaz-mag /opt/gaz-mag/releases
   chown -R 10501:10501 /opt/gaz-mag/data && chmod 700 /opt/gaz-mag/data
+  # боевой режим (18.10.2026): сайт собирает gaz-mag-builder (uid 10501) – ему принадлежат выкладки, код, данные, кэш;
+  # очередь заданий – «почтовый ящик» (1733): ключ выкладки и приёмник кладут задания, читать и удалять может только сборщик
+  mkdir -p /opt/gaz-mag/repo /opt/gaz-mag/content /opt/gaz-mag/queue /opt/gaz-mag/state /opt/gaz-mag/work /opt/gaz-mag/cache /opt/gaz-mag/builder
+  chown -R 10501:10501 /opt/gaz-mag/releases /opt/gaz-mag/repo /opt/gaz-mag/content /opt/gaz-mag/state /opt/gaz-mag/work /opt/gaz-mag/cache
+  chown 10501:10501 /opt/gaz-mag/queue && chmod 1733 /opt/gaz-mag/queue && chmod 755 /opt/gaz-mag/state
   chmod 755 /opt/gaz-mag /opt/gaz-mag/releases /opt/gaz-mag/server
   [ -f /opt/gaz-mag/lead.env ] || { printf 'TG_TOKEN=\nTG_CHAT=\n' > /opt/gaz-mag/lead.env; }
   chmod 600 /opt/gaz-mag/lead.env"
 scp -q -i "$KEY" "$HERE/receive.sh" "$HOST:/usr/local/bin/gazmag-receive"
 scp -q -i "$KEY" "$HERE/compose.yml" "$HERE/nginx.conf" "$HOST:/opt/gaz-mag/"
+scp -q -i "$KEY" "$HERE/builder/Dockerfile" "$HERE/builder/builder.mjs" "$HOST:/opt/gaz-mag/builder/"
 scp -q -i "$KEY" "$HERE/../server/lead.mjs" "$HOST:/opt/gaz-mag/server/lead.mjs"
 "${SSH[@]}" "chmod 755 /usr/local/bin/gazmag-receive && chown root:root /usr/local/bin/gazmag-receive
   chmod 644 /opt/gaz-mag/server/lead.mjs
   printf 'command=\"/usr/local/bin/gazmag-receive\",restrict %s\n' \"$(cat "$DEPLOY_PUB")\" > /home/gazmag-deploy/.ssh/authorized_keys
   chown -R gazmag-deploy:gazmag-deploy /home/gazmag-deploy/.ssh && chmod 700 /home/gazmag-deploy/.ssh && chmod 600 /home/gazmag-deploy/.ssh/authorized_keys
-  cd /opt/gaz-mag && docker compose up -d --remove-orphans >/dev/null && docker restart gaz-mag-api gaz-mag-web >/dev/null && docker ps --filter name=gaz-mag --format '{{.Names}} {{.Status}}'"
+  cd /opt/gaz-mag && docker compose build -q gaz-mag-builder && docker compose up -d --remove-orphans >/dev/null && docker restart gaz-mag-api gaz-mag-web gaz-mag-builder >/dev/null && docker ps --filter name=gaz-mag --format '{{.Names}} {{.Status}}'"
 
 # 2. Блок в общем Caddy: только при парных метках, с проверкой конфигурации и откатом при неудачной перезагрузке
 cat "$HERE/gaz-mag.caddy" | "${SSH[@]}" '
