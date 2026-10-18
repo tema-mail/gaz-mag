@@ -2428,7 +2428,7 @@
   "brand": "Теплокс",
   "descr": "",
   "text": "",
-  "price": 12000,
+  "price": 12001,
   "priceOld": null,
   "sort": 1030350,
   "lists": [
@@ -2484,7 +2484,8 @@
   "editions": [],
   "images": [
    "/img/p/stor3963-6439_61690949"
-  ]
+  ],
+  "hidden": false
  },
  {
   "id": "260068387442",
