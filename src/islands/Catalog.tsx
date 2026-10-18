@@ -133,7 +133,8 @@ export default function Catalog({ cards, filters, step = 12 }: { cards: Card[]; 
         <p class="cat__found">Найдено: {list.length} из {cards.length}</p>
 
         <div class="grid" data-products>
-          {list.slice(0, limit).map((p, i) => <ProductCard p={p} eager={i < 3} key={p.id} />)}
+          {/* все карточки в HTML (ссылки видят поисковики), лишние скрыты до «Показать ещё» */}
+          {list.map((p, i) => (i < limit ? <ProductCard p={p} eager={i < 3} key={p.id} /> : <div hidden key={p.id}><ProductCard p={p} /></div>))}
         </div>
         {list.length === 0 && (
           <p class="cat__empty">По выбранным фильтрам товаров нет. <button type="button" class="link" onClick={reset}>Сбросить фильтры</button> или <button type="button" class="link" data-lead="Подбор оборудования">оставьте заявку</button> – подберём под ваш дом.</p>

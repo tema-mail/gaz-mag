@@ -170,8 +170,11 @@ createServer(async (req, res) => {
     const raw = String(req.headers['x-original-uri'] || new URL(req.url, 'http://x').searchParams.get('u') || '');
     try { u = decodeURIComponent(raw.split('?')[0]); } catch { u = raw.split('?')[0]; }
     const key = u.replace(/\/+$/, '') || '/';
-    const to = (await redirects())[key];
-    if (to) { res.writeHead(301, { Location: to, 'Cache-Control': 'public, max-age=86400' }); return res.end(); }
+    const map = await redirects();
+    // точный прежний адрес; иначе тильдовский товар по номеру (окончание адреса у Тильды любое)
+    const to = map[key] || map[`tilda:${key.match(/tproduct\/\d+-(\d+)/)?.[1]}`];
+    const query = raw.includes('?') ? raw.slice(raw.indexOf('?')) : ''; // utm и прочие метки – сохраняем
+    if (to) { res.writeHead(301, { Location: to + query, 'Cache-Control': 'public, max-age=86400' }); return res.end(); }
     res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
     return res.end(await page404());
   }

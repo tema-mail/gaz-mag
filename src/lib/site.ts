@@ -71,7 +71,7 @@ export const NAV: NavItem[] = [
   { label: 'Hubert', href: R.hubert },
   { label: 'Акции', href: R.promos },
   {
-    label: 'Монтаж', href: R.montag, children: [
+    label: 'Услуги', href: R.services, children: [
       { label: 'Подключение к газовым сетям и монтаж отопления', href: R.montag },
       { label: 'Установка газовых котлов', href: R.install },
     ],
@@ -84,6 +84,7 @@ export const FOOTER = {
   menu: [
     { label: 'Каталог', href: R.catalog },
     { label: 'Акции', href: R.promos },
+    { label: 'Услуги', href: R.services },
     { label: 'Монтаж и подключение газа', href: R.montag },
     { label: 'Установка котлов', href: R.install },
     { label: 'Котлы Hubert', href: R.hubert },

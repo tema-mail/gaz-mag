@@ -14,7 +14,7 @@ gaz-mag.ru {
 		reverse_proxy gaz-mag-web:8080
 	}
 }
-www.gaz-mag.ru {
+www.gaz-mag.ru, http://www.gaz-mag.ru {
 	redir https://gaz-mag.ru{uri} permanent
 }
 # Проверочный адрес до переключения домена: свой сертификат Caddy (curl -k), закрыт от поисковиков.
