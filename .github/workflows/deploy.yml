@@ -31,6 +31,12 @@ jobs:
         env:
           PUBLIC_SITE_URL: https://gaz-mag.ru
           PUBLIC_LEADS: '1'
+      # Весь личный кабинет /admin – за логином и паролем; без секретов шаг падает и открытая админка не выкладывается.
+      - name: Закрыть админку логином и паролем
+        run: node scripts/lock-admin.mjs
+        env:
+          ADMIN_LOGIN: ${{ secrets.ADMIN_LOGIN }}
+          ADMIN_PASS: ${{ secrets.ADMIN_PASS }}
       - name: Ключ выкладки
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
