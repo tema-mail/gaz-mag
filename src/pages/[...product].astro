@@ -1,5 +1,6 @@
 ---
-// 53 карточки товаров по адресам оригинала: /<каталог>/tproduct/<uid>-<slug>.
+import { R } from '../lib/routes';
+// Карточки товаров по ЧПУ: /katalog/<раздел>/<адрес из названия> (прежние тильдовские адреса – 301 по legacy[]).
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import ProductBuy from '../islands/ProductBuy';
@@ -8,6 +9,7 @@ import Gallery from '../islands/Gallery';
 import { CATALOGS, SITE } from '../lib/site';
 import { catalogOf, listCards, products, toCard } from '../lib/catalog';
 import { thumb, u } from '../lib/url';
+import { productSeoDescr, productSeoTitle } from '../lib/seo';
 
 export function getStaticPaths() {
   return products.map((p) => ({ params: { product: p.path.slice(1) }, props: { p } }));
@@ -23,9 +25,9 @@ const ld = {
   offers: { '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: prices.length },
 };
 ---
-<Base title={`${p.title} – купить в Новосибирске, цена ${card.price.toLocaleString('ru-RU')} ₽`} description={`${p.title}${p.brand ? ` (${p.brand})` : ''} – цена ${p.editions.length > 1 ? 'от ' : ''}${card.price.toLocaleString('ru-RU')} ₽. Характеристики, наличие, установка и подключение. ${SITE.name}: Болотное, работаем по Новосибирску.`} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
+<Base title={p.seoTitle || productSeoTitle(p.title)} description={p.seoDescr || productSeoDescr(p.title, p.brand)} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
   <div class="container pp">
-    <Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: '/catalogcentr' }, ...(cat ? [{ label: cat.title, href: '/' + cat.slug }] : []), { label: p.title }]} />
+    <Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, ...(cat ? [{ label: cat.title, href: cat.href }] : []), { label: p.title }]} />
     <div class="pp__grid">
       <Gallery client:visible images={p.images} alt={p.title} />
       <div class="pp__info">
@@ -34,9 +36,9 @@ const ld = {
         {p.descr && <p class="pp__descr">{p.descr}</p>}
         <ProductBuy client:load p={{ id: p.id, title: p.title, price: card.price, priceOld: p.priceOld, img: p.images[0] ?? '', path: p.path, options: p.options, editions: p.editions }} />
         <ul class="pp__perks">
-          <li>Подключение газа и монтаж отопления – <a href={u('/montag')}>подробнее</a></li>
-          <li>Установка газового котла – <a href={u('/ustanovka-kotla')}>подробнее</a></li>
-          <li>Скидки пенсионерам, юрлицам и при покупке от 100 тыс. – <a href={u('/akcii')}>все акции</a></li>
+          <li>Подключение газа и монтаж отопления – <a href={u(R.montag)}>подробнее</a></li>
+          <li>Установка газового котла – <a href={u(R.install)}>подробнее</a></li>
+          <li>Скидки пенсионерам, юрлицам и при покупке от 100 тыс. – <a href={u(R.promos)}>все акции</a></li>
         </ul>
       </div>
     </div>

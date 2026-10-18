@@ -1,7 +1,7 @@
 [
  {
   "id": "930598661982",
-  "path": "/catalog_boilers/tproduct/709793657-930598661982-gazovii-nastennii-dvuhkonturnii-kotel-oc",
+  "path": "/katalog/gazovye-kotly/gazovyy-nastennyy-dvukhkonturnyy-kotel-ochag-10-24e",
   "title": "Газовый настенный двухконтурный котел Очаг 10-24E",
   "brand": "Очаг",
   "descr": "Новинка",
@@ -137,11 +137,16 @@
   "images": [
    "/img/p/stor6366-3562_41669762",
    "/img/p/stor6365-3366_40488720"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "gazovyy-nastennyy-dvukhkonturnyy-kotel-ochag-10-24e",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-930598661982-gazovii-nastennii-dvuhkonturnii-kotel-oc"
   ]
  },
  {
   "id": "712633437052",
-  "path": "/catalog_boilers/tproduct/709793657-712633437052-nastennii-gazovii-kotel-hubert-smart-agb",
+  "path": "/katalog/gazovye-kotly/nastennyy-gazovyy-kotel-hubert-smart-agb-10-24dy",
   "title": "Настенный газовый котел HUBERT Smart AGB 10-24DY",
   "brand": "HUBERT",
   "descr": "",
@@ -256,11 +261,16 @@
    "/img/p/stor6636-3634_92803567",
    "/img/p/stor6239-3033_17825916",
    "/img/p/stor3735-6631_92016795"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "nastennyy-gazovyy-kotel-hubert-smart-agb-10-24dy",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-712633437052-nastennii-gazovii-kotel-hubert-smart-agb"
   ]
  },
  {
   "id": "840016399102",
-  "path": "/catalog_boilers/tproduct/709793657-840016399102-kotel-gazovii-nastennii-dvuhkonturnii-na",
+  "path": "/katalog/gazovye-kotly/kotel-gazovyy-nastennyy-dvukhkonturnyy-navien-deluxe-expert-13-24kv",
   "title": "Котел газовый настенный двухконтурный NAVIEN DELUXE EXPERT 13-24кв",
   "brand": "NAVIEN",
   "descr": "",
@@ -373,11 +383,16 @@
   "images": [
    "/img/p/stor6166-6361_8b9534decd57c208c9aa83bac4bc10fd",
    "/img/p/stor6463-6565_a2379504fa9d076a24e6eea845fb12c3"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-gazovyy-nastennyy-dvukhkonturnyy-navien-deluxe-expert-13-24kv",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-840016399102-kotel-gazovii-nastennii-dvuhkonturnii-na"
   ]
  },
  {
   "id": "723246640912",
-  "path": "/catalog_boilers/tproduct/709793657-723246640912-nastennii-gazovii-kotel-hubert-smart-agb",
+  "path": "/katalog/gazovye-kotly/nastennyy-gazovyy-kotel-hubert-smart-agb-10-24dp",
   "title": "Настенный газовый котел HUBERT Smart AGB 10-24DP",
   "brand": "HUBERT",
   "descr": "",
@@ -491,11 +506,16 @@
    "/img/p/stor6533-6238_8844db1c5e4415643189bd4ca5bb3fa6",
    "/img/p/stor3136-3930_b9183b6ac37ad9f2ee68111203046fb6",
    "/img/p/stor6334-3831_1bd388c00cc6071a266b17be22ee2502"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "nastennyy-gazovyy-kotel-hubert-smart-agb-10-24dp",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-723246640912-nastennii-gazovii-kotel-hubert-smart-agb"
   ]
  },
  {
   "id": "402136040242",
-  "path": "/catalog_boilers/tproduct/709793657-402136040242-nastennii-dvuhkonturnii-gazovii-kotel-hu",
+  "path": "/katalog/gazovye-kotly/nastennyy-dvukhkonturnyy-gazovyy-kotel-hubert-agb-18-40-dl",
   "title": "Настенный двухконтурный газовый котел HUBERT AGB 18-40 DL",
   "brand": "HUBERT",
   "descr": "",
@@ -617,11 +637,16 @@
    "/img/p/stor6365-3635_58162313",
    "/img/p/stor3765-6332_47974323",
    "/img/p/stor3561-3861_85536411"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "nastennyy-dvukhkonturnyy-gazovyy-kotel-hubert-agb-18-40-dl",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-402136040242-nastennii-dvuhkonturnii-gazovii-kotel-hu"
   ]
  },
  {
   "id": "456337812252",
-  "path": "/catalog_boilers/tproduct/709793657-456337812252-nastennii-odnokonturnii-gazovii-kotel-hu",
+  "path": "/katalog/gazovye-kotly/nastennyy-odnokonturnyy-gazovyy-kotel-hubert-agb-18-35-wlb-datchik-boylera",
   "title": "Настенный одноконтурный газовый котел HUBERT AGB 18-35 WLB + датчик бойлера",
   "brand": "HUBERT",
   "descr": "",
@@ -734,11 +759,16 @@
    "/img/p/stor6365-3635_58162313",
    "/img/p/stor3765-6332_47974323",
    "/img/p/stor3561-3861_85536411"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "nastennyy-odnokonturnyy-gazovyy-kotel-hubert-agb-18-35-wlb-datchik-boylera",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-456337812252-nastennii-odnokonturnii-gazovii-kotel-hu"
   ]
  },
  {
   "id": "274388891362",
-  "path": "/catalog_boilers/tproduct/709793657-274388891362-nastennii-dvuhkonturnii-kotel-kiturami-a",
+  "path": "/katalog/gazovye-kotly/nastennyy-dvukhkonturnyy-kotel-kiturami-alpha-plus-s-10-24",
   "title": "Настенный двухконтурный котел Kiturami Alpha Plus S 10-24",
   "brand": "Kiturami",
   "descr": "",
@@ -838,11 +868,16 @@
   "images": [
    "/img/p/stor6637-3766_3313c105d1a01eb207e2bd996ffe989e",
    "/img/p/stor6564-3566_22b8b6aa64114be95eb37f7aa226204d"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "nastennyy-dvukhkonturnyy-kotel-kiturami-alpha-plus-s-10-24",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-274388891362-nastennii-dvuhkonturnii-kotel-kiturami-a"
   ]
  },
  {
   "id": "571255813661",
-  "path": "/catalog_boilers/tproduct/709793657-571255813661-kotel-napolnii-odnokonturnii-ksg-7-25kvt",
+  "path": "/katalog/gazovye-kotly/kotel-napolnyy-odnokonturnyy-ksg-7-25kvt-s-ochag-standart-sabk-at",
   "title": "Котел напольный одноконтурный КСГ- 7-25кВт С \"Очаг\" Стандарт САБК-АТ.",
   "brand": "Очаг",
   "descr": "",
@@ -960,11 +995,16 @@
   "images": [
    "/img/p/stor6263-6266_57147621",
    "/img/p/stor3238-3737_74043984"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-napolnyy-odnokonturnyy-ksg-7-25kvt-s-ochag-standart-sabk-at",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-571255813661-kotel-napolnii-odnokonturnii-ksg-7-25kvt"
   ]
  },
  {
   "id": "685538253012",
-  "path": "/catalog_boilers/tproduct/709793657-685538253012-kotel-napolnii-odnokonturnii-zhar-compac",
+  "path": "/katalog/gazovye-kotly/kotel-napolnyy-odnokonturnyy-zhar-compact-tgv-7-14kvt",
   "title": "Котел напольный одноконтурный ЖАР Compact TGV 7-14кВт",
   "brand": "ЖАР",
   "descr": "",
@@ -1077,11 +1117,16 @@
    "/img/p/stor6535-3930_87142746",
    "/img/p/stor3666-6138_71790734",
    "/img/p/stor3333-3764_92319712"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-napolnyy-odnokonturnyy-zhar-compact-tgv-7-14kvt",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-685538253012-kotel-napolnii-odnokonturnii-zhar-compac"
   ]
  },
  {
   "id": "957361699972",
-  "path": "/catalog_boilers/tproduct/709793657-957361699972-kotel-napolnii-odnokonturnii-zhar-kov-tg",
+  "path": "/katalog/gazovye-kotly/kotel-napolnyy-odnokonturnyy-zhar-kov-tgv-12-5-25kvt",
   "title": "Котел напольный одноконтурный ЖАР КОВ TGV 12,5-25кВт",
   "brand": "ЖАР",
   "descr": "",
@@ -1193,11 +1238,16 @@
    "/img/p/stor3866-3030_18642441",
    "/img/p/stor3566-6233_29058276",
    "/img/p/stor3666-6138_71790734"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-napolnyy-odnokonturnyy-zhar-kov-tgv-12-5-25kvt",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-957361699972-kotel-napolnii-odnokonturnii-zhar-kov-tg"
   ]
  },
  {
   "id": "419618182582",
-  "path": "/catalog_boilers/tproduct/709793657-419618182582-kotel-napolnii-odnokonturnii-ksg-7-16kvt",
+  "path": "/katalog/gazovye-kotly/kotel-napolnyy-odnokonturnyy-ksg-7-16kvt-e-ochag-standart-eurosit",
   "title": "Котел напольный одноконтурный КСГ- 7-16кВт E \"Очаг\" Стандарт EUROSIT",
   "brand": "Очаг",
   "descr": "",
@@ -1298,11 +1348,16 @@
   "images": [
    "/img/p/stor6263-6266_57147621",
    "/img/p/stor3238-3737_74043984"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-napolnyy-odnokonturnyy-ksg-7-16kvt-e-ochag-standart-eurosit",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-419618182582-kotel-napolnii-odnokonturnii-ksg-7-16kvt"
   ]
  },
  {
   "id": "945917554262",
-  "path": "/catalog_boilers/tproduct/709793657-945917554262-kotel-gazovii-nastennii-federica-bugatti",
+  "path": "/katalog/gazovye-kotly/kotel-gazovyy-nastennyy-federica-bugatti-12-32-varme-2-kh-kont-s-disp",
   "title": "Котел газовый настенный Federica Bugatti 12-32 VARME 2-х конт. с дисп.",
   "brand": "Federica Bugatti",
   "descr": "",
@@ -1412,11 +1467,16 @@
    "/img/p/stor3337-6566_88192776",
    "/img/p/stor6236-3466_44116570",
    "/img/p/stor6336-3939_92808319"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-gazovyy-nastennyy-federica-bugatti-12-32-varme-2-kh-kont-s-disp",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-945917554262-kotel-gazovii-nastennii-federica-bugatti"
   ]
  },
  {
   "id": "683002401882",
-  "path": "/catalog_boilers/tproduct/709793657-683002401882-kotel-gazovii-nastennii-federica-bugatti",
+  "path": "/katalog/gazovye-kotly/kotel-gazovyy-nastennyy-federica-bugatti-12-32-varme-2-kh-kont-s-disp-s-wi-fi-chernyy",
   "title": "Котел газовый настенный Federica Bugatti 12-32 VARME 2-х конт. с дисп. с WI-FI ЧЕРНЫЙ",
   "brand": "Federica Bugatti",
   "descr": "",
@@ -1526,11 +1586,16 @@
    "/img/p/stor6430-3232_18803663",
    "/img/p/stor3835-3239_47233995",
    "/img/p/stor3730-3861_46550076"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-gazovyy-nastennyy-federica-bugatti-12-32-varme-2-kh-kont-s-disp-s-wi-fi-chernyy",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-683002401882-kotel-gazovii-nastennii-federica-bugatti"
   ]
  },
  {
   "id": "462294140572",
-  "path": "/catalog_boilers/tproduct/709793657-462294140572-kotel-gazovii-nastennii-federica-bugatti",
+  "path": "/katalog/gazovye-kotly/kotel-gazovyy-nastennyy-federica-bugatti-24-32v-varme-1-kont-s-disp",
   "title": "Котел газовый настенный Federica Bugatti 24-32В VARME 1-конт. с дисп.",
   "brand": "Federica Bugatti",
   "descr": "",
@@ -1622,11 +1687,16 @@
    "/img/p/stor3337-6566_88192776",
    "/img/p/stor6236-3466_44116570",
    "/img/p/stor6336-3939_92808319"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-gazovyy-nastennyy-federica-bugatti-24-32v-varme-1-kont-s-disp",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-462294140572-kotel-gazovii-nastennii-federica-bugatti"
   ]
  },
  {
   "id": "900406443831",
-  "path": "/catalog_boilers/tproduct/709793657-900406443831-kotel-nastennii-daesung-a-max-16-41-151",
+  "path": "/katalog/gazovye-kotly/kotel-nastennyy-daesung-a-max-16-41-15-1-kvt",
   "title": "Котел настенный Daesung А MAX 16-41 (15,1 кВт)",
   "brand": "Daesung",
   "descr": "",
@@ -1752,11 +1822,16 @@
   ],
   "images": [
    "/img/p/stor3063-6237_54924769"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-nastennyy-daesung-a-max-16-41-15-1-kvt",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-900406443831-kotel-nastennii-daesung-a-max-16-41-151"
   ]
  },
  {
   "id": "679182877991",
-  "path": "/catalog_boilers/tproduct/709793657-679182877991-mimaks-odnokonturnii-napolnii-s-gorelkoi",
+  "path": "/katalog/gazovye-kotly/mimaks-odnokonturnyy-napolnyy-s-gorelkoy-agu-ks-g-7-40kvt",
   "title": "МИМАКС одноконтурный напольный с горелкой АГУ КС-Г 7-40кВт",
   "brand": "МИМАКС",
   "descr": "",
@@ -1901,11 +1976,16 @@
   ],
   "images": [
    "/img/p/stor6338-3265_49312891"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "mimaks-odnokonturnyy-napolnyy-s-gorelkoy-agu-ks-g-7-40kvt",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-679182877991-mimaks-odnokonturnii-napolnii-s-gorelkoi"
   ]
  },
  {
   "id": "331776267261",
-  "path": "/catalog_boilers/tproduct/709793657-331776267261-kotel-napolnii-dvuhkonturnii-ksgv-125-20",
+  "path": "/katalog/gazovye-kotly/kotel-napolnyy-dvukhkonturnyy-ksgv-12-5-20kvt-s-ochag-standart",
   "title": "Котел напольный двухконтурный КСГВ-12,5-20кВт С \"Очаг\" Стандарт",
   "brand": "Очаг",
   "descr": "",
@@ -2005,11 +2085,16 @@
   "images": [
    "/img/p/stor6338-3835_69684166",
    "/img/p/stor3335-6366_20109618"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-napolnyy-dvukhkonturnyy-ksgv-12-5-20kvt-s-ochag-standart",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-331776267261-kotel-napolnii-dvuhkonturnii-ksgv-125-20"
   ]
  },
  {
   "id": "806155713571",
-  "path": "/catalog_boilers/tproduct/709793657-806155713571-nastennii-gazovii-kotel-haier-urban-210",
+  "path": "/katalog/gazovye-kotly/nastennyy-gazovyy-kotel-haier-urban-2-10-tm-10-kv",
   "title": "Настенный газовый котел HAIER Urban 2.10 TM 10 Кв",
   "brand": "Haier",
   "descr": "",
@@ -2076,11 +2161,16 @@
    "/img/p/stor6432-6265_35956082",
    "/img/p/stor3762-6163_45891141",
    "/img/p/stor6461-3933_27783536"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "nastennyy-gazovyy-kotel-haier-urban-2-10-tm-10-kv",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-806155713571-nastennii-gazovii-kotel-haier-urban-210"
   ]
  },
  {
   "id": "132460964951",
-  "path": "/catalog_boilers/tproduct/709793657-132460964951-nastennii-gazovii-kotel-haier-techline-2",
+  "path": "/katalog/gazovye-kotly/nastennyy-gazovyy-kotel-haier-techline-2-10-ti-10-kv",
   "title": "Настенный газовый котел HAIER TechLine 2.10 Ti 10 Кв",
   "brand": "Haier",
   "descr": "",
@@ -2158,11 +2248,16 @@
   "images": [
    "/img/p/stor3662-3534_13375351",
    "/img/p/stor3763-3236_89246489"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "nastennyy-gazovyy-kotel-haier-techline-2-10-ti-10-kv",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-132460964951-nastennii-gazovii-kotel-haier-techline-2"
   ]
  },
  {
   "id": "756617715611",
-  "path": "/catalog_boilers/tproduct/709793657-756617715611-kotel-gazovii-napolnii-fed-ks-g-10-20kvt",
+  "path": "/katalog/gazovye-kotly/kotel-gazovyy-napolnyy-fed-ks-g-10-20kvt-tgv-307-stalnoy-t-o-novyy-t-o",
   "title": "Котел газовый напольный FED КС-Г-10-20кВт (TGV-307) стальной т/о (новый т/о)",
   "brand": "Federica Bugatti",
   "descr": "",
@@ -2270,11 +2365,16 @@
   ],
   "images": [
    "/img/p/stor3961-6464_37101874"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-gazovyy-napolnyy-fed-ks-g-10-20kvt-tgv-307-stalnoy-t-o-novyy-t-o",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-756617715611-kotel-gazovii-napolnii-fed-ks-g-10-20kvt"
   ]
  },
  {
   "id": "754021088181",
-  "path": "/catalog_boilers/tproduct/709793657-754021088181-kotel-gazovii-napolnii-fed-ks-g-75-40kvt",
+  "path": "/katalog/gazovye-kotly/kotel-gazovyy-napolnyy-fed-ks-g-7-5-40kvt-sit-630-stalnoy-t-o",
   "title": "Котел газовый напольный FED КС-Г-7,5-40кВт (sit 630) стальной т/о",
   "brand": "Federica Bugatti",
   "descr": "",
@@ -2419,11 +2519,16 @@
   "images": [
    "/img/p/stor3130-3563_65213383",
    "/img/p/stor6232-6663_44903486"
+  ],
+  "catalog": "catalog_boilers",
+  "slug": "kotel-gazovyy-napolnyy-fed-ks-g-7-5-40kvt-sit-630-stalnoy-t-o",
+  "legacy": [
+   "/catalog_boilers/tproduct/709793657-754021088181-kotel-gazovii-napolnii-fed-ks-g-75-40kvt"
   ]
  },
  {
   "id": "398947804391",
-  "path": "/catalog_gaz_waterheaters/tproduct/720821487-398947804391-teploks-gpv-10-b",
+  "path": "/katalog/gazovye-kolonki/teploks-gpv-10-b",
   "title": "ТЕПЛОКС ГПВ-10-Б",
   "brand": "Теплокс",
   "descr": "",
@@ -2485,11 +2590,16 @@
   "images": [
    "/img/p/stor3963-6439_61690949"
   ],
-  "hidden": false
+  "hidden": false,
+  "catalog": "catalog_gaz_waterheaters",
+  "slug": "teploks-gpv-10-b",
+  "legacy": [
+   "/catalog_gaz_waterheaters/tproduct/720821487-398947804391-teploks-gpv-10-b"
+  ]
  },
  {
   "id": "260068387442",
-  "path": "/catalog_gaz_waterheaters/tproduct/720821487-260068387442-teploks-gpv-12-b",
+  "path": "/katalog/gazovye-kolonki/teploks-gpv-12-b",
   "title": "ТЕПЛОКС ГПВ-12-Б",
   "brand": "Теплокс",
   "descr": "",
@@ -2550,11 +2660,16 @@
   "editions": [],
   "images": [
    "/img/p/stor3963-6439_61690949"
+  ],
+  "catalog": "catalog_gaz_waterheaters",
+  "slug": "teploks-gpv-12-b",
+  "legacy": [
+   "/catalog_gaz_waterheaters/tproduct/720821487-260068387442-teploks-gpv-12-b"
   ]
  },
  {
   "id": "228134883401",
-  "path": "/catalog_el_waterheaters/tproduct/720821688-228134883401-ballu-bwhs-100-primex",
+  "path": "/katalog/elektricheskie-vodonagrevateli/ballu-bwh-s-100-primex",
   "title": "Ballu BWH/S 100 Primex",
   "brand": "Ballu",
   "descr": "",
@@ -2609,11 +2724,16 @@
    "/img/p/stor3531-3634_94750001",
    "/img/p/stor3261-3963_34880501",
    "/img/p/stor6532-3065_19386748"
+  ],
+  "catalog": "catalog_el_waterheaters",
+  "slug": "ballu-bwh-s-100-primex",
+  "legacy": [
+   "/catalog_el_waterheaters/tproduct/720821688-228134883401-ballu-bwhs-100-primex"
   ]
  },
  {
   "id": "410081358981",
-  "path": "/catalog_el_waterheaters/tproduct/720821688-410081358981-electrolux-ewh-100-quantum-pro",
+  "path": "/katalog/elektricheskie-vodonagrevateli/electrolux-ewh-100-quantum-pro",
   "title": "Electrolux EWH 100 Quantum Pro",
   "brand": "Electrolux",
   "descr": "",
@@ -2668,11 +2788,16 @@
    "/img/p/stor3832-3434_82301131",
    "/img/p/stor3962-6433_82674811",
    "/img/p/stor3432-3639_91475227"
+  ],
+  "catalog": "catalog_el_waterheaters",
+  "slug": "electrolux-ewh-100-quantum-pro",
+  "legacy": [
+   "/catalog_el_waterheaters/tproduct/720821688-410081358981-electrolux-ewh-100-quantum-pro"
   ]
  },
  {
   "id": "278140667431",
-  "path": "/catalog_el_waterheaters/tproduct/720821688-278140667431-ballu-bwhs-100-rodon",
+  "path": "/katalog/elektricheskie-vodonagrevateli/ballu-bwh-s-100-rodon",
   "title": "Ballu BWH/S 100 Rodon",
   "brand": "Ballu",
   "descr": "",
@@ -2725,11 +2850,16 @@
   "editions": [],
   "images": [
    "/img/p/stor3438-3731_29444007"
+  ],
+  "catalog": "catalog_el_waterheaters",
+  "slug": "ballu-bwh-s-100-rodon",
+  "legacy": [
+   "/catalog_el_waterheaters/tproduct/720821688-278140667431-ballu-bwhs-100-rodon"
   ]
  },
  {
   "id": "755541835031",
-  "path": "/catalog_el_waterheaters/tproduct/720821688-755541835031-kotel-elektricheskii-thermex-quantum-e90",
+  "path": "/katalog/elektricheskie-vodonagrevateli/kotel-elektricheskiy-thermex-quantum-e906-6-kvt",
   "title": "Котел электрический thermex Quantum E906 6 кВт",
   "brand": "Thermex",
   "descr": "",
@@ -2782,11 +2912,16 @@
   "editions": [],
   "images": [
    "/img/p/stor3166-3263_24414474"
+  ],
+  "catalog": "catalog_el_waterheaters",
+  "slug": "kotel-elektricheskiy-thermex-quantum-e906-6-kvt",
+  "legacy": [
+   "/catalog_el_waterheaters/tproduct/720821688-755541835031-kotel-elektricheskii-thermex-quantum-e90"
   ]
  },
  {
   "id": "745877145372",
-  "path": "/catalog_indirect_boilers/tproduct/720822185-745877145372-boiler-kosvennogo-nagreva-po-sisteme-bak",
+  "path": "/katalog/boylery-kosvennogo-nagreva/boyler-kosvennogo-nagreva-po-sisteme-bak-v-bake-krats-chern-obem-160l",
   "title": "Бойлер косвенного нагрева по системе «бак-в-баке» KRATS черн (объем 160л)",
   "brand": "Thermex",
   "descr": "",
@@ -2867,11 +3002,16 @@
   "images": [
    "/img/p/stor3464-3235_48551117",
    "/img/p/stor6664-3963_90294438"
+  ],
+  "catalog": "catalog_indirect_boilers",
+  "slug": "boyler-kosvennogo-nagreva-po-sisteme-bak-v-bake-krats-chern-obem-160l",
+  "legacy": [
+   "/catalog_indirect_boilers/tproduct/720822185-745877145372-boiler-kosvennogo-nagreva-po-sisteme-bak"
   ]
  },
  {
   "id": "827448906931",
-  "path": "/catalog_indirect_boilers/tproduct/720822185-827448906931-royal-thermo-aquatec-inox-rtwx-f-1001-gr",
+  "path": "/katalog/boylery-kosvennogo-nagreva/royal-thermo-aquatec-inox-rtwx-f-100-1-grafit-s-sukhim-tenom",
   "title": "Royal Thermo AQUATEC INOX RTWX-F 100.1 Grafit с сухим тэном",
   "brand": "Royal Thermo",
   "descr": "",
@@ -2920,11 +3060,16 @@
   "editions": [],
   "images": [
    "/img/p/stor3835-3937_87371149"
+  ],
+  "catalog": "catalog_indirect_boilers",
+  "slug": "royal-thermo-aquatec-inox-rtwx-f-100-1-grafit-s-sukhim-tenom",
+  "legacy": [
+   "/catalog_indirect_boilers/tproduct/720822185-827448906931-royal-thermo-aquatec-inox-rtwx-f-1001-gr"
   ]
  },
  {
   "id": "727363623351",
-  "path": "/catalog_indirect_boilers/tproduct/720822185-727363623351-royal-thermo-aquatec-inox-rtwx-f-80-100l",
+  "path": "/katalog/boylery-kosvennogo-nagreva/royal-thermo-aquatec-inox-rtwx-f-80-100l-nastennyy",
   "title": "Royal Thermo AQUATEC INOX RTWX-F 80-100л настенный",
   "brand": "Royal Thermo",
   "descr": "",
@@ -2998,11 +3143,16 @@
   ],
   "images": [
    "/img/p/stor6562-3836_40265610"
+  ],
+  "catalog": "catalog_indirect_boilers",
+  "slug": "royal-thermo-aquatec-inox-rtwx-f-80-100l-nastennyy",
+  "legacy": [
+   "/catalog_indirect_boilers/tproduct/720822185-727363623351-royal-thermo-aquatec-inox-rtwx-f-80-100l"
   ]
  },
  {
   "id": "201615246661",
-  "path": "/catalog_indirect_boilers/tproduct/720822185-201615246661-royal-thermo-aquatec-inox-rtwx-150-napol",
+  "path": "/katalog/boylery-kosvennogo-nagreva/royal-thermo-aquatec-inox-rtwx-150-napolnyy-bez-tena",
   "title": "Royal Thermo AQUATEC INOX RTWX 150 напольный без тэна",
   "brand": "Royal Thermo",
   "descr": "",
@@ -3051,11 +3201,16 @@
   "editions": [],
   "images": [
    "/img/p/stor6630-6162_55014634"
+  ],
+  "catalog": "catalog_indirect_boilers",
+  "slug": "royal-thermo-aquatec-inox-rtwx-150-napolnyy-bez-tena",
+  "legacy": [
+   "/catalog_indirect_boilers/tproduct/720822185-201615246661-royal-thermo-aquatec-inox-rtwx-150-napol"
   ]
  },
  {
   "id": "721279322081",
-  "path": "/catalog_indirect_boilers/tproduct/720822185-721279322081-boiler-kosvennogo-nagreva-150-l-thermex",
+  "path": "/katalog/boylery-kosvennogo-nagreva/boyler-kosvennogo-nagreva-150-l-thermex-comfort-inox-150v-24-nerzh",
   "title": "Бойлер косвенного нагрева 150 л. Thermex Comfort INOX 150V/24 (нерж.)",
   "brand": "Thermex",
   "descr": "",
@@ -3104,11 +3259,16 @@
   "editions": [],
   "images": [
    "/img/p/stor3438-3231_45790079"
+  ],
+  "catalog": "catalog_indirect_boilers",
+  "slug": "boyler-kosvennogo-nagreva-150-l-thermex-comfort-inox-150v-24-nerzh",
+  "legacy": [
+   "/catalog_indirect_boilers/tproduct/720822185-721279322081-boiler-kosvennogo-nagreva-150-l-thermex"
   ]
  },
  {
   "id": "153489329822",
-  "path": "/catalog_indirect_boilers/tproduct/720822185-153489329822-boiler-kosvennogo-nagreva-inox-1000-fede",
+  "path": "/katalog/boylery-kosvennogo-nagreva/boyler-kosvennogo-nagreva-inox-1000-federica-bugatti-chern-obem-150l-proiz-1050l-ch-pri",
   "title": "Бойлер косвенного нагрева INOX 1000 Federica Bugatti черн (объем 150л, произ.1050л/ч при 45*С, анод)",
   "brand": "Thermex",
   "descr": "",
@@ -3193,11 +3353,16 @@
    "/img/p/stor3664-3036_64023585",
    "/img/p/stor6565-3066_29827186",
    "/img/p/stor3532-6437_26477358"
+  ],
+  "catalog": "catalog_indirect_boilers",
+  "slug": "boyler-kosvennogo-nagreva-inox-1000-federica-bugatti-chern-obem-150l-proiz-1050l-ch-pri",
+  "legacy": [
+   "/catalog_indirect_boilers/tproduct/720822185-153489329822-boiler-kosvennogo-nagreva-inox-1000-fede"
   ]
  },
  {
   "id": "651075481781",
-  "path": "/catalog_other/tproduct/721475011-651075481781-bochonok-15",
+  "path": "/katalog/tovary-dlya-otopleniya/bochonok-15",
   "title": "Бочонок 15",
   "brand": "",
   "descr": "",
@@ -3211,11 +3376,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "bochonok-15",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-651075481781-bochonok-15"
+  ]
  },
  {
   "id": "114781939811",
-  "path": "/catalog_other/tproduct/721475011-114781939811-bochonok-25",
+  "path": "/katalog/tovary-dlya-otopleniya/bochonok-25",
   "title": "Бочонок 25",
   "brand": "",
   "descr": "",
@@ -3229,11 +3399,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "bochonok-25",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-114781939811-bochonok-25"
+  ]
  },
  {
   "id": "910083375221",
-  "path": "/catalog_other/tproduct/721475011-910083375221-stabilizator-napryazhenie-releinii-snr-5",
+  "path": "/katalog/tovary-dlya-otopleniya/stabilizator-napryazhenie-releynyy-snr-500n2p",
   "title": "Стабилизатор напряжение релейный СНР-500Н2П",
   "brand": "",
   "descr": "",
@@ -3247,11 +3422,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "stabilizator-napryazhenie-releynyy-snr-500n2p",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-910083375221-stabilizator-napryazhenie-releinii-snr-5"
+  ]
  },
  {
   "id": "998131865721",
-  "path": "/catalog_other/tproduct/721475011-998131865721-stabilizator-napryazheniya-frederica-bug",
+  "path": "/katalog/tovary-dlya-otopleniya/stabilizator-napryazheniya-frederica-bugatti-fb-500",
   "title": "Стабилизатор напряжения Frederica Bugatti FB 500",
   "brand": "",
   "descr": "",
@@ -3265,11 +3445,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "stabilizator-napryazheniya-frederica-bugatti-fb-500",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-998131865721-stabilizator-napryazheniya-frederica-bug"
+  ]
  },
  {
   "id": "431946405441",
-  "path": "/catalog_other/tproduct/721475011-431946405441-stabilizator-napryazheniya-ivepr-teploco",
+  "path": "/katalog/tovary-dlya-otopleniya/stabilizator-napryazheniya-ivepr-teplocom-st-555",
   "title": "Стабилизатор напряжения ИВЭПР TEPLOCOM ST-555",
   "brand": "",
   "descr": "",
@@ -3283,11 +3468,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "stabilizator-napryazheniya-ivepr-teplocom-st-555",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-431946405441-stabilizator-napryazheniya-ivepr-teploco"
+  ]
  },
  {
   "id": "565545141491",
-  "path": "/catalog_other/tproduct/721475011-565545141491-61002-aquaflax-nano-tyubik-80-gr",
+  "path": "/katalog/tovary-dlya-otopleniya/61002-aquaflax-nano-tyubik-80-gr",
   "title": "61002 Aquaflax nano, тюбик, 80 гр.",
   "brand": "",
   "descr": "",
@@ -3301,11 +3491,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "61002-aquaflax-nano-tyubik-80-gr",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-565545141491-61002-aquaflax-nano-tyubik-80-gr"
+  ]
  },
  {
   "id": "552216281211",
-  "path": "/catalog_other/tproduct/721475011-552216281211-61030-santehmaster-gel-zeleniityubik-60g",
+  "path": "/katalog/tovary-dlya-otopleniya/61030-santekhmaster-gel-zelenyy-tyubik-60gr-blister",
   "title": "61030 Сантехмастер Гель Зеленый,тюбик 60гр,блистер",
   "brand": "",
   "descr": "",
@@ -3319,11 +3514,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "61030-santekhmaster-gel-zelenyy-tyubik-60gr-blister",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-552216281211-61030-santehmaster-gel-zeleniityubik-60g"
+  ]
  },
  {
   "id": "436422446721",
-  "path": "/catalog_other/tproduct/721475011-436422446721-61031-santehmaster-gel-siniityubik-60grb",
+  "path": "/katalog/tovary-dlya-otopleniya/61031-santekhmaster-gel-siniy-tyubik-60gr-blister",
   "title": "61031 Сантехмастер Гель Синий,тюбик 60гр,блистер",
   "brand": "",
   "descr": "",
@@ -3337,11 +3537,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "61031-santekhmaster-gel-siniy-tyubik-60gr-blister",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-436422446721-61031-santehmaster-gel-siniityubik-60grb"
+  ]
  },
  {
   "id": "994024707991",
-  "path": "/catalog_other/tproduct/721475011-994024707991-61037-stopmaster-gel-krasniityubik-60grb",
+  "path": "/katalog/tovary-dlya-otopleniya/61037-stopmaster-gel-krasnyy-tyubik-60gr-blister",
   "title": "61037 Стопмастер Гель Красный,тюбик 60гр,блистер",
   "brand": "",
   "descr": "",
@@ -3355,11 +3560,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "61037-stopmaster-gel-krasnyy-tyubik-60gr-blister",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-994024707991-61037-stopmaster-gel-krasniityubik-60grb"
+  ]
  },
  {
   "id": "372820755251",
-  "path": "/catalog_other/tproduct/721475011-372820755251-santehmaster-gel-zeleniityubik-15grblist",
+  "path": "/katalog/tovary-dlya-otopleniya/santekhmaster-gel-zelenyy-tyubik-15gr-blister",
   "title": "Сантехмастер Гель Зеленый,тюбик 15гр,блистер",
   "brand": "",
   "descr": "",
@@ -3373,11 +3583,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "santekhmaster-gel-zelenyy-tyubik-15gr-blister",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-372820755251-santehmaster-gel-zeleniityubik-15grblist"
+  ]
  },
  {
   "id": "241419639171",
-  "path": "/catalog_other/tproduct/721475011-241419639171-santehmaster-gel-siniityubik-15grblister",
+  "path": "/katalog/tovary-dlya-otopleniya/santekhmaster-gel-siniy-tyubik-15gr-blister",
   "title": "Сантехмастер Гель Синий,тюбик 15гр,блистер",
   "brand": "",
   "descr": "",
@@ -3391,11 +3606,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "santekhmaster-gel-siniy-tyubik-15gr-blister",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-241419639171-santehmaster-gel-siniityubik-15grblister"
+  ]
  },
  {
   "id": "788171122011",
-  "path": "/catalog_other/tproduct/721475011-788171122011-fiksator-rezbi-nerazemnii-krasnii-odis",
+  "path": "/katalog/tovary-dlya-otopleniya/fiksator-rezby-nerazemnyy-krasnyy-odis",
   "title": "Фиксатор резьбы неразъемный (Красный) ODIS",
   "brand": "",
   "descr": "",
@@ -3409,11 +3629,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "fiksator-rezby-nerazemnyy-krasnyy-odis",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-788171122011-fiksator-rezbi-nerazemnii-krasnii-odis"
+  ]
  },
  {
   "id": "850106682941",
-  "path": "/catalog_other/tproduct/721475011-850106682941-fiksator-rezbi-razemnii-sinii-odis",
+  "path": "/katalog/tovary-dlya-otopleniya/fiksator-rezby-razemnyy-siniy-odis",
   "title": "Фиксатор резьбы разъемный (Синий) ODIS",
   "brand": "",
   "descr": "",
@@ -3427,11 +3652,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "fiksator-rezby-razemnyy-siniy-odis",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-850106682941-fiksator-rezbi-razemnii-sinii-odis"
+  ]
  },
  {
   "id": "704379904611",
-  "path": "/catalog_other/tproduct/721475011-704379904611-holodnaya-svarka-kudo-ku-h104-dlya-remon",
+  "path": "/katalog/tovary-dlya-otopleniya/kholodnaya-svarka-kudo-ku-h104-dlya-remonta-batarey-60gr",
   "title": "Холодная сварка KUDO KU-H104 для ремонта батарей 60гр.",
   "brand": "",
   "descr": "",
@@ -3445,11 +3675,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "kholodnaya-svarka-kudo-ku-h104-dlya-remonta-batarey-60gr",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-704379904611-holodnaya-svarka-kudo-ku-h104-dlya-remon"
+  ]
  },
  {
   "id": "800648662181",
-  "path": "/catalog_other/tproduct/721475011-800648662181-holodnaya-svarka-ultima-strongfix-univer",
+  "path": "/katalog/tovary-dlya-otopleniya/kholodnaya-svarka-ultima-strongfix-universalnaya-bystrogo-deystviya-58gr",
   "title": "Холодная сварка ULTIMA StrongFix универсальная быстрого действия 58гр.",
   "brand": "",
   "descr": "",
@@ -3463,11 +3698,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "kholodnaya-svarka-ultima-strongfix-universalnaya-bystrogo-deystviya-58gr",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-800648662181-holodnaya-svarka-ultima-strongfix-univer"
+  ]
  },
  {
   "id": "487106056751",
-  "path": "/catalog_other/tproduct/721475011-487106056751-germetik-dlya-pechei-penosil-1500",
+  "path": "/katalog/tovary-dlya-otopleniya/germetik-dlya-pechey-penosil-1500",
   "title": "Герметик для печей Penosil 1500*",
   "brand": "",
   "descr": "",
@@ -3481,11 +3721,16 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": []
+  "images": [],
+  "catalog": "catalog_other",
+  "slug": "germetik-dlya-pechey-penosil-1500",
+  "legacy": [
+   "/catalog_other/tproduct/721475011-487106056751-germetik-dlya-pechei-penosil-1500"
+  ]
  },
  {
   "id": "867349673122",
-  "path": "/gas/tproduct/725273079-867349673122-schetchik-gaza-malogabaritnii-sgmb-4-na",
+  "path": "/katalog/datchiki-i-schetchiki-gaza/schetchik-gaza-malogabaritnyy-sgmb-4-na-3-4",
   "title": "Счетчик газа малогабаритный СГМБ-4 на 3/4",
   "brand": "",
   "descr": "",
@@ -3523,11 +3768,16 @@
   "editions": [],
   "images": [
    "/img/p/stor6531-3132_61833235"
+  ],
+  "catalog": "gas",
+  "slug": "schetchik-gaza-malogabaritnyy-sgmb-4-na-3-4",
+  "legacy": [
+   "/gas/tproduct/725273079-867349673122-schetchik-gaza-malogabaritnii-sgmb-4-na"
   ]
  },
  {
   "id": "202487854682",
-  "path": "/gas/tproduct/725273079-202487854682-koaksialnaya-traditsionnaya-sistema-d601",
+  "path": "/katalog/datchiki-i-schetchiki-gaza/koaksialnaya-traditsionnaya-sistema-d60-100-krats",
   "title": "Коаксиальная традиционная система D60/100 KRATS",
   "brand": "",
   "descr": "",
@@ -3557,11 +3807,16 @@
   "editions": [],
   "images": [
    "/img/p/stor6464-6636_97228096"
+  ],
+  "catalog": "gas",
+  "slug": "koaksialnaya-traditsionnaya-sistema-d60-100-krats",
+  "legacy": [
+   "/gas/tproduct/725273079-202487854682-koaksialnaya-traditsionnaya-sistema-d601"
   ]
  },
  {
   "id": "800746894832",
-  "path": "/gas/tproduct/725273079-800746894832-schetchik-gaza-sgk-g4-leviipravii",
+  "path": "/katalog/datchiki-i-schetchiki-gaza/schetchik-gaza-sgk-g4-levyy-pravyy",
   "title": "Счетчик газа СГК G4 (левый\\правый)",
   "brand": "",
   "descr": "",
@@ -3598,11 +3853,16 @@
   "editions": [],
   "images": [
    "/img/p/stor6163-6466_11000028"
+  ],
+  "catalog": "gas",
+  "slug": "schetchik-gaza-sgk-g4-levyy-pravyy",
+  "legacy": [
+   "/gas/tproduct/725273079-800746894832-schetchik-gaza-sgk-g4-leviipravii"
   ]
  },
  {
   "id": "972712178362",
-  "path": "/gas/tproduct/725273079-972712178362-bitovaya-sistema-avtonomnogo-kontrolya-z",
+  "path": "/katalog/datchiki-i-schetchiki-gaza/bytovaya-sistema-avtonomnogo-kontrolya-zagazovannosti-sgk-2-b-so-sn4-dn-20-nd",
   "title": "Бытовая система автономного контроля загазованности СГК-2-Б-СО+СН4 DN 20 НД",
   "brand": "",
   "descr": "",
@@ -3696,6 +3956,11 @@
   "editions": [],
   "images": [
    "/img/p/stor6665-3034_55339802"
+  ],
+  "catalog": "gas",
+  "slug": "bytovaya-sistema-avtonomnogo-kontrolya-zagazovannosti-sgk-2-b-so-sn4-dn-20-nd",
+  "legacy": [
+   "/gas/tproduct/725273079-972712178362-bitovaya-sistema-avtonomnogo-kontrolya-z"
   ]
  }
 ]

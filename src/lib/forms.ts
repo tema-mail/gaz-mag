@@ -1,3 +1,4 @@
+import { R } from './routes';
 import { u } from './url';
 
 // Куда уходят заявки и заказы. Владелец 18.10.2026: на боевом gaz-mag.ru – в Telegram через наш приёмник
@@ -48,4 +49,4 @@ export async function sendForm(formName: string, fields: Record<string, string>,
 }
 
 /** Адрес «Спасибо» с учётом подпапки на Pages. */
-export const thanksUrl = () => u('/thanks');
+export const thanksUrl = () => u(R.thanks);

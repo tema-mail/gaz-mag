@@ -1,3 +1,4 @@
+import { R } from '../lib/routes';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { OPEN_EVENT, readConsent, saveConsent } from '../lib/consent';
 import { u } from '../lib/url';
@@ -53,7 +54,7 @@ export default function CookieConsent() {
           </div>
         )}
         <p class="cc__docs">
-          Подробнее: <a href={u('/cookie')}>Политика cookie</a> · <a href={u('/policy')}>Политика обработки персональных данных</a> · <a href={u('/agreement')}>Согласие на обработку персональных данных</a>
+          Подробнее: <a href={u(R.cookie)}>Политика cookie</a> · <a href={u(R.policy)}>Политика обработки персональных данных</a> · <a href={u(R.agreement)}>Согласие на обработку персональных данных</a>
         </p>
         <div class="cc__btns">
           {details ? (

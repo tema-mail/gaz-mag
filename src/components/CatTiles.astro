@@ -6,7 +6,7 @@ import { img } from '../lib/img';
 ---
 <div class="tiles">
   {CATALOGS.map((c) => (
-    <a class="tile soft-card reveal" href={u('/' + c.slug)}>
+    <a class="tile soft-card reveal" href={u(c.href)}>
       <span class="tile__t">{c.title}</span>
       <img src={img(c.image, 800)} alt="" loading="lazy" />
     </a>

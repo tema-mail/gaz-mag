@@ -148,6 +148,13 @@ async function store() {
     await sleep(1500);
   }
   const products = [...all.values()];
+  // ЧПУ (18.10.2026): адреса товаров уже перенесены на /katalog/<раздел>/<slug> – берём их из текущего products.json по id,
+  // новые товары с Тильды получают адрес из названия (как scripts/migrate-urls.mjs), прежний адрес – в legacy[] для 301.
+  const prev = new Map((existsSync(path.join(DATA, 'products.json')) ? JSON.parse(await readFile(path.join(DATA, 'products.json'), 'utf8')) : []).map((p) => [p.id, p]));
+  for (const p of products) {
+    const o = prev.get(p.id);
+    if (o?.slug) { const tilda = p.path; Object.assign(p, { catalog: o.catalog, slug: o.slug, path: o.path, legacy: [...new Set([...(o.legacy || []), tilda])] }); }
+  }
   console.log('товаров', products.length, 'с вариантами', products.filter((p) => p.editions.length).length);
   await pool(products, 6, async (p) => {
     p.images = [];

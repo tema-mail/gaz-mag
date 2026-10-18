@@ -1,0 +1,31 @@
+---
+// /uslugi – хаб услуг (родитель страниц услуг в ЧПУ-иерархии, 18.10.2026). Тексты – с оригинала (/montag, акция «монтаж от 8 тыс.»).
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { R } from '../../lib/routes';
+import { u } from '../../lib/url';
+const items = [
+  { href: R.montag, title: 'Подключение к газовым сетям и монтаж отопления', text: 'Полное газооснащение дома: проект газоснабжения, подключение к газовой сети и ввод трубы в дом, установка котла, проверка вентиляции, монтаж системы отопления.' },
+  { href: R.install, title: 'Установка газовых котлов', text: 'Установка котла, подключение к системе отопления и газопроводу, настройка и тестирование работы системы. Монтаж отопления и подключение котла – от 8 тыс. рублей.' },
+];
+---
+<Base title="Услуги: подключение газа, монтаж отопления, установка котлов – Болотное" description="Услуги магазина газового оборудования в Болотном: подключение газа к частному дому, монтаж отопления, установка газового котла от 8 тыс. ₽.">
+  <PageHead crumbs={[{ label: 'Главная', href: R.home }, { label: 'Услуги' }]} title="Услуги" lead="Подключим газ, смонтируем отопление и установим котёл – сертифицированные специалисты, без ожидания очереди, гарантия на работы." />
+  <section class="section--tight container">
+    <div class="us">
+      {items.map((i) => (
+        <a class="us__item soft-card reveal" href={u(i.href)}>
+          <h2 class="h3">{i.title}</h2>
+          <p>{i.text}</p>
+          <span class="btn btn--navy btn--sm">Подробнее</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+<style>
+  .us { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .us__item { display: grid; gap: 14px; align-content: start; justify-items: start; padding: 32px; border-radius: var(--radius-l); transition: box-shadow .25s, transform .25s var(--ease); }
+  .us__item:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  @media (max-width: 1023px) { .us { grid-template-columns: 1fr; } .us__item { padding: 22px 18px; } }
+</style>

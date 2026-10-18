@@ -12,7 +12,7 @@
 - Публикация: пуш в main → GitHub Actions (`.github/workflows/deploy.yml`) → VPS Beget, gaz-mag.ru. Откат – workflow «Откат сайта». Приёмник заявок `server/lead.mjs` обновляется `DEPLOY_PUB=~/.config/gaz-mag/deploy_ed25519.pub zsh deploy/install.sh`.
 
 ## Структура
-- `src/pages` – маршруты повторяют адреса оригинала (`/catalog_boilers`, `/<каталог>/tproduct/<id>-<slug>`, `/hubert`…).
+- `src/pages` – ЧПУ (`/katalog/<раздел>/<товар>`, `/uslugi/…`), все адреса – в `src/lib/routes.ts`; прежние адреса Тильды – 301 (`dist/redirects.json`).
 - `src/components` – секции (.astro), `src/islands` – интерактив (корзина, избранное, фильтры, меню, формы, квиз).
 - `src/data` – снятые данные; тексты страниц – в самих страницах.
 

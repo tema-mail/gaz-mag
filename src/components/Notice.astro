@@ -1,4 +1,5 @@
 ---
+import { R } from '../lib/routes';
 // Техническая страница-сообщение: «Спасибо», 404.
 import { u } from '../lib/url';
 const { title, text, code } = Astro.props as { title: string; text: string; code?: string };
@@ -10,7 +11,7 @@ const { title, text, code } = Astro.props as { title: string; text: string; code
     <p>{text}</p>
     <div class="nt__btns">
       <a class="btn btn--white" href={u('/')}>На главную</a>
-      <a class="btn btn--outline nt__ghost" href={u('/catalogcentr')}>В каталог</a>
+      <a class="btn btn--outline nt__ghost" href={u(R.catalog)}>В каталог</a>
     </div>
   </div>
 </section>

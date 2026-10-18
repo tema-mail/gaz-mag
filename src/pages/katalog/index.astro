@@ -1,10 +1,10 @@
 ---
 // /catalogcentr – общий каталог, как на оригинале: плитки 6 каталогов. Ниже – «Специальные предложения».
-import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
-import CatTiles from '../components/CatTiles.astro';
-import ProductRow from '../components/ProductRow.astro';
-import { listCards } from '../lib/catalog';
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import CatTiles from '../../components/CatTiles.astro';
+import ProductRow from '../../components/ProductRow.astro';
+import { listCards } from '../../lib/catalog';
 const specials = listCards('specials');
 ---
 <Base title="Каталог газового оборудования – Новосибирск и Болотное | Магазин газового оборудования" description="Каталог магазина газового оборудования (Болотное, работаем по Новосибирску): газовые котлы, газовые и электрические водонагреватели, бойлеры косвенного нагрева, радиаторы, датчики загазованности и модули управления.">

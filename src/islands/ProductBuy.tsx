@@ -1,3 +1,4 @@
+import { catalogKeyOf } from '../lib/routes';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import type { Edition } from '../lib/catalog';
 import { addToCart, cart, favs, fmt, sheet, toggleFav } from '../lib/store';
@@ -71,7 +72,7 @@ export default function ProductBuy({ p }: { p: P }) {
       </div>
       <button
         type="button" class="btn btn--outline btn--block" data-lead={`Заказ в один клик: ${p.title}${variant ? ` (${variant})` : ''}`}
-        data-lead-item={JSON.stringify([{ uid: id, title: p.title, variant, category: p.path.split('/')[1] || '', qty, price }])}
+        data-lead-item={JSON.stringify([{ uid: id, title: p.title, variant, category: catalogKeyOf(p.path), qty, price }])}
       >
         Заказать в один клик
       </button>

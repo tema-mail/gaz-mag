@@ -1,3 +1,4 @@
+import { R } from '../lib/routes';
 import { useState } from 'preact/hooks';
 import { sendForm, thanksUrl, type LeadItem } from '../lib/forms';
 import { maskPhone, phoneOk } from '../lib/phone';
@@ -43,7 +44,7 @@ export default function LeadForm({ form, button = 'Отправить', extra, d
       </label>
       <label class="check">
         <input type="checkbox" checked={agree} onChange={(e) => setAgree((e.target as HTMLInputElement).checked)} />
-        <span>Даю <a href={u('/agreement')} target="_blank">согласие на обработку персональных данных</a> и ознакомлен(а) с <a href={u('/policy')} target="_blank">политикой обработки персональных данных</a></span>
+        <span>Даю <a href={u(R.agreement)} target="_blank">согласие на обработку персональных данных</a> и ознакомлен(а) с <a href={u(R.policy)} target="_blank">политикой обработки персональных данных</a></span>
       </label>
       {err && <p class="form-err" role="alert">{err}</p>}
       <button class={`btn ${dark ? 'btn--white' : 'btn--navy'} btn--block`} type="submit" disabled={busy || !agree}>

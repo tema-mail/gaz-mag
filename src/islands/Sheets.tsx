@@ -1,3 +1,4 @@
+import { R, catalogKeyOf } from '../lib/routes';
 import { useEffect, useState } from 'preact/hooks';
 import {
   cart, cartCount, cartTotal, clearCart, favs, fmt, leadItems, leadTopic, removeFromCart, setQty, sheet, toast, toggleFav,
@@ -45,7 +46,7 @@ function Checkout() {
     const order = cart.value.map((i) => `${i.title}${i.variant ? ` (${i.variant})` : ''} – ${i.qty} шт. × ${fmt(i.price)}`).join('\n');
     const ok = await sendForm('Заказ из корзины', {
       Name: f.name, Email: f.email, Phone: f.phone, Comment: f.comment, Order: order, Total: fmt(cartTotal.value),
-    }, cart.value.map((i) => ({ uid: i.id, title: i.title, variant: i.variant, category: i.path.split('/')[1] || '', qty: i.qty, price: i.price })));
+    }, cart.value.map((i) => ({ uid: i.id, title: i.title, variant: i.variant, category: catalogKeyOf(i.path), qty: i.qty, price: i.price })));
     setBusy(false);
     if (!ok) return setErr(`Не получилось отправить. Позвоните нам: ${SITE.phones[0].text}`);
     clearCart();
@@ -60,12 +61,12 @@ function Checkout() {
       <textarea class="input" placeholder="Комментарий: адрес доставки, нужен ли монтаж" value={f.comment} onInput={set('comment')} aria-label="Комментарий" rows={2} />
       <label class="check">
         <input type="checkbox" checked={agree} onChange={(e) => setAgree((e.target as HTMLInputElement).checked)} />
-        <span>Даю <a href={u('/agreement')} target="_blank">согласие на обработку персональных данных</a> и ознакомлен(а) с <a href={u('/policy')} target="_blank">политикой обработки персональных данных</a></span>
+        <span>Даю <a href={u(R.agreement)} target="_blank">согласие на обработку персональных данных</a> и ознакомлен(а) с <a href={u(R.policy)} target="_blank">политикой обработки персональных данных</a></span>
       </label>
       {err && <p class="form-err" role="alert">{err}</p>}
       <div class="cs__total"><span>Итого</span><b>{fmt(cartTotal.value)}</b></div>
       <button class="btn btn--navy btn--block" type="submit" disabled={busy || !agree}>{busy ? 'Отправляем…' : 'Оформить заказ'}</button>
-      <p class="form-note">Оформляя заказ, вы принимаете условия <a href={u('/oferta')} target="_blank">договора оферты</a>. Менеджер перезвонит и подтвердит наличие, доставку и оплату.</p>
+      <p class="form-note">Оформляя заказ, вы принимаете условия <a href={u(R.oferta)} target="_blank">договора оферты</a>. Менеджер перезвонит и подтвердит наличие, доставку и оплату.</p>
     </form>
   );
 }
@@ -85,7 +86,7 @@ function CartSheet() {
           <span class="empty__icon"><IconBag size={30} /></span>
           <p class="empty__title">В корзине пока пусто</p>
           <p>Выберите котёл, водонагреватель или комплектующие в каталоге.</p>
-          <a class="btn btn--navy" href={u('/catalogcentr')}>Перейти в каталог</a>
+          <a class="btn btn--navy" href={u(R.catalog)}>Перейти в каталог</a>
         </div>
       ) : (
         <>
@@ -124,7 +125,7 @@ function FavSheet() {
           <span class="empty__icon"><IconHeart size={30} /></span>
           <p class="empty__title">Здесь будут отложенные товары</p>
           <p>Нажмите на сердечко на карточке – товар сохранится, чтобы сравнить и вернуться к нему позже.</p>
-          <a class="btn btn--navy" href={u('/catalogcentr')}>Перейти в каталог</a>
+          <a class="btn btn--navy" href={u(R.catalog)}>Перейти в каталог</a>
         </div>
       ) : (
         <ul class="cs__list">

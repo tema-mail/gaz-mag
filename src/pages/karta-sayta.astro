@@ -1,0 +1,49 @@
+---
+// /karta-sayta – карта сайта для людей: дерево по иерархии ЧПУ (Каталог → разделы → товары, Услуги, Акции, О компании, Документы).
+// Для поисковиков – /sitemap.xml с теми же адресами.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { CATALOGS } from '../lib/site';
+import { products } from '../lib/catalog';
+import { PROMOS } from '../lib/promos';
+import { R } from '../lib/routes';
+import { u } from '../lib/url';
+const tree = [
+  { title: 'Главная', href: R.home },
+  { title: 'Каталог', href: R.catalog, children: CATALOGS.map((c) => ({ title: c.title, href: c.href, children: products.filter((p) => p.catalog === c.slug).sort((a, b) => a.title.localeCompare(b.title, 'ru')).map((p) => ({ title: p.title, href: p.path })) })) },
+  { title: 'Котлы HUBERT', href: R.hubert },
+  { title: 'Услуги', href: R.services, children: [{ title: 'Подключение к газовым сетям и монтаж отопления', href: R.montag }, { title: 'Установка газовых котлов', href: R.install }] },
+  { title: 'Акции', href: R.promos, children: PROMOS.map((p) => ({ title: p.title, href: p.href })) },
+  { title: 'О компании', href: R.about },
+  { title: 'Документы', children: [
+    { title: 'Политика обработки персональных данных', href: R.policy }, { title: 'Согласие на обработку персональных данных', href: R.agreement },
+    { title: 'Политика cookie', href: R.cookie }, { title: 'Договор оферты', href: R.oferta }, { title: 'Реквизиты', href: R.requisites },
+  ] },
+];
+type Node = { title: string; href?: string; children?: Node[] };
+---
+<Base title="Карта сайта – Магазин газового оборудования, Болотное" description="Все разделы и товары магазина газового оборудования в Болотном: каталог газовых котлов, колонок, водонагревателей, бойлеров, услуги, акции, документы.">
+  <PageHead crumbs={[{ label: 'Главная', href: R.home }, { label: 'Карта сайта' }]} title="Карта сайта" />
+  <section class="section--tight container ks">
+    <ul>
+      {tree.map((n: Node) => (
+        <li>
+          {n.href ? <a href={u(n.href)}><b>{n.title}</b></a> : <b>{n.title}</b>}
+          {n.children && <ul>{n.children.map((c: Node) => (
+            <li>
+              {c.href ? <a href={u(c.href)}>{c.title}</a> : c.title}
+              {c.children && c.children.length > 0 && <ul class="ks__leaf">{c.children.map((g: Node) => <li><a href={u(g.href!)}>{g.title}</a></li>)}</ul>}
+            </li>
+          ))}</ul>}
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+<style>
+  .ks ul { list-style: none; margin: 0; padding: 0 0 0 18px; display: grid; gap: 8px; }
+  .ks > ul { padding: 0; gap: 16px; }
+  .ks a { color: var(--navy); }
+  .ks a:hover { text-decoration: underline; }
+  .ks__leaf { font-size: 14px; margin-top: 6px !important; border-left: 2px solid var(--line); }
+</style>

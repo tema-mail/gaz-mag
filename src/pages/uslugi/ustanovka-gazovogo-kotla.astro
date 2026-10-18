@@ -1,15 +1,16 @@
 ---
+import { R, catalogPath } from '../../lib/routes';
 // /ustanovka-kotla – новая страница «Установка газовых котлов» (задание владельца 14.10.2026).
 // Своё намерение – поставить котёл, отдельно от подключения дома к газу (/montag). Факты – только с оригинала:
 // состав монтажа котла, виды котлов, цена от 8 тыс. (акция), гарантия, обслуживание и ремонт.
-import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
-import Steps from '../components/Steps.astro';
-import LeadSection from '../components/LeadSection.astro';
-import Faq from '../components/Faq.astro';
-import ProductRow from '../components/ProductRow.astro';
-import { listCards } from '../lib/catalog';
-import { u } from '../lib/url';
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Steps from '../../components/Steps.astro';
+import LeadSection from '../../components/LeadSection.astro';
+import Faq from '../../components/Faq.astro';
+import ProductRow from '../../components/ProductRow.astro';
+import { listCards } from '../../lib/catalog';
+import { u } from '../../lib/url';
 const boilers = listCards('specials').filter((c) => /кот[её]л/i.test(c.title)).slice(0, 4);
 const faq = [
   { q: 'Какие работы входят в монтаж газового котла?', a: 'Монтаж газового котла включает в себя установку котла, подключение его к системе отопления и газопроводу, а также настройку и тестирование работы системы.' },
@@ -19,10 +20,10 @@ const faq = [
 ];
 ---
 <Base title="Установка газового котла в Новосибирске и Болотном – от 8 тыс. ₽" description="Установка настенных и напольных, одно- и двухконтурных газовых котлов: монтаж, подключение к отоплению и газопроводу, настройка и тестирование. От 8 тыс. рублей, гарантия на работы.">
-  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Монтаж', href: '/montag' }, { label: 'Установка газовых котлов' }]} title="Установка газовых котлов" lead="Установим газовый котёл, подключим его к системе отопления и газопроводу, настроим и проверим работу системы. Монтаж отопления и подключение котла – от 8 тыс. рублей.">
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Монтаж', href: R.montag }, { label: 'Установка газовых котлов' }]} title="Установка газовых котлов" lead="Установим газовый котёл, подключим его к системе отопления и газопроводу, настроим и проверим работу системы. Монтаж отопления и подключение котла – от 8 тыс. рублей.">
     <div class="uk-cta">
       <button type="button" class="btn btn--navy" data-lead="Заявка на установку газового котла">Заказать установку</button>
-      <a class="btn btn--outline" href={u('/catalog_boilers')}>Выбрать котёл</a>
+      <a class="btn btn--outline" href={u(catalogPath('catalog_boilers'))}>Выбрать котёл</a>
     </div>
   </PageHead>
 
@@ -47,7 +48,7 @@ const faq = [
     <section class="section container">
       <div class="uk-head">
         <h2 class="h2">Выбрать котёл</h2>
-        <a class="btn btn--outline btn--sm" href={u('/catalog_boilers')}>Все котлы</a>
+        <a class="btn btn--outline btn--sm" href={u(catalogPath('catalog_boilers'))}>Все котлы</a>
       </div>
       <ProductRow cards={boilers} />
     </section>
@@ -63,7 +64,7 @@ const faq = [
         <li>Гарантия на все выполненные работы</li>
         <li>Обслуживание и ремонт газовых котлов и водонагревателей – по индивидуальной заявке</li>
       </ul>
-      <p>Нужен газ в дом с нуля? Проект, подключение к сети и ввод трубы – на странице <a href={u('/montag')}>«Подключение к газовым сетям и монтаж отопления»</a>.</p>
+      <p>Нужен газ в дом с нуля? Проект, подключение к сети и ввод трубы – на странице <a href={u(R.montag)}>«Подключение к газовым сетям и монтаж отопления»</a>.</p>
     </div>
   </section>
 

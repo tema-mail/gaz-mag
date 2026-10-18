@@ -18,6 +18,8 @@ export interface Product {
   options: { title: string; values: string[] }[];
   editions: Edition[];
   images: string[];
+  /** ЧПУ (18.10.2026): ключ раздела, адрес из названия, прежние адреса для 301. */
+  catalog: string; slug: string; legacy?: string[];
   /** Поля, которые пишет админка (src/islands/admin/ProductsAdmin.tsx). */
   hidden?: boolean; sku?: string; mark?: string; seoTitle?: string; seoDescr?: string;
 }
@@ -85,6 +87,6 @@ export function filterDefs(list: string): FilterDef[] {
 }
 
 /** Карточка товара: каталог, к которому он относится по адресу оригинала. */
-export const catalogOf = (p: Product) => p.path.split('/')[1];
+export const catalogOf = (p: Product) => p.catalog;
 
 export const rub = (n: number) => n.toLocaleString('ru-RU').replace(/ /g, ' ') + ' ₽';

@@ -1,11 +1,12 @@
 ---
+import { R } from '../../lib/routes';
 // /hubert-dy – посадочная «Акция на котёл + монтаж», как на оригинале: без меню сайта, свои телефоны и реквизиты.
 // Срок «до 31 января» и цены 46 500 → 43 000 ₽ – с оригинала как есть (в магазине сейчас 44 910 ₽) – см. ТЕХДОЛГ.
-import Base from '../layouts/Base.astro';
-import LeadForm from '../islands/LeadForm';
-import { SITE } from '../lib/site';
-import { img } from '../lib/img';
-import { u } from '../lib/url';
+import Base from '../../layouts/Base.astro';
+import LeadForm from '../../islands/LeadForm';
+import { SITE } from '../../lib/site';
+import { img } from '../../lib/img';
+import { u } from '../../lib/url';
 const T = 'https://static.tildacdn.com/';
 const BOILER = T + 'tild3633-3132-4432-a364-316633313636/Group_1.png';
 const CALC = T + 'tild6237-6531-4237-b261-656430613434/Red_Calculator_1.png';
@@ -40,7 +41,7 @@ const perks = [
         </div>
         <div class="dy-btns">
           <a class="btn btn--white" href="#dy-form">Получить расчёт + закрепить акцию</a>
-          <a class="btn btn--outline dy-ghost" href={u('/catalog_boilers/tproduct/709793657-712633437052-nastennii-gazovii-kotel-hubert-smart-agb')}>Котёл в каталоге</a>
+          <a class="btn btn--outline dy-ghost" href={u('/katalog/gazovye-kotly/nastennyy-gazovyy-kotel-hubert-smart-agb-10-24dy')}>Котёл в каталоге</a>
         </div>
         <p class="dy-small">*товар можно приобрести в рассрочку от Яндекс – условия уточняйте у менеджера</p>
       </div>
@@ -59,7 +60,7 @@ const perks = [
       <div>
         <h2 class="h2">Мы также предлагаем услуги по установке оборудования со скидкой* и комплектующие</h2>
         <p class="dy-small">*Условия предоставления скидки уточняйте у менеджера</p>
-        <a class="btn btn--navy" href={u('/ustanovka-kotla')}>Установка котлов</a>
+        <a class="btn btn--navy" href={u(R.install)}>Установка котлов</a>
       </div>
       <div class="dy-photos">{PHOTOS.map((p) => <img src={img(p, 800)} alt="" loading="lazy" />)}</div>
     </div>
@@ -79,7 +80,7 @@ const perks = [
   <footer class="dy-foot container">
     <p>{SITE.owner} · ОГРНИП {SITE.ogrnip} · ИНН {SITE.inn}</p>
     <p>Магазин газового оборудования – ваш надёжный партнёр в мире тепла и комфорта! {SITE.addressShort}</p>
-    <p><a href={u('/policy')}>Политика конфиденциальности</a> · <a href={u('/')}>Сайт магазина</a></p>
+    <p><a href={u(R.policy)}>Политика конфиденциальности</a> · <a href={u('/')}>Сайт магазина</a></p>
   </footer>
 </Base>
 <style>

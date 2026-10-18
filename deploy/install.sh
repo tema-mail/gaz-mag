@@ -27,7 +27,7 @@ scp -q -i "$KEY" "$HERE/../server/lead.mjs" "$HOST:/opt/gaz-mag/server/lead.mjs"
   chmod 644 /opt/gaz-mag/server/lead.mjs
   printf 'command=\"/usr/local/bin/gazmag-receive\",restrict %s\n' \"$(cat "$DEPLOY_PUB")\" > /home/gazmag-deploy/.ssh/authorized_keys
   chown -R gazmag-deploy:gazmag-deploy /home/gazmag-deploy/.ssh && chmod 700 /home/gazmag-deploy/.ssh && chmod 600 /home/gazmag-deploy/.ssh/authorized_keys
-  cd /opt/gaz-mag && docker compose up -d --remove-orphans >/dev/null && docker restart gaz-mag-api >/dev/null && docker ps --filter name=gaz-mag --format '{{.Names}} {{.Status}}'"
+  cd /opt/gaz-mag && docker compose up -d --remove-orphans >/dev/null && docker restart gaz-mag-api gaz-mag-web >/dev/null && docker ps --filter name=gaz-mag --format '{{.Names}} {{.Status}}'"
 
 # 2. Блок в общем Caddy: только при парных метках, с проверкой конфигурации и откатом при неудачной перезагрузке
 cat "$HERE/gaz-mag.caddy" | "${SSH[@]}" '

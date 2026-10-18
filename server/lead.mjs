@@ -57,6 +57,17 @@ async function readLeads() {
     .reverse();
 }
 
+const RELEASE = process.env.RELEASE_DIR || '/releases/current';
+let redirCache = { at: 0, map: {} };
+async function redirects() {
+  if (Date.now() - redirCache.at < 60_000) return redirCache.map;
+  try { redirCache = { at: Date.now(), map: JSON.parse(await readFile(`${RELEASE}/redirects.json`, 'utf8')) }; } catch { redirCache.at = Date.now(); }
+  return redirCache.map;
+}
+async function page404() {
+  try { return await readFile(`${RELEASE}/404.html`, 'utf8'); } catch { return '<h1>404 – страница не найдена</h1>'; }
+}
+
 const phoneOk = (v) => String(v || '').replace(/\D/g, '').length >= 10;
 const clean = (v) => String(v ?? '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, MAX_FIELD);
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -104,6 +115,16 @@ function send(res, code, body, origin) {
 createServer(async (req, res) => {
   const origin = req.headers.origin;
   const ip0 = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  // 301 с прежних адресов: карта – redirects.json текущей выкладки (монтируется /releases только на чтение)
+  if (req.url.startsWith('/api/go')) {
+    let u = '';
+    try { u = decodeURIComponent(new URL(req.url, 'http://x').searchParams.get('u') || ''); } catch {}
+    const key = u.replace(/\/+$/, '') || '/';
+    const to = (await redirects())[key];
+    if (to) { res.writeHead(301, { Location: to, 'Cache-Control': 'public, max-age=86400' }); return res.end(); }
+    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(await page404());
+  }
   if (req.url === '/api/health') return send(res, 200, { ok: true, telegram: Boolean(TG_TOKEN && TG_CHATS.length), admin: Boolean(ADMIN) });
 
   // Кабинет: список заявок и смена этапа – только с паролем; неверный пароль считается в лимит попыток.

@@ -31,6 +31,8 @@ services:
     volumes:
       - /opt/gaz-mag/server:/app:ro
       - /opt/gaz-mag/data:/data
+      # карта 301 и 404.html текущей выкладки – только чтение
+      - /opt/gaz-mag/releases:/releases:ro
     read_only: true
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]

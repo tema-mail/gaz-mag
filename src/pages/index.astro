@@ -1,4 +1,5 @@
 ---
+import { R } from '../lib/routes';
 // Главная – как на оригинале: первый экран, плитки каталогов, «Специальные предложения»,
 // слайдер акций, «Подключение к газовым сетям и монтаж отопления», контакты (в Base).
 import Base from '../layouts/Base.astro';
@@ -50,7 +51,7 @@ const org = {
   <section class="section container" id="sales">
     <div class="sales-head">
       <h2 class="h2">Акции</h2>
-      <a class="btn btn--outline btn--sm" href={u('/akcii')}>Все акции</a>
+      <a class="btn btn--outline btn--sm" href={u(R.promos)}>Все акции</a>
     </div>
     <PromoSlider />
   </section>
@@ -61,8 +62,8 @@ const org = {
         <h2 class="h2">Подключение к газовым сетям и монтаж отопления</h2>
         <p class="lead">Выполним полное газооснащение Вашего дома, от проектирования системы газоснабжения до монтажа отопительного оборудования и сервисного обслуживания.</p>
         <div class="mt__btns">
-          <a class="btn btn--navy" href={u('/montag')}>Подробнее</a>
-          <a class="btn btn--outline" href={u('/ustanovka-kotla')}>Установка котлов</a>
+          <a class="btn btn--navy" href={u(R.montag)}>Подробнее</a>
+          <a class="btn btn--outline" href={u(R.install)}>Установка котлов</a>
         </div>
       </div>
       <img class="mt__img" src={img(MONTAG)} alt="Мастер подключает газовый котёл" loading="lazy" />

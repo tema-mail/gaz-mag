@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import type { Edition } from '../../lib/catalog';
+import { catalogPath, slugify } from '../../lib/routes';
+import { productSeoDescr, productSeoTitle } from '../../lib/seo';
 
 // Редактор товара – перенос с кабинета-стандарта Milovini (эталон Elite Rose, «Магазин → товар» Тильды):
 // вкладки «Основное», «Фото», «Разделы», «SEO». Отличие по данным gaz-mag: у товаров есть варианты (мощность, объём)
@@ -61,7 +63,12 @@ export default function ProductEditor({ product, lists, base, onClose, onSave, o
     setP({ ...p, editions: p.editions.map((ed, n) => (n === i ? { ...ed, [k]: v ? Number(v) : null } : ed)) });
   };
   const setChar = (i: number, k: 't' | 'v') => (e: Event) => setP({ ...p, chars: p.chars.map((c, n) => (n === i ? { ...c, [k]: (e.target as HTMLInputElement).value } : c)) });
-  const slug = p.path.split('/').pop() || '';
+  // адрес: у существующего – как есть; у нового – из названия и первого отмеченного каталога (так же сохранится)
+  const firstCat = p.lists.find((l) => !['specials', 'hubert'].includes(l));
+  const slug = p.path ? p.path.split('/').pop() || '' : slugify(p.title || '');
+  const pathShown = p.path || (firstCat ? `${catalogPath(firstCat)}/${slug}` : '/katalog/<раздел>/' + slug);
+  const autoTitle = productSeoTitle(p.title || 'Название товара');
+  const autoDescr = productSeoDescr(p.title || 'Название товара', p.brand);
   const host = (typeof location !== 'undefined' ? location.host : 'gaz-mag.ru');
 
   return (
@@ -188,13 +195,15 @@ export default function ProductEditor({ product, lists, base, onClose, onSave, o
 
           {tab === 'SEO' && (
             <div class="fgrid">
-              <label class="f f--wide"><span>Адрес страницы <em>создаётся из названия, менять не нужно</em></span><div class="url"><em>{p.path ? p.path.replace(/[^/]+$/, '') : '/<каталог>/tproduct/'}</em><input value={slug} placeholder="из названия" readOnly /></div></label>
-              <label class="f f--wide"><span>Title <em>{(p.seoTitle || '').length}/70 · пусто – «название – купить в Новосибирске, цена»</em></span><input value={p.seoTitle} onInput={set('seoTitle')} /></label>
-              <label class="f f--wide"><span>Description <em>{(p.seoDescr || '').length}/160</em></span><textarea rows={3} value={p.seoDescr} onInput={set('seoDescr')} /></label>
+              <p class="muted f--wide" style="margin:0">Адрес, Title и Description заполняются сами из названия, марки и раздела – под поиск в Болотном. Поправьте, если нужно; пустое поле при сохранении снова заполнится автоматически.</p>
+              <label class="f f--wide"><span>Адрес страницы <em>{p.path ? 'у опубликованного товара не меняется – позиции в поиске' : 'из названия и раздела'}</em></span><div class="url"><input value={pathShown} readOnly /></div></label>
+              <label class="f f--wide"><span>Title <em>{(p.seoTitle || autoTitle).length}/70{!p.seoTitle && ' · автоматически'}</em></span><input value={p.seoTitle} placeholder={autoTitle} onInput={set('seoTitle')} /></label>
+              <label class="f f--wide"><span>Description <em>{(p.seoDescr || autoDescr).length}/160{!p.seoDescr && ' · автоматически'}</em></span><textarea rows={3} value={p.seoDescr} placeholder={autoDescr} onInput={set('seoDescr')} /></label>
+              <div class="f--wide"><button type="button" class="btn" onClick={() => setP({ ...p, seoTitle: autoTitle, seoDescr: autoDescr })}>Заполнить автоматически</button></div>
               <div class="snip f--wide">
-                <span class="snip__url">{host} › {p.path.split('/')[1] || 'catalog'} › {slug}</span>
-                <span class="snip__t">{p.seoTitle || `${p.title} – купить в Новосибирске`}</span>
-                <span class="snip__d">{p.seoDescr || 'Описание для поиска появится здесь.'}</span>
+                <span class="snip__url">{host} › {pathShown.split('/').filter(Boolean).join(' › ')}</span>
+                <span class="snip__t">{p.seoTitle || autoTitle}</span>
+                <span class="snip__d">{p.seoDescr || autoDescr}</span>
               </div>
             </div>
           )}

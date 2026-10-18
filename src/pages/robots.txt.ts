@@ -5,6 +5,6 @@ export function GET() {
   const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
   const body = import.meta.env.PUBLIC_NOINDEX === '1'
     ? 'User-agent: *\nDisallow: /\n'
-    : `User-agent: *\nDisallow: /souz\nDisallow: /thanks\nDisallow: /fail\nDisallow: /api/\nDisallow: /admin\n\nSitemap: ${site}${base}/sitemap.xml\n`;
+    : `User-agent: *\nDisallow: /souz\nDisallow: /spasibo\nDisallow: /api/\nDisallow: /admin\n\nSitemap: ${site}${base}/sitemap.xml\n`;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

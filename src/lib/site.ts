@@ -1,3 +1,4 @@
+import { R, catalogPath } from './routes';
 // Контакты и навигация – одно место для шапки, меню, подвала и страниц. Всё снято с gaz-mag.ru 14.10.2026.
 export const SITE = {
   name: 'Магазин газового оборудования',
@@ -61,39 +62,40 @@ export const CATALOGS = [
     h1: 'Датчики загазованности, счётчики газа и дымоходы',
     seoTitle: 'Датчики загазованности, счётчики газа, коаксиальные дымоходы – Новосибирск, Болотное',
     seoDescr: 'Системы контроля загазованности СГК, счётчики газа СГМБ и СГК G4, коаксиальные дымоходы для газовых котлов – в Новосибирске и Болотном. Цены.' },
-] as const;
+].map((c) => ({ ...c, href: catalogPath(c.slug) }));
 export type CatalogSlug = (typeof CATALOGS)[number]['slug'];
 
 export interface NavItem { label: string; href: string; children?: { label: string; href: string }[] }
 export const NAV: NavItem[] = [
-  { label: 'Каталог', href: '/catalogcentr', children: CATALOGS.map((c) => ({ label: c.title, href: '/' + c.slug })) },
-  { label: 'Hubert', href: '/hubert' },
-  { label: 'Акции', href: '/akcii' },
+  { label: 'Каталог', href: R.catalog, children: CATALOGS.map((c) => ({ label: c.title, href: c.href })) },
+  { label: 'Hubert', href: R.hubert },
+  { label: 'Акции', href: R.promos },
   {
-    label: 'Монтаж', href: '/montag', children: [
-      { label: 'Подключение к газовым сетям и монтаж отопления', href: '/montag' },
-      { label: 'Установка газовых котлов', href: '/ustanovka-kotla' },
+    label: 'Монтаж', href: R.montag, children: [
+      { label: 'Подключение к газовым сетям и монтаж отопления', href: R.montag },
+      { label: 'Установка газовых котлов', href: R.install },
     ],
   },
   { label: 'Контакты', href: '#contacts' },
-  { label: 'О компании', href: '/about' },
+  { label: 'О компании', href: R.about },
 ];
 
 export const FOOTER = {
   menu: [
-    { label: 'Каталог', href: '/catalogcentr' },
-    { label: 'Акции', href: '/akcii' },
-    { label: 'Монтаж и подключение газа', href: '/montag' },
-    { label: 'Установка котлов', href: '/ustanovka-kotla' },
-    { label: 'Котлы Hubert', href: '/hubert' },
-    { label: 'О компании', href: '/about' },
-    { label: 'Реквизиты', href: '/rekvezit' },
+    { label: 'Каталог', href: R.catalog },
+    { label: 'Акции', href: R.promos },
+    { label: 'Монтаж и подключение газа', href: R.montag },
+    { label: 'Установка котлов', href: R.install },
+    { label: 'Котлы Hubert', href: R.hubert },
+    { label: 'О компании', href: R.about },
+    { label: 'Реквизиты', href: R.requisites },
+    { label: 'Карта сайта', href: R.sitemap },
   ],
-  catalog: CATALOGS.map((c) => ({ label: c.short, href: '/' + c.slug })),
+  catalog: CATALOGS.map((c) => ({ label: c.short, href: c.href })),
   legal: [
-    { label: 'Политика обработки персональных данных', href: '/policy' },
-    { label: 'Согласие на обработку персональных данных', href: '/agreement' },
-    { label: 'Политика cookie', href: '/cookie' },
-    { label: 'Договор оферты', href: '/oferta' },
+    { label: 'Политика обработки персональных данных', href: R.policy },
+    { label: 'Согласие на обработку персональных данных', href: R.agreement },
+    { label: 'Политика cookie', href: R.cookie },
+    { label: 'Договор оферты', href: R.oferta },
   ],
 };

@@ -1,4 +1,5 @@
 ---
+import { R } from '../../lib/routes';
 // Страницы сайта по сущностям – перенос с кабинета-стандарта Milovini (эталон Elite Rose): Главная, Каталоги
 // (раскрываются – внутри карточки товара; товар из нескольких списков показан в своём каталоге по адресу),
 // Внутренние страницы, Юридические, Технические. Блога у gaz-mag нет – группы нет.
@@ -13,19 +14,19 @@ import { thumb, u } from '../../lib/url';
 const site = (p: string) => new URL(u(p), Astro.site).href;
 const card_ = (path: string) => u('/admin/page' + (path === '/' ? '/' : path.replace(/\/?$/, '/')));
 const inner = [
-  { name: 'О компании', path: '/about' },
-  { name: 'Подключение к газовым сетям и монтаж отопления', path: '/montag' },
-  { name: 'Установка газовых котлов', path: '/ustanovka-kotla' },
-  { name: 'Котлы HUBERT', path: '/hubert' },
-  { name: 'Акции', path: '/akcii' },
+  { name: 'О компании', path: R.about },
+  { name: 'Подключение к газовым сетям и монтаж отопления', path: R.montag },
+  { name: 'Установка газовых котлов', path: R.install },
+  { name: 'Котлы HUBERT', path: R.hubert },
+  { name: 'Акции', path: R.promos },
   ...PROMOS.map((p) => ({ name: `Акция: ${p.short}`, path: p.href })),
-  { name: 'СОЮЗ (черновик оригинала, закрыт от поиска)', path: '/souz' },
+  { name: 'СОЮЗ (черновик оригинала, закрыт от поиска)', path: R.souz },
 ];
 const legal = [
-  { name: 'Политика обработки персональных данных', path: '/policy' }, { name: 'Согласие на обработку персональных данных', path: '/agreement' },
-  { name: 'Политика cookie', path: '/cookie' }, { name: 'Договор оферты', path: '/oferta' }, { name: 'Реквизиты счёта', path: '/rekvezit' },
+  { name: 'Политика обработки персональных данных', path: R.policy }, { name: 'Согласие на обработку персональных данных', path: R.agreement },
+  { name: 'Политика cookie', path: R.cookie }, { name: 'Договор оферты', path: R.oferta }, { name: 'Реквизиты счёта', path: R.requisites },
 ];
-const tech = [{ name: 'Спасибо', path: '/thanks' }, { name: 'Страница не найдена (адрес оригинала)', path: '/fail' }, { name: 'Страница не найдена', path: '/404' }];
+const tech = [{ name: 'Спасибо', path: R.thanks }, { name: 'Страница не найдена', path: '/404' }];
 // Страниц на сайте: главная + общий каталог + каталоги + карточки + внутренние + юридические + технические
 const total = 1 + 1 + CATALOGS.length + products.length + inner.length + legal.length + tech.length;
 const T = 'https://static.tildacdn.com/';
@@ -51,8 +52,8 @@ const T = 'https://static.tildacdn.com/';
     <details class="pcat">
       <summary class="prow">
         <img class="thumb" src={img(CATALOGS[0].image, 800)} alt="" />
-        <div><span class="pname"><i class="caret"></i><a class="pcard" href={card_('/catalogcentr')} onclick="event.stopPropagation()">Общий каталог</a></span><div class="muted" style="font-size:12px">{allProducts.length} товаров · {CATALOGS.length} каталогов (на странице – плитки каталогов и «Специальные предложения»)</div></div>
-        <a class="purl" href={u('/catalogcentr')} target="_blank" onclick="event.stopPropagation()">{site('/catalogcentr')}</a>
+        <div><span class="pname"><i class="caret"></i><a class="pcard" href={card_(R.catalog)} onclick="event.stopPropagation()">Общий каталог</a></span><div class="muted" style="font-size:12px">{allProducts.length} товаров · {CATALOGS.length} каталогов (на странице – плитки каталогов и «Специальные предложения»)</div></div>
+        <a class="purl" href={u(R.catalog)} target="_blank" onclick="event.stopPropagation()">{site(R.catalog)}</a>
         <span class="pkind">Каталог</span>
       </summary>
       {allProducts.map((p) => (
@@ -65,15 +66,15 @@ const T = 'https://static.tildacdn.com/';
       ))}
     </details>
     {CATALOGS.map((c) => {
-      // Карточки каталога – те, у кого адрес лежит в этом каталоге (как на сайте: /<каталог>/tproduct/…)
-      const list = allProducts.filter((p) => p.path.startsWith(`/${c.slug}/`));
+      // Карточки каталога – товары с этим ключом раздела (адрес /katalog/<раздел>/<товар>)
+      const list = allProducts.filter((p) => p.catalog === c.slug);
       const shown = listCards(c.slug).length;
       return (
         <details class="pcat">
           <summary class="prow">
             <img class="thumb" src={img(c.image, 800)} alt="" loading="lazy" />
-            <div><span class="pname"><i class="caret"></i><a class="pcard" href={card_('/' + c.slug)} onclick="event.stopPropagation()">Каталог «{c.title}»</a></span><div class="muted" style="font-size:12px">{shown} товаров в каталоге</div></div>
-            <a class="purl" href={u('/' + c.slug)} target="_blank" onclick="event.stopPropagation()">{site('/' + c.slug)}</a>
+            <div><span class="pname"><i class="caret"></i><a class="pcard" href={card_(c.href)} onclick="event.stopPropagation()">Каталог «{c.title}»</a></span><div class="muted" style="font-size:12px">{shown} товаров в каталоге</div></div>
+            <a class="purl" href={u(c.href)} target="_blank" onclick="event.stopPropagation()">{site(c.href)}</a>
             <span class="pkind">Каталог</span>
           </summary>
           {list.map((p) => (

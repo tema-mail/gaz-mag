@@ -1,0 +1,22 @@
+---
+import { R } from '../../lib/routes';
+// 6 разделов каталога по ЧПУ: /katalog/gazovye-kotly … (прежние адреса /catalog_boilers и т.п. – 301, src/lib/routes.ts).
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Catalog from '../../islands/Catalog';
+import { CATALOGS, SITE } from '../../lib/site';
+import { filterDefs, listCards } from '../../lib/catalog';
+
+export function getStaticPaths() {
+  // адрес раздела – ЧПУ (src/lib/routes.ts CATALOG_URL), данные – по ключу раздела c.slug
+  return CATALOGS.map((c) => ({ params: { catalog: c.href.split('/').pop()! }, props: { c } }));
+}
+const { c } = Astro.props;
+const cards = listCards(c.slug);
+---
+<Base title={c.seoTitle} description={c.seoDescr}>
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, { label: c.title }]} title={c.h1} lead={`${cards.length} ${cards.length % 10 === 1 && cards.length % 100 !== 11 ? 'товар' : cards.length % 10 >= 2 && cards.length % 10 <= 4 && (cards.length % 100 < 10 || cards.length % 100 >= 20) ? 'товара' : 'товаров'} в каталоге. Магазин в Болотном, ${SITE.addressShort.replace('г. Болотное, ', '')}; работаем по Новосибирску и Болотному.`} />
+  <section class="section--tight container">
+    <Catalog client:load cards={cards} filters={filterDefs(c.slug)} />
+  </section>
+</Base>

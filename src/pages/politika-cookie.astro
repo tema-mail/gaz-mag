@@ -1,4 +1,5 @@
 ---
+import { R } from '../lib/routes';
 // /cookie – политика cookie: что сайт реально хранит в браузере и что ставит Яндекс.Карта.
 // Текст описывает фактическое поведение кода (src/lib/store.ts, src/lib/consent.ts, Contacts.astro) – менять вместе с ним.
 import Base from '../layouts/Base.astro';
@@ -37,7 +38,7 @@ import { u } from '../lib/url';
       <li>Отозвать согласие на обработку персональных данных можно письмом на <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</li>
     </ul>
 
-    <p>Связанные документы: <a href={u('/policy')}>Политика обработки персональных данных</a> · <a href={u('/agreement')}>Согласие на обработку персональных данных</a>.</p>
+    <p>Связанные документы: <a href={u(R.policy)}>Политика обработки персональных данных</a> · <a href={u(R.agreement)}>Согласие на обработку персональных данных</a>.</p>
   </section>
 </Base>
 <style>

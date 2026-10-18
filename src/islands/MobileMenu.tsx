@@ -1,3 +1,4 @@
+import { R } from '../lib/routes';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import { sheet } from '../lib/store';
@@ -43,9 +44,9 @@ export default function MobileMenu() {
         </button>
         <p class="mm__h">Каталог</p>
         <div class="mm__cats">
-          <a class="mm-cat mm-cat--all" href={u('/catalogcentr')} onClick={close}>Весь каталог <IconChevron /></a>
+          <a class="mm-cat mm-cat--all" href={u(R.catalog)} onClick={close}>Весь каталог <IconChevron /></a>
           {CATALOGS.map((c) => (
-            <a class="mm-cat" href={u('/' + c.slug)} onClick={close}>{c.short} <IconChevron /></a>
+            <a class="mm-cat" href={u(c.href)} onClick={close}>{c.short} <IconChevron /></a>
           ))}
         </div>
         <ul class="mm__links">

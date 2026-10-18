@@ -1,4 +1,5 @@
 ---
+import { R } from '../../lib/routes';
 // Страница каждой акции: /akcii/pensioneram, /akcii/yur-licam-i-montazhnikam, /akcii/montazh-ot-8000,
 // /akcii/pokupka-ot-100000, /akcii/stabilizator-v-podarok. Акция «котёл + монтаж» – своя посадочная /hubert-dy.
 import Base from '../../layouts/Base.astro';
@@ -12,7 +13,7 @@ import { img } from '../../lib/img';
 import { u } from '../../lib/url';
 
 export function getStaticPaths() {
-  return PROMOS.filter((p) => p.href.startsWith('/akcii/')).map((p) => ({ params: { promo: p.slug }, props: { p } }));
+  return PROMOS.filter((p) => p.href.startsWith('/akcii/') && p.slug !== 'hubert-dy').map((p) => ({ params: { promo: p.slug }, props: { p } }));
 }
 const { p } = Astro.props;
 const cats = CATALOGS.filter((c) => p.catalogs.includes(c.slug));
@@ -21,14 +22,14 @@ const goods = (p.slug === 'stabilizator-v-podarok' ? listCards('hubert') : listC
 const others = PROMOS.filter((x) => x.slug !== p.slug);
 ---
 <Base title={`${p.title} – акция, Новосибирск и Болотное`} description={p.descr}>
-  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Акции', href: '/akcii' }, { label: p.short }]} title={p.title} />
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Акции', href: R.promos }, { label: p.short }]} title={p.title} />
 
   <section class="section--tight container">
     <div class="pr soft-card">
       <div class="pr__text">
         {p.note && <p class="pr__note">{p.note}</p>}
         <ul class="pr__points">{p.points.map((x) => <li>{x}</li>)}</ul>
-        {p.slug === 'montazh-ot-8000' && <p>Что входит в монтаж котла – на странице <a href={u('/ustanovka-kotla')}>«Установка газовых котлов»</a>.</p>}
+        {p.slug === 'montazh-ot-8000' && <p>Что входит в монтаж котла – на странице <a href={u(R.install)}>«Установка газовых котлов»</a>.</p>}
         <div class="pr__btns">
           <button type="button" class="btn btn--navy" data-lead={`Акция: ${p.title}`}>Воспользоваться акцией</button>
           <a class="btn btn--outline" href="#contacts">Позвонить</a>
@@ -41,7 +42,7 @@ const others = PROMOS.filter((x) => x.slug !== p.slug);
   {cats.length > 0 && (
     <section class="section container">
       <h2 class="h3">Выбрать товар в каталоге</h2>
-      <div class="pr-cats">{cats.map((c) => <a class="chip" href={u('/' + c.slug)}>{c.title}</a>)}</div>
+      <div class="pr-cats">{cats.map((c) => <a class="chip" href={u(c.href)}>{c.title}</a>)}</div>
     </section>
   )}
 

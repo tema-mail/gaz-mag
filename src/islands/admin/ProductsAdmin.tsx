@@ -3,7 +3,9 @@ import type { Product } from '../../lib/catalog';
 import ProductEditor, { type AdmList, type AdmProduct } from './ProductEditor';
 import CsvImport from './CsvImport';
 import GhConnect from './GhConnect';
-import { PRODUCTS_PATH, UPLOADS_DIR, buildOf, commit, humanError, fileToBase64, getToken, readJson, slugify, type FileChange } from './gh';
+import { PRODUCTS_PATH, UPLOADS_DIR, buildOf, commit, humanError, fileToBase64, getToken, readJson, type FileChange } from './gh';
+import { productPath, uniqueSlug } from '../../lib/routes';
+import { productSeoDescr, productSeoTitle } from '../../lib/seo';
 
 // Раздел «Товары» – перенос с кабинета-стандарта Milovini (эталон Elite Rose, магазин Тильды). С подключённым ключом
 // GitHub изменения сохраняются в src/data/products.json одним коммитом «Админка: …», сайт пересобирается и выкладывается
@@ -129,9 +131,11 @@ export default function ProductsAdmin({ items, lists, base }: { items: Product[]
       n++;
     }
     const firstCatalog = p.lists.find((l) => !['specials', 'hubert'].includes(l))!;
+    // ЧПУ нового товара: /katalog/<раздел>/<адрес из названия>, уникальный; у существующего адрес не меняется (позиции в поиске)
+    const slug = old?.slug ?? uniqueSlug(p.title, new Set(raw.map((x) => x.slug)));
     const build = (o: Product | undefined): Product => ({
       ...(o ?? { sort: 0, options: [], editions: [] }),
-      id, path: o?.path ?? `/${firstCatalog}/tproduct/${id}-${slugify(p.title)}`,
+      id, catalog: o?.catalog ?? firstCatalog, slug: o?.slug ?? slug, path: o?.path ?? productPath(firstCatalog, slug),
       // описание не трогали – сохраняем исходную разметку; правили – текст построчно
       title: p.title.trim(), brand: p.brand.trim(), descr: p.descr.trim(),
       text: o && p.text === htmlToText(o.text) ? o.text : esc(p.text.trim()).replace(/\n/g, '<br />'),
@@ -139,7 +143,8 @@ export default function ProductsAdmin({ items, lists, base }: { items: Product[]
       chars: p.chars.filter((c) => c.t.trim() && c.v.trim()).map((c) => ({ t: c.t.trim(), v: c.v.trim() })),
       options: p.options, editions: p.editions,
       ...(p.sku.trim() ? { sku: p.sku.trim() } : {}), ...(p.mark.trim() ? { mark: p.mark.trim() } : {}),
-      ...(p.seoTitle ? { seoTitle: p.seoTitle } : {}), ...(p.seoDescr ? { seoDescr: p.seoDescr } : {}),
+      // SEO: пусто – заполняем шаблоном (Болотное, src/lib/seo.ts)
+      seoTitle: p.seoTitle.trim() || productSeoTitle(p.title), seoDescr: p.seoDescr.trim() || productSeoDescr(p.title, p.brand),
     } as Product);
     setEdit(null);
     const next = build(old);

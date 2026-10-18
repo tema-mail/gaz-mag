@@ -26,39 +26,42 @@ CITY, CITY_STEM = "Новосибирск", "новосибирск"
 CITY2, CITY2_STEM = "Болотное", "болотн"
 
 CATALOG_NAMES = {
-    "catalog_boilers": "Газовые котлы", "catalog_gaz_waterheaters": "Газовые колонки и водонагреватели",
-    "catalog_el_waterheaters": "Электрические водонагреватели", "catalog_indirect_boilers": "Бойлеры косвенного нагрева",
-    "catalog_other": "Товары для отопления", "gas": "Датчики загазованности, счётчики газа и дымоходы",
+    "gazovye-kotly": "Газовые котлы", "gazovye-kolonki": "Газовые колонки и водонагреватели",
+    "elektricheskie-vodonagrevateli": "Электрические водонагреватели", "boylery-kosvennogo-nagreva": "Бойлеры косвенного нагрева",
+    "tovary-dlya-otopleniya": "Товары для отопления", "datchiki-i-schetchiki-gaza": "Датчики загазованности, счётчики газа и дымоходы",
 }
 PAGE_NAMES = {"about": "О компании", "hubert-dy": "Акция на котёл HUBERT + монтаж"}
 
 
 def cluster_of(route: str) -> str:
-    """Кластер запросов страницы – по адресу, как у эталона (структура разделов = структура кластеров)."""
+    """Кластер запросов страницы – по адресу (ЧПУ 18.10.2026: структура разделов = структура кластеров)."""
     parts = [p for p in route.split("/") if p]
     if not parts:
-        return "Общий спрос: газовое оборудование в Новосибирске и Болотном"
-    if parts[0] in CATALOG_NAMES:
-        if "tproduct" in parts:
-            return "Карточка товара: запросы по конкретной модели, мощности и цене"
-        name = CATALOG_NAMES[parts[0]]
-        return f"Каталог «{name}»: {name.lower()} купить в Новосибирске"
-    if parts[0] == "catalogcentr":
-        return "Хаб каталога: газовое оборудование в Новосибирске и Болотном"
-    if parts[0] == "montag":
-        return "Услуга: подключение газа к частному дому и монтаж отопления"
-    if parts[0] == "ustanovka-kotla":
-        return "Услуга: установка и замена газового котла"
-    if parts[0] == "hubert":
+        return "Общий спрос: газовое оборудование в Болотном и Новосибирске"
+    if parts[0] == "katalog":
+        if len(parts) == 1:
+            return "Хаб каталога: газовое оборудование в Болотном и Новосибирске"
+        name = CATALOG_NAMES.get(parts[1], parts[1])
+        if len(parts) >= 3:
+            return f"Карточка товара ({name.lower()}): запросы по конкретной модели, мощности и цене – Болотное"
+        return f"Каталог «{name}»: {name.lower()} купить в Новосибирске и Болотном"
+    if parts[0] == "uslugi":
+        if len(parts) == 1:
+            return "Хаб услуг: подключение газа, монтаж отопления, установка котла"
+        return {"podklyuchenie-gaza-i-montazh-otopleniya": "Услуга: подключение газа к частному дому и монтаж отопления",
+                "ustanovka-gazovogo-kotla": "Услуга: установка и замена газового котла"}.get(parts[1], "Услуга")
+    if parts[0] == "kotly-hubert":
         return "Бренд: котлы HUBERT – купить, цены, подбор"
     if parts[0] == "akcii":
         return "Акции и скидки на газовое оборудование"
-    if parts[0] in ("policy", "agreement", "oferta", "cookie", "rekvezit"):
+    if parts[0] in ("politika-konfidencialnosti", "soglasie-na-obrabotku-dannyh", "oferta", "politika-cookie", "rekvizity"):
         return "Юридические документы – вне поискового продвижения"
-    if parts[0] in ("thanks", "fail", "souz"):
+    if parts[0] in ("spasibo", "souz"):
         return "Служебная страница – из поиска закрыта"
-    if parts[0] in PAGE_NAMES:
-        return f"Страница «{PAGE_NAMES[parts[0]]}»: доверие и коммерческие вопросы перед покупкой"
+    if parts[0] == "karta-sayta":
+        return "Карта сайта – навигация, вне продвижения"
+    if parts[0] == "o-kompanii":
+        return "Страница «О компании»: доверие и коммерческие вопросы перед покупкой"
     return "Страница сайта"
 
 

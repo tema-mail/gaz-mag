@@ -1,13 +1,14 @@
 ---
+import { R } from '../../lib/routes';
 // /montag – «Подключение к газовым сетям и монтаж отопления». Адрес оригинала сохранён, тексты и вопросы –
 // с оригинала, разложены в понятную структуру. Вопросы про сам котёл – на /ustanovka-kotla (без повторов).
-import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
-import Steps from '../components/Steps.astro';
-import LeadSection from '../components/LeadSection.astro';
-import Faq from '../components/Faq.astro';
-import { img } from '../lib/img';
-import { u } from '../lib/url';
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Steps from '../../components/Steps.astro';
+import LeadSection from '../../components/LeadSection.astro';
+import Faq from '../../components/Faq.astro';
+import { img } from '../../lib/img';
+import { u } from '../../lib/url';
 const T = 'https://static.tildacdn.com/';
 const PHOTO = T + 'tild3938-6663-4939-b731-393463353432/gas-boiler.jpg';
 const FORM_IMG = T + 'tild3431-6430-4533-b432-393136316435/Group_388.png';
@@ -36,7 +37,7 @@ const faq = [
       { t: 'Проверку вентиляции на соответствие требованиям пожарной безопасности' },
       { t: 'Монтаж системы отопления' },
     ]} />
-    <p class="mg-link"><a href={u('/ustanovka-kotla')}>Установка газовых котлов: что входит и какие котлы ставим →</a></p>
+    <p class="mg-link"><a href={u(R.install)}>Установка газовых котлов: что входит и какие котлы ставим →</a></p>
   </section>
 
   <section class="section container">
@@ -56,7 +57,7 @@ const faq = [
           <ul>
             <li>Стоимость услуг ниже, чем у государственных компаний</li>
             <li>Отсутствие ожидания очереди на монтаж</li>
-            <li>Большой выбор газовых котлов и материалов – <a href={u('/catalogcentr')}>каталог</a></li>
+            <li>Большой выбор газовых котлов и материалов – <a href={u(R.catalog)}>каталог</a></li>
           </ul>
         </div>
         <div>
