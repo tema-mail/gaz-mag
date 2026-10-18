@@ -1,0 +1,17 @@
+---
+// Раздел «Товары» (перенос кабинета-стандарта Milovini, эталон Elite Rose): все товары src/data/products.json,
+// включая скрытые. Разделы – списки товара: 6 каталогов сайта + «Специальные предложения» + «HUBERT».
+import Admin from '../../layouts/Admin.astro';
+import ProductsAdmin from '../../islands/admin/ProductsAdmin';
+import { allProducts } from '../../lib/catalog';
+import { CATALOGS } from '../../lib/site';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const lists = [
+  ...CATALOGS.map((c) => ({ id: c.slug, title: c.title })),
+  { id: 'specials', title: 'Специальные предложения (главная, акции)' },
+  { id: 'hubert', title: 'HUBERT (страница котлов HUBERT)' },
+];
+---
+<Admin title="Товары" active="products">
+  <ProductsAdmin client:load items={allProducts} lists={lists} base={base} />
+</Admin>

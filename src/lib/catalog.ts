@@ -18,6 +18,8 @@ export interface Product {
   options: { title: string; values: string[] }[];
   editions: Edition[];
   images: string[];
+  /** Поля, которые пишет админка (src/islands/admin/ProductsAdmin.tsx). */
+  hidden?: boolean; sku?: string; mark?: string; seoTitle?: string; seoDescr?: string;
 }
 
 /** Карточка товара для островов: только то, что нужно сетке, фильтрам и корзине. */
@@ -35,8 +37,10 @@ export interface Card {
 export type FilterKind = 'brand' | 'price' | 'char' | 'power';
 export interface FilterDef { label: string; kind: FilterKind; char?: string }
 
-// Все товары с ценой. У 16 товаров «Радиаторы и иные товары» на оригинале нет фото – переносим как есть, с заглушкой.
-export const products = (productsJson as Product[]).filter((p) => p.price);
+// Все товары с ценой (для админки – включая скрытые). У 16 товаров «Радиаторы и иные товары» на оригинале нет фото – с заглушкой.
+export const allProducts = (productsJson as Product[]).filter((p) => p.price);
+/** Товары на сайте: скрытые в админке не попадают в каталоги, поиск, sitemap и не получают страницу. */
+export const products = allProducts.filter((p) => !p.hidden);
 export const productById = new Map(products.map((p) => [p.id, p]));
 
 /** «10кВт», «13 кВт», «24» → «10 кВт». */

@@ -96,7 +96,22 @@ const num = (v) => {
 };
 const clean = (s) => String(s ?? '').replace(/ /g, ' ').trim();
 
+// Защита правок админки: если products.json последним менял коммит «Админка: …», генератор его не трогает
+// (правило кабинета-стандарта 16.10.2026). Переснять насильно: npm run data -- --force.
+import { execSync } from 'node:child_process';
+function adminEdited() {
+  try {
+    const msg = execSync('git log -1 --format=%s -- src/data/products.json', { cwd: ROOT }).toString().trim();
+    return msg.startsWith('Админка:') ? msg : '';
+  } catch { return ''; }
+}
+
 async function store() {
+  const edited = adminEdited();
+  if (edited && !process.argv.includes('--force')) {
+    console.error(`products.json правили в админке («${edited}») – не перезаписываю. Переснять с Тильды поверх правок: npm run data -- --force`);
+    process.exit(1);
+  }
   const all = new Map();
   const filters = {};
   for (const [page, sp] of Object.entries(STOREPARTS)) {

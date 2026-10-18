@@ -7,14 +7,14 @@
     Рекомендации – закрытые разделы (src/components/admin/Locked.astro). */
 import '../styles/admin.css';
 import { u } from '../lib/url';
-import { products } from '../lib/catalog';
+import { allProducts } from '../lib/catalog';
 type Tab = 'pages' | 'products' | 'leads' | 'metrika' | 'seo' | 'positions' | 'recommendations';
 interface Props { title: string; active: Tab }
 const { title, active } = Astro.props;
 const site = new URL(u('/'), Astro.site).href;
 const tabs: [Tab, string, string, string][] = [
   ['pages', '/admin/', 'Страницы сайта', ''],
-  ['products', '/admin/products/', 'Товары', String(products.length)],
+  ['products', '/admin/products/', 'Товары', String(allProducts.length)],
   ['leads', '/admin/leads/', 'Заявки', ''],
   ['metrika', '/admin/metrika/', 'Метрика', '🔒'],
   ['seo', '/admin/seo/', 'SEO-аналитика', '🔒'],
