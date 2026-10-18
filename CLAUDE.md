@@ -9,7 +9,7 @@
 - `npm run data` – заново снять товары, варианты и фильтры магазина (store.tildaapi.com) в `src/data/*.json`
   и картинки товаров в `public/img/p`. `npm run data -- --img` – скачать картинки страниц
   (ссылки `https://static.tildacdn.com/...` в `src/` → локальные через `src/lib/img.ts`).
-- Публикация: GitHub Pages (`tema-mail/gaz-mag`), workflow `.github/workflows/pages.yml`, закрыто noindex.
+- Публикация: пуш в main → GitHub Actions (`.github/workflows/deploy.yml`) → VPS Beget, gaz-mag.ru. Откат – workflow «Откат сайта». Приёмник заявок `server/lead.mjs` обновляется `DEPLOY_PUB=~/.config/gaz-mag/deploy_ed25519.pub zsh deploy/install.sh`.
 
 ## Структура
 - `src/pages` – маршруты повторяют адреса оригинала (`/catalog_boilers`, `/<каталог>/tproduct/<id>-<slug>`, `/hubert`…).

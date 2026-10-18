@@ -1,0 +1,23 @@
+name: Откат сайта
+
+# Вернуть предыдущую выкладку на сервере (хранятся 5 последних). Запуск: Actions → «Откат сайта» → Run workflow.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ключ выкладки
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@45.12.72.227 rollback
+      - run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@45.12.72.227 status

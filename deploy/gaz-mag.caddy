@@ -1,0 +1,31 @@
+# >>> gaz-mag: магазин газового оборудования – блок добавляет deploy/install.sh репозитория gaz-mag
+gaz-mag.ru {
+	encode gzip zstd
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+	handle /api/* {
+		reverse_proxy gaz-mag-api:8090
+	}
+	handle {
+		reverse_proxy gaz-mag-web:8080
+	}
+}
+www.gaz-mag.ru {
+	redir https://gaz-mag.ru{uri} permanent
+}
+# Проверочный адрес до переключения домена: свой сертификат Caddy (curl -k), закрыт от поисковиков.
+gaz-mag.45.12.72.227.nip.io {
+	tls internal
+	header X-Robots-Tag "noindex, nofollow"
+	handle /api/* {
+		reverse_proxy gaz-mag-api:8090
+	}
+	handle {
+		reverse_proxy gaz-mag-web:8080
+	}
+}
+# <<< gaz-mag

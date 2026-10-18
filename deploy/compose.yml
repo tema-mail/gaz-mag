@@ -1,0 +1,42 @@
+# gaz-mag.ru на VPS Beget: статика из /opt/gaz-mag/releases/current + приёмник заявок; наружу – через общий Caddy.
+# Порты не публикуются: Caddy ходит к контейнерам по сети dzenbot_default.
+name: gaz-mag
+services:
+  gaz-mag-web:
+    image: nginxinc/nginx-unprivileged:1.27-alpine
+    container_name: gaz-mag-web
+    restart: unless-stopped
+    volumes:
+      - /opt/gaz-mag/releases:/srv:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 64m
+    networks: [proxy]
+  # Приём заявок: копия в /opt/gaz-mag/data/leads.jsonl + сообщение в Telegram. Токен бота – только в lead.env (600).
+  gaz-mag-api:
+    image: node:22-alpine
+    container_name: gaz-mag-api
+    restart: unless-stopped
+    # Свой системный пользователь gazmag-api (uid 10501): заявки с ПДн не читает никто из других сервисов.
+    user: "10501:10501"
+    working_dir: /app
+    command: ["node", "lead.mjs"]
+    env_file: [/opt/gaz-mag/lead.env]
+    environment:
+      DATA_DIR: /data
+      ORIGIN: https://gaz-mag.ru,https://www.gaz-mag.ru
+    volumes:
+      - /opt/gaz-mag/server:/app:ro
+      - /opt/gaz-mag/data:/data
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 96m
+    networks: [proxy]
+networks:
+  proxy:
+    external: true
+    name: dzenbot_default

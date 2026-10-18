@@ -24,7 +24,8 @@ const {
   description = 'Продажа газового оборудования в Болотном: газовые котлы, водонагреватели, бойлеры, радиаторы, датчики загазованности. Подключение газа и монтаж отопления.',
   image, noindex = false, noContacts = false, bare = false,
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+// Canonical без слеша в конце – адреса страниц как на Тильде (/montag, а не /montag/).
+const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
 // Показная копия на GitHub Pages закрыта от поиска, чтобы не дублировать живой gaz-mag.ru.
 const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
 ---
