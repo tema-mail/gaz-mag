@@ -6,10 +6,14 @@
 ## Стек и запуск
 - Astro 7 (статическая сборка), острова Preact, общее состояние – `@preact/signals` (`src/lib/store.ts`).
 - `npm run dev` – разработка, `npm run build` – сборка в `dist/`.
-- `npm run data` – заново снять товары, варианты и фильтры магазина (store.tildaapi.com) в `src/data/*.json`
+- `npm run data` (только до боя; в бою данные на сервере) – заново снять товары, варианты и фильтры магазина (store.tildaapi.com) в `src/data/*.json`
   и картинки товаров в `public/img/p`. `npm run data -- --img` – скачать картинки страниц
   (ссылки `https://static.tildacdn.com/...` в `src/` → локальные через `src/lib/img.ts`).
-- Публикация: пуш в main → GitHub Actions (`.github/workflows/deploy.yml`) → VPS Beget, gaz-mag.ru. Откат – workflow «Откат сайта». Приёмник заявок `server/lead.mjs` обновляется `DEPLOY_PUB=~/.config/gaz-mag/deploy_ed25519.pub zsh deploy/install.sh`.
+- **Сайт в бою с 18.10.2026** (src/lib/stage.ts). Данные (товары, фото) – на сервере `/opt/gaz-mag/content` (история – git там же),
+  их правит админка через `/api/admin/*`. Сайт собирает `gaz-mag-builder` на сервере. Пуш кода в main → Actions шлёт серверу
+  `update` → сервер забирает код и пересобирает с данными сервера. Откат – workflow «Откат сайта». `src/data/products.json`
+  в репозитории в бою НЕ источник правды; свежие данные на мак: `scp root@45.12.72.227:/opt/gaz-mag/content/products.json src/data/`.
+  Приёмник/сборщик/nginx обновляются `DEPLOY_PUB=~/.config/gaz-mag/deploy_ed25519.pub zsh deploy/install.sh`.
 
 ## Структура
 - `src/pages` – ЧПУ (`/katalog/<раздел>/<товар>`, `/uslugi/…`), все адреса – в `src/lib/routes.ts`; прежние адреса Тильды – 301 (`dist/redirects.json`).
