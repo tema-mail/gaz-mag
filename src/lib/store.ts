@@ -72,3 +72,5 @@ export const fmt = (n: number) => n.toLocaleString('ru-RU').replace(/[\u00a0\u20
 
 /** Тема заявки для попапа: кнопка с data-lead="Акция …" подставляет её, без значения – общая заявка. */
 export const leadTopic = signal('Заявка с сайта');
+/** Товар для «Заказать в один клик» (кнопка с data-lead-item) – уходит в заявку отдельным полем. */
+export const leadItems = signal<import('./forms').LeadItem[]>([]);

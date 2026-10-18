@@ -1,4 +1,4 @@
-import { leadTopic, sheet } from '../lib/store';
+import { leadItems, leadTopic, sheet } from '../lib/store';
 import LeadForm from './LeadForm';
 import Drawer from './Drawer';
 
@@ -15,7 +15,7 @@ export default function LeadPopup() {
         <h2 class="lead__title">Оставьте заявку</h2>
         <p class="lead__text">Введите свои контактные данные – менеджер перезвонит, ответит на вопросы и поможет подобрать оборудование.</p>
         {topic !== 'Заявка с сайта' && <p class="lead__topic">{topic}</p>}
-        <LeadForm form={topic} button="Отправить" />
+        <LeadForm form={topic} button="Отправить" items={leadItems.value} />
       </div>
     </Drawer>
   );

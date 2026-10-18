@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { sendForm, thanksUrl } from '../lib/forms';
+import { sendForm, thanksUrl, type LeadItem } from '../lib/forms';
 import { maskPhone, phoneOk } from '../lib/phone';
 import { SITE } from '../lib/site';
 import { u } from '../lib/url';
@@ -7,8 +7,8 @@ import { u } from '../lib/url';
 // Общая форма заявки: имя, телефон, согласие. Галочка согласия по умолчанию пустая (КоАП 13.11, 152-ФЗ ст. 9),
 // кнопка неактивна, пока её не отметят. Используется в попапе, на «Монтаже», акциях и посадочной.
 // extra – скрытые поля (например, ответы квиза), которые уйдут вместе с заявкой.
-export default function LeadForm({ form, button = 'Отправить', extra, dark = false }: {
-  form: string; button?: string; extra?: Record<string, string>; dark?: boolean;
+export default function LeadForm({ form, button = 'Отправить', extra, dark = false, items = [] }: {
+  form: string; button?: string; extra?: Record<string, string>; dark?: boolean; items?: LeadItem[];
 }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -21,7 +21,7 @@ export default function LeadForm({ form, button = 'Отправить', extra, d
     if (!phoneOk(phone)) return setErr('Укажите телефон полностью – менеджер перезвонит');
     if (!agree) return setErr('Нужно согласие на обработку персональных данных');
     setBusy(true);
-    const ok = await sendForm(form, { Name: name, Phone: phone, ...extra });
+    const ok = await sendForm(form, { Name: name, Phone: phone, ...extra }, items);
     setBusy(false);
     if (!ok) return setErr(`Не получилось отправить. Позвоните нам: ${SITE.phones[0].text}`);
     location.href = thanksUrl();

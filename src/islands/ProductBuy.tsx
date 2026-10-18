@@ -69,7 +69,10 @@ export default function ProductBuy({ p }: { p: P }) {
           <IconHeart filled={fav} size={22} />
         </button>
       </div>
-      <button type="button" class="btn btn--outline btn--block" data-lead={`Заказ в один клик: ${p.title}${variant ? ` (${variant})` : ''}`}>
+      <button
+        type="button" class="btn btn--outline btn--block" data-lead={`Заказ в один клик: ${p.title}${variant ? ` (${variant})` : ''}`}
+        data-lead-item={JSON.stringify([{ uid: id, title: p.title, variant, category: p.path.split('/')[1] || '', qty, price }])}
+      >
         Заказать в один клик
       </button>
       {inCart && (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import {
-  cart, cartCount, cartTotal, clearCart, favs, fmt, leadTopic, removeFromCart, setQty, sheet, toast, toggleFav,
+  cart, cartCount, cartTotal, clearCart, favs, fmt, leadItems, leadTopic, removeFromCart, setQty, sheet, toast, toggleFav,
 } from '../lib/store';
 import { sendForm, thanksUrl } from '../lib/forms';
 import { maskPhone, phoneOk } from '../lib/phone';
@@ -45,7 +45,7 @@ function Checkout() {
     const order = cart.value.map((i) => `${i.title}${i.variant ? ` (${i.variant})` : ''} – ${i.qty} шт. × ${fmt(i.price)}`).join('\n');
     const ok = await sendForm('Заказ из корзины', {
       Name: f.name, Email: f.email, Phone: f.phone, Comment: f.comment, Order: order, Total: fmt(cartTotal.value),
-    });
+    }, cart.value.map((i) => ({ uid: i.id, title: i.title, variant: i.variant, category: i.path.split('/')[1] || '', qty: i.qty, price: i.price })));
     setBusy(false);
     if (!ok) return setErr(`Не получилось отправить. Позвоните нам: ${SITE.phones[0].text}`);
     clearCart();
@@ -170,7 +170,10 @@ export default function Sheets() {
       if (!a) return;
       e.preventDefault();
       const what = a.getAttribute('data-open');
-      if (!what) leadTopic.value = a.getAttribute('data-lead') || 'Заявка с сайта';
+      if (!what) {
+        leadTopic.value = a.getAttribute('data-lead') || 'Заявка с сайта';
+        try { leadItems.value = JSON.parse(a.getAttribute('data-lead-item') || '[]'); } catch { leadItems.value = []; }
+      }
       sheet.value = (what as any) || 'lead';
     };
     document.addEventListener('click', onClick);

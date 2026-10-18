@@ -1,15 +1,20 @@
 // Приём заявок и заказов gaz-mag.ru – маленький сервис без зависимостей (Node 22), живёт на VPS Beget (РФ).
-// POST /api/lead {form, fields{...}} → проверка → копия в /data/leads.jsonl → сообщение в Telegram.
+// POST /api/lead {form, consent, fields{...}, items[]} → проверка → копия в /data/leads.jsonl → сообщение в Telegram.
 // Копия пишется всегда, даже если Telegram недоступен: заявка не теряется.
-// Окружение: TG_TOKEN (бот), TG_CHAT (кому слать, через запятую), PORT (8090), ORIGIN (https://gaz-mag.ru).
+// Кабинет (вкладка «Заявки»): GET /api/leads и PATCH /api/leads/<номер> {stage} – только с логином и паролем кабинета
+// (Basic, тот же вход, что у замка админки – правило стандарта 17.10.2026). Этапы и их история – /data/stages.json.
+// Окружение: TG_TOKEN, TG_CHAT (через запятую), ADMIN_LOGIN, ADMIN_PASS, PORT (8090), ORIGIN (https://gaz-mag.ru).
 import { createServer } from 'node:http';
-import { appendFile, mkdir } from 'node:fs/promises';
+import { appendFile, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { timingSafeEqual } from 'node:crypto';
 
 const PORT = Number(process.env.PORT || 8090);
 const DATA = process.env.DATA_DIR || '/data';
 const TG_TOKEN = process.env.TG_TOKEN || '';
 const TG_CHATS = (process.env.TG_CHAT || '').split(',').map((s) => s.trim()).filter(Boolean);
 const ORIGINS = (process.env.ORIGIN || 'https://gaz-mag.ru').split(',').map((s) => s.trim());
+const ADMIN = process.env.ADMIN_LOGIN && process.env.ADMIN_PASS ? `${process.env.ADMIN_LOGIN}:${process.env.ADMIN_PASS}` : '';
+const STAGES = ['новая', 'в работе', 'выполнена', 'отказ'];
 
 const MAX_BODY = 16 * 1024;
 const MAX_FIELD = 2000;
@@ -17,6 +22,40 @@ const MAX_FIELD = 2000;
 const WINDOW_MS = 10 * 60 * 1000;
 const LIMIT = 5;
 const hits = new Map();
+
+/** Basic-авторизация кабинета; сравнение за постоянное время. */
+function authed(req) {
+  const h = String(req.headers.authorization || '');
+  if (!ADMIN || !h.startsWith('Basic ')) return false;
+  const got = Buffer.from(Buffer.from(h.slice(6), 'base64').toString('utf8'));
+  const want = Buffer.from(ADMIN);
+  return got.length === want.length && timingSafeEqual(got, want);
+}
+
+/** Товары заявки: [{uid, title, variant, category, qty, price}] – из корзины или «заказа в один клик». */
+function cleanItems(list) {
+  if (!Array.isArray(list)) return [];
+  return list.slice(0, 40).map((i) => ({
+    uid: clean(i?.uid).slice(0, 40), title: clean(i?.title).slice(0, 300), variant: clean(i?.variant).slice(0, 200),
+    category: clean(i?.category).slice(0, 80), qty: Math.max(1, Math.min(999, Number(i?.qty) || 1)), price: Math.max(0, Math.round(Number(i?.price) || 0)),
+  })).filter((i) => i.title);
+}
+const pad = (n) => String(n).padStart(2, '0');
+function leadId(d) {
+  const n = new Date(d.getTime() + 7 * 3600e3); // время Новосибирска в номере
+  return `GM-${String(n.getUTCFullYear()).slice(2)}${pad(n.getUTCMonth() + 1)}${pad(n.getUTCDate())}-${pad(n.getUTCHours())}${pad(n.getUTCMinutes())}${Math.random().toString(36).slice(2, 4)}`;
+}
+async function readStages() {
+  try { return JSON.parse(await readFile(`${DATA}/stages.json`, 'utf8')); } catch { return {}; }
+}
+async function readLeads() {
+  let text = '';
+  try { text = await readFile(`${DATA}/leads.jsonl`, 'utf8'); } catch { return []; }
+  const stages = await readStages();
+  return text.split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean)
+    .map((l) => ({ ...l, stage: stages[l.id]?.stage || 'новая', history: stages[l.id]?.history || [] }))
+    .reverse();
+}
 
 const phoneOk = (v) => String(v || '').replace(/\D/g, '').length >= 10;
 const clean = (v) => String(v ?? '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, MAX_FIELD);
@@ -48,6 +87,7 @@ const LABELS = { Name: 'Имя', Phone: 'Телефон', Email: 'E-mail', Order
 function message(lead) {
   const f = lead.fields;
   const lines = [`<b>${esc(lead.form)}</b>`];
+  lines[0] += ` · № ${lead.id}`;
   for (const k of Object.keys(LABELS)) if (f[k]) lines.push(`<b>${LABELS[k]}:</b> ${k === 'Order' ? '\n' : ''}${esc(f[k])}`);
   for (const [k, v] of Object.entries(f)) if (!LABELS[k] && v) lines.push(`<b>${esc(k)}:</b> ${esc(v)}`);
   lines.push(`<i>${new Date(lead.at).toLocaleString('ru-RU', { timeZone: 'Asia/Novosibirsk' })} НСК</i>`);
@@ -63,7 +103,30 @@ function send(res, code, body, origin) {
 
 createServer(async (req, res) => {
   const origin = req.headers.origin;
-  if (req.url === '/api/health') return send(res, 200, { ok: true, telegram: Boolean(TG_TOKEN && TG_CHATS.length) });
+  const ip0 = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  if (req.url === '/api/health') return send(res, 200, { ok: true, telegram: Boolean(TG_TOKEN && TG_CHATS.length), admin: Boolean(ADMIN) });
+
+  // Кабинет: список заявок и смена этапа – только с паролем; неверный пароль считается в лимит попыток.
+  if (req.url === '/api/leads' || req.url.startsWith('/api/leads/')) {
+    if (!authed(req)) { if (limited('auth:' + ip0)) return send(res, 429, { ok: false, error: 'rate' }); return send(res, 401, { ok: false }); }
+    if (req.method === 'GET' && req.url === '/api/leads') return send(res, 200, { ok: true, leads: await readLeads() });
+    if (req.method === 'PATCH') {
+      const id = decodeURIComponent(req.url.slice('/api/leads/'.length));
+      let body = '';
+      for await (const c of req) { body += c; if (body.length > 2000) return send(res, 413, { ok: false }); }
+      let stage;
+      try { stage = JSON.parse(body).stage; } catch { return send(res, 400, { ok: false }); }
+      if (!STAGES.includes(stage) || !/^GM-[\w-]{6,30}$/.test(id)) return send(res, 422, { ok: false });
+      const all = await readStages();
+      const cur = all[id] || { stage: 'новая', history: [] };
+      if (cur.stage !== stage) { cur.history = [...cur.history, { at: new Date().toISOString(), from: cur.stage, to: stage }].slice(-50); cur.stage = stage; }
+      all[id] = cur;
+      await writeFile(`${DATA}/stages.json.tmp`, JSON.stringify(all));
+      await rename(`${DATA}/stages.json.tmp`, `${DATA}/stages.json`);
+      return send(res, 200, { ok: true, stage: cur.stage, history: cur.history });
+    }
+    return send(res, 405, { ok: false });
+  }
   if (req.method === 'OPTIONS') {
     res.writeHead(204, { 'Access-Control-Allow-Origin': ORIGINS.includes(origin) ? origin : ORIGINS[0], 'Access-Control-Allow-Methods': 'POST', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '600' });
     return res.end();
@@ -93,7 +156,11 @@ createServer(async (req, res) => {
   const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
   if (limited(ip)) return send(res, 429, { ok: false, error: 'rate' }, origin);
 
-  const lead = { at: new Date().toISOString(), form: clean(body.form || 'Заявка с сайта').slice(0, 200), fields, consent: true, ip };
+  const now = new Date();
+  const items = cleanItems(body.items);
+  const page = fields.Page || '';
+  const category = items[0]?.category || (page.split('/')[1] || '');
+  const lead = { id: leadId(now), at: now.toISOString(), form: clean(body.form || 'Заявка с сайта').slice(0, 200), fields, items, category, source: clean(body.source).slice(0, 120), consent: true, ip };
   try {
     await mkdir(DATA, { recursive: true });
     await appendFile(`${DATA}/leads.jsonl`, JSON.stringify(lead) + '\n');
