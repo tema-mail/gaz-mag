@@ -118,7 +118,9 @@ createServer(async (req, res) => {
   // 301 с прежних адресов: карта – redirects.json текущей выкладки (монтируется /releases только на чтение)
   if (req.url.startsWith('/api/go')) {
     let u = '';
-    try { u = decodeURIComponent(new URL(req.url, 'http://x').searchParams.get('u') || ''); } catch {}
+    // исходный адрес – из заголовка nginx (X-Original-URI) или ?u= для ручной проверки
+    const raw = String(req.headers['x-original-uri'] || new URL(req.url, 'http://x').searchParams.get('u') || '');
+    try { u = decodeURIComponent(raw.split('?')[0]); } catch { u = raw.split('?')[0]; }
     const key = u.replace(/\/+$/, '') || '/';
     const to = (await redirects())[key];
     if (to) { res.writeHead(301, { Location: to, 'Cache-Control': 'public, max-age=86400' }); return res.end(); }
