@@ -8,13 +8,24 @@ import ProductRow from '../components/ProductRow.astro';
 import { img } from '../lib/img';
 import { u } from '../lib/url';
 import { listCards } from '../lib/catalog';
+import { NSK_POINT, SITE } from '../lib/site';
 const T = 'https://static.tildacdn.com/';
 const HERO_BG = T + 'tild6337-3361-4932-a238-636534396537/Mask_group.png';
 const HERO = T + 'tild3032-6337-4166-b464-643130313366/Group_554.png';
 const MONTAG = T + 'tild3530-3633-4538-b536-643063636434/Rectangle_401_1.png';
 const specials = listCards('specials');
+// Разметка организации: магазин в Болотном, работаем по Новосибирску и Болотному, пункт выдачи HUBERT в Новосибирске.
+// Часы работы не указаны – их нет на оригинале (ТЕХДОЛГ).
+const org = {
+  '@context': 'https://schema.org', '@type': 'Store', name: SITE.name, url: Astro.site?.href,
+  telephone: SITE.phones.map((p) => p.href.replace('tel:', '')), email: SITE.email,
+  address: { '@type': 'PostalAddress', streetAddress: 'ул. Забабонова, 55А', addressLocality: 'Болотное', addressRegion: 'Новосибирская область', addressCountry: 'RU' },
+  areaServed: [{ '@type': 'City', name: 'Новосибирск' }, { '@type': 'City', name: 'Болотное' }],
+  department: [{ '@type': 'Store', name: `${SITE.name} – пункт выдачи в Новосибирске`, telephone: NSK_POINT.phone.href.replace('tel:', ''),
+    address: { '@type': 'PostalAddress', streetAddress: NSK_POINT.address, addressLocality: 'Новосибирск', addressRegion: 'Новосибирская область', addressCountry: 'RU' } }],
+};
 ---
-<Base title="Продажа Газового оборудования: котлов, водонагревателей, бойлеров, радиаторов в Болотном">
+<Base title="Газовое оборудование в Новосибирске и Болотном – газовые котлы, колонки, бойлеры | Магазин газового оборудования" description="Магазин газового оборудования в Болотном, работаем по Новосибирску: газовые котлы HUBERT, Navien, Haier, Очаг, газовые колонки, водонагреватели, бойлеры косвенного нагрева. Подключение газа, монтаж отопления, установка котла от 8 тыс. ₽.">
   <section class="container hero-wrap">
     <div class="hero navy-card" style={`background-image:url(${img(HERO_BG)})`}>
       <div class="hero__text">
@@ -57,6 +68,7 @@ const specials = listCards('specials');
       <img class="mt__img" src={img(MONTAG)} alt="Мастер подключает газовый котёл" loading="lazy" />
     </div>
   </section>
+  <script type="application/ld+json" set:html={JSON.stringify(org)} />
 </Base>
 <style>
   .hero-wrap { padding-top: 20px; }

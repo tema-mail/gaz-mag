@@ -3,7 +3,7 @@
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import Catalog from '../islands/Catalog';
-import { CATALOGS } from '../lib/site';
+import { CATALOGS, SITE } from '../lib/site';
 import { filterDefs, listCards } from '../lib/catalog';
 
 export function getStaticPaths() {
@@ -12,8 +12,8 @@ export function getStaticPaths() {
 const { c } = Astro.props;
 const cards = listCards(c.slug);
 ---
-<Base title={`Каталог / ${c.title}`} description={`${c.title} в Болотном: ${cards.length} товаров в каталоге, фильтры по марке, цене и характеристикам. Доставка, подключение и монтаж.`}>
-  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: '/catalogcentr' }, { label: c.title }]} title={c.title} />
+<Base title={c.seoTitle} description={c.seoDescr}>
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: '/catalogcentr' }, { label: c.title }]} title={c.h1} lead={`${cards.length} ${cards.length % 10 === 1 && cards.length % 100 !== 11 ? 'товар' : cards.length % 10 >= 2 && cards.length % 10 <= 4 && (cards.length % 100 < 10 || cards.length % 100 >= 20) ? 'товара' : 'товаров'} в каталоге. Магазин в Болотном, ${SITE.addressShort.replace('г. Болотное, ', '')}; работаем по Новосибирску и Болотному.`} />
   <section class="section--tight container">
     <Catalog client:load cards={cards} filters={filterDefs(c.slug)} />
   </section>

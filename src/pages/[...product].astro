@@ -23,7 +23,7 @@ const ld = {
   offers: { '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: prices.length },
 };
 ---
-<Base title={`${p.title} – купить в Болотном`} description={`${p.title}${p.brand ? `, ${p.brand}` : ''}: цена ${card.price.toLocaleString('ru-RU')} ₽. Характеристики, доставка, подключение и монтаж – ${SITE.name}, Болотное.`} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
+<Base title={`${p.title} – купить в Новосибирске, цена ${card.price.toLocaleString('ru-RU')} ₽`} description={`${p.title}${p.brand ? ` (${p.brand})` : ''} – цена ${p.editions.length > 1 ? 'от ' : ''}${card.price.toLocaleString('ru-RU')} ₽. Характеристики, наличие, установка и подключение. ${SITE.name}: Болотное, работаем по Новосибирску.`} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
   <div class="container pp">
     <Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: '/catalogcentr' }, ...(cat ? [{ label: cat.title, href: '/' + cat.slug }] : []), { label: p.title }]} />
     <div class="pp__grid">
