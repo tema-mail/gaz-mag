@@ -24,11 +24,20 @@ const run = (cmd, args, opts = {}) => {
 };
 const status = (s) => writeFileSync(`${STATE}/status.json.tmp`, JSON.stringify({ ...s, at: now() })) || renameSync(`${STATE}/status.json.tmp`, `${STATE}/status.json`);
 
+// Задание в работе лежит в /queue/.work и удаляется только после окончания сборки: перезапуск сборщика посреди
+// сборки (установщик, сбой) не теряет его – при старте незавершённые задания возвращаются в очередь (18.10.2026: так
+// терялись сборки после deploy/install.sh).
+const WORKQ = `${Q}/.work`;
 function takeJobs() {
   const files = readdirSync(Q).filter((f) => /^\d+-(build|update|rollback)/.test(f)).sort();
   const jobs = files.map((f) => ({ f, kind: f.split('-')[1], text: readFileSync(path.join(Q, f), 'utf8').trim() }));
-  for (const j of jobs) unlinkSync(path.join(Q, j.f));
+  for (const j of jobs) renameSync(path.join(Q, j.f), path.join(WORKQ, j.f));
   return jobs;
+}
+function finishJobs() { for (const f of readdirSync(WORKQ)) rmSync(path.join(WORKQ, f), { force: true }); }
+function requeueUnfinished() {
+  mkdirSync(WORKQ, { recursive: true });
+  for (const f of readdirSync(WORKQ)) renameSync(path.join(WORKQ, f), path.join(Q, f));
 }
 
 function switchTo(id) {
@@ -116,6 +125,7 @@ function pullOrHead() {
 const pending = { update: true };
 
 for (const d of [Q, STATE, REL, CONTENT, '/work', CACHE]) mkdirSync(d, { recursive: true });
+requeueUnfinished();
 status({ state: 'idle', note: 'сборщик запущен' });
 log('сборщик gaz-mag запущен');
 for (;;) {
@@ -126,6 +136,7 @@ for (;;) {
     if (jobs.some((j) => j.kind === 'rollback')) {
       const to = rollback();
       status({ state: 'done', ok: true, job, release: to, note: 'откат' });
+      finishJobs();
       continue;
     }
     if (jobs.some((j) => j.kind === 'update')) pending.update = true;
@@ -135,10 +146,12 @@ for (;;) {
     for (const j of takeJobs()) { if (j.kind === 'update') pending.update = true; if (j.kind === 'build' && j.text) messages.push(j.text); }
     const id = build(messages);
     status({ state: 'done', ok: true, job, release: id, messages });
+    finishJobs();
     log(`выложено ${id}`);
   } catch (e) {
     const tail = String(e.stderr || e.stdout || e.message || e).slice(-2000);
     log(`ОШИБКА: ${tail}`);
     status({ state: 'done', ok: false, job, error: tail.slice(-600) });
+    finishJobs(); // ошибка сборки – задание не повторяем по кругу; следующее сохранение или пуш поставит новое
   }
 }
