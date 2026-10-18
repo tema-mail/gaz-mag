@@ -145,7 +145,9 @@ function LeadsView({ leads, example, cats: catNames, onStage }: {
 export default function Leads({ sample, cats }: { sample: Lead[]; cats: Record<string, string> }) {
   const [state, setState] = useState<{ kind: 'loading' | 'ok' | 'error'; leads: Lead[]; text?: string }>({ kind: 'loading', leads: [] });
   const [example, setExample] = useState(false);
+  const [tg, setTg] = useState<boolean | null>(null);
   useEffect(() => {
+    fetch('/api/health', { cache: 'no-store' }).then((r) => r.json()).then((d) => setTg(Boolean(d.telegram))).catch(() => setTg(null));
     fetch('/api/leads', { headers: { Authorization: auth() }, cache: 'no-store' })
       .then(async (r) => {
         if (r.status === 401) throw new Error('сервер не принял вход кабинета');
@@ -171,7 +173,7 @@ export default function Leads({ sample, cats }: { sample: Lead[]; cats: Record<s
         <p class="demo-note">
           {state.kind === 'error'
             ? `Заявки с сервера не загрузились: ${state.text}. `
-            : 'Заявок с сайта пока нет – они появятся здесь сразу после первого заказа или заявки (и придут в Telegram). '}
+            : `Заявок с сайта пока нет – они появятся здесь сразу после первого заказа или заявки${tg ? ' (и придут в Telegram)' : tg === false ? '. Уведомления в Telegram пока не подключены – нужен бот владельца' : ''}. `}
           {example && 'Ниже – пример доски на настоящих формах сайта.'}
           <button class="btn" style="margin-left:auto" onClick={() => setExample(!example)}>{example ? 'Скрыть пример' : 'Показать пример'}</button>
         </p>

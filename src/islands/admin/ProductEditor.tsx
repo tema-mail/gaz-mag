@@ -3,7 +3,8 @@ import type { Edition } from '../../lib/catalog';
 
 // Редактор товара – перенос с кабинета-стандарта Milovini (эталон Elite Rose, «Магазин → товар» Тильды):
 // вкладки «Основное», «Фото», «Разделы», «SEO». Отличие по данным gaz-mag: у товаров есть варианты (мощность, объём)
-// со своими ценами и характеристики – для них вкладки «Варианты» и «Характеристики»; «Размеры и вес» нет – нет данных.
+// со своими ценами и характеристики – для них вкладки «Варианты» (создать по параметру, добавить, убрать, цены) и
+// «Характеристики»; «Размеры и вес» нет – нет данных.
 
 export interface AdmProduct {
   id: string; title: string; brand: string; sku: string; price: number | null; priceOld: number | null; mark: string;
@@ -22,7 +23,32 @@ export default function ProductEditor({ product, lists, base, onClose, onSave, o
   const [files, setFiles] = useState<{ file: File; url: string }[]>([]);
   const [tab, setTab] = useState<TabName>('Основное');
   const isNew = !product.id;
-  const TABS: TabName[] = ['Основное', 'Фото', 'Разделы', ...(p.editions.length > 1 ? ['Варианты' as const] : []), 'Характеристики', 'SEO'];
+  const TABS: TabName[] = ['Основное', 'Фото', 'Разделы', 'Варианты', 'Характеристики', 'SEO'];
+  const [optName, setOptName] = useState('');
+  const [optValues, setOptValues] = useState('');
+  const [addValue, setAddValue] = useState('');
+  const uid = (i = 0) => String(Date.now() + i);
+  /** Создать варианты по одному параметру: «Мощность, кВт» + «10кВт, 13кВт» → по варианту на значение, цена – цена товара. */
+  const makeVariants = () => {
+    const title = optName.trim();
+    const values = [...new Set(optValues.split(',').map((v) => v.trim()).filter(Boolean))];
+    if (!title || values.length < 2) return;
+    setP({ ...p, options: [{ title, values }], editions: values.map((v, i) => ({ id: uid(i), price: p.price, priceOld: p.priceOld, opts: { [title]: v } })) });
+  };
+  const opt = p.options[0];
+  const addVariant = () => {
+    const v = addValue.trim();
+    if (!opt || !v || opt.values.includes(v)) return;
+    setP({ ...p, options: [{ ...opt, values: [...opt.values, v] }], editions: [...p.editions, { id: uid(), price: p.price, priceOld: null, opts: { [opt.title]: v } }] });
+    setAddValue('');
+  };
+  const removeVariant = (i: number) => {
+    if (!opt) return;
+    const gone = p.editions[i].opts[opt.title];
+    const editions = p.editions.filter((_, n) => n !== i);
+    // остался один вариант – это уже товар без вариантов
+    setP(editions.length < 2 ? { ...p, options: [], editions: [], price: editions[0]?.price ?? p.price } : { ...p, options: [{ ...opt, values: opt.values.filter((v) => v !== gone) }], editions });
+  };
   useEffect(() => {
     const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', k);
@@ -108,21 +134,36 @@ export default function ProductEditor({ product, lists, base, onClose, onSave, o
             </div>
           )}
 
-          {tab === 'Варианты' && (
+          {tab === 'Варианты' && p.editions.length < 2 && (
+            <div class="fgrid">
+              <p class="muted f--wide" style="margin:0">У товара нет вариантов. Задайте параметр и значения – получится по варианту на каждое значение (например, мощность котла или объём бака), цены потом поправьте в таблице.</p>
+              <label class="f"><span>Параметр</span><input value={optName} onInput={(e) => setOptName((e.target as HTMLInputElement).value)} placeholder="Мощность, кВт" /></label>
+              <label class="f"><span>Значения через запятую</span><input value={optValues} onInput={(e) => setOptValues((e.target as HTMLInputElement).value)} placeholder="10кВт, 13кВт, 18кВт, 24кВт" /></label>
+              <div class="f--wide"><button class="btn primary" type="button" onClick={makeVariants} disabled={!optName.trim() || optValues.split(',').filter((v) => v.trim()).length < 2}>Создать варианты</button></div>
+            </div>
+          )}
+          {tab === 'Варианты' && p.editions.length >= 2 && (
             <div>
-              <p class="muted" style="margin:0 0 12px">Покупатель выбирает вариант на странице товара; в корзину попадает цена варианта. В каталоге показывается самая низкая цена с «от».</p>
+              <p class="muted" style="margin:0 0 12px">Покупатель выбирает вариант на странице товара; в корзину попадает цена варианта. В каталоге показывается самая низкая цена с «от». Слово «Мощность» в названии параметра включает фильтр «Мощность» в каталоге.</p>
               <table class="vt">
-                <thead><tr>{p.options.map((o) => <th>{o.title}</th>)}<th>Цена, ₽</th><th>Старая цена, ₽</th></tr></thead>
+                <thead><tr>{p.options.map((o) => <th>{o.title}</th>)}<th>Цена, ₽</th><th>Старая цена, ₽</th><th></th></tr></thead>
                 <tbody>
                   {p.editions.map((ed, i) => (
                     <tr>
                       {p.options.map((o) => <td>{ed.opts[o.title]}</td>)}
                       <td><input inputMode="numeric" value={ed.price ?? ''} onInput={edNum(i, 'price')} aria-label="Цена варианта" /></td>
                       <td><input inputMode="numeric" value={ed.priceOld ?? ''} onInput={edNum(i, 'priceOld')} aria-label="Старая цена варианта" /></td>
+                      <td><button class="btn ghost" type="button" title="Убрать вариант" onClick={() => removeVariant(i)}>×</button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              {opt && (
+                <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+                  <input value={addValue} onInput={(e) => setAddValue((e.target as HTMLInputElement).value)} placeholder={`Новое значение «${opt.title}»`} aria-label="Новое значение" style="max-width:260px" />
+                  <button class="btn" type="button" onClick={addVariant} disabled={!addValue.trim()}>+ Добавить вариант</button>
+                </div>
+              )}
             </div>
           )}
 

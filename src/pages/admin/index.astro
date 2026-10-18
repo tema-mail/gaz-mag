@@ -4,7 +4,7 @@
 // Внутренние страницы, Юридические, Технические. Блога у gaz-mag нет – группы нет.
 // Название страницы ведёт в её карточку /admin/page/<адрес>/ (scripts/page-cards.py, как у EV SIBIR).
 import Admin from '../../layouts/Admin.astro';
-import { listCards, products } from '../../lib/catalog';
+import { allProducts, listCards, products } from '../../lib/catalog';
 import { CATALOGS } from '../../lib/site';
 import { PROMOS } from '../../lib/promos';
 import { img } from '../../lib/img';
@@ -33,7 +33,7 @@ const T = 'https://static.tildacdn.com/';
 <Admin title="Страницы сайта" active="pages">
   <div class="tools">
     <h1>Страницы сайта</h1>
-    <span class="muted">{total} страниц · из них {products.length} карточек товара</span>
+    <span class="muted">{total} страниц · из них {products.length} карточек товара{allProducts.length > products.length && ` (ещё ${allProducts.length - products.length} скрыто)`}</span>
     <a class="btn" href={u('/')} target="_blank">Открыть сайт ↗</a>
   </div>
   <div class="pages">
@@ -48,15 +48,25 @@ const T = 'https://static.tildacdn.com/';
     </div>
 
     <div class="pgroup">Каталоги <span>{1 + CATALOGS.length} · {products.length} карточек товара</span></div>
-    <div class="prow">
-      <span></span>
-      <div><a class="pname pcard" href={card_('/catalogcentr')}>Общий каталог</a><div class="muted" style="font-size:12px">плитки {CATALOGS.length} каталогов + «Специальные предложения»</div></div>
-      <a class="purl" href={u('/catalogcentr')} target="_blank">{site('/catalogcentr')}</a>
-      <span class="pkind">Каталог</span>
-    </div>
+    <details class="pcat">
+      <summary class="prow">
+        <img class="thumb" src={img(CATALOGS[0].image, 800)} alt="" />
+        <div><span class="pname"><i class="caret"></i><a class="pcard" href={card_('/catalogcentr')} onclick="event.stopPropagation()">Общий каталог</a></span><div class="muted" style="font-size:12px">{allProducts.length} товаров · {CATALOGS.length} каталогов (на странице – плитки каталогов и «Специальные предложения»)</div></div>
+        <a class="purl" href={u('/catalogcentr')} target="_blank" onclick="event.stopPropagation()">{site('/catalogcentr')}</a>
+        <span class="pkind">Каталог</span>
+      </summary>
+      {allProducts.map((p) => (
+        <div class="prow lvl1">
+          <img class="thumb" src={thumb(p.images[0])} alt="" loading="lazy" />
+          <div><span class="pname">{p.hidden ? p.title : <a class="pcard" href={card_(p.path)}>{p.title}</a>}{p.hidden && <span class="chip" style="margin-left:8px">скрыт</span>}</span><div class="muted" style="font-size:12px">{p.editions.length > 1 ? 'от ' : ''}{p.price?.toLocaleString('ru-RU')} ₽</div></div>
+          <a class="purl" href={u(p.path)} target="_blank">{p.path}</a>
+          <span class="pkind">Карточка товара</span>
+        </div>
+      ))}
+    </details>
     {CATALOGS.map((c) => {
       // Карточки каталога – те, у кого адрес лежит в этом каталоге (как на сайте: /<каталог>/tproduct/…)
-      const list = products.filter((p) => p.path.startsWith(`/${c.slug}/`));
+      const list = allProducts.filter((p) => p.path.startsWith(`/${c.slug}/`));
       const shown = listCards(c.slug).length;
       return (
         <details class="pcat">
@@ -69,7 +79,7 @@ const T = 'https://static.tildacdn.com/';
           {list.map((p) => (
             <div class="prow lvl1">
               <img class="thumb" src={thumb(p.images[0])} alt="" loading="lazy" />
-              <div><a class="pname pcard" href={card_(p.path)}>{p.title}</a><div class="muted" style="font-size:12px">{p.editions.length > 1 ? 'от ' : ''}{p.price?.toLocaleString('ru-RU')} ₽{p.editions.length > 1 ? ` · ${p.editions.length} вариантов` : ''}</div></div>
+              <div><span class="pname">{p.hidden ? p.title : <a class="pcard" href={card_(p.path)}>{p.title}</a>}{p.hidden && <span class="chip" style="margin-left:8px">скрыт</span>}</span><div class="muted" style="font-size:12px">{p.editions.length > 1 ? 'от ' : ''}{p.price?.toLocaleString('ru-RU')} ₽{p.editions.length > 1 ? ` · ${p.editions.length} вариантов` : ''}</div></div>
               <a class="purl" href={u(p.path)} target="_blank">{p.path}</a>
               <span class="pkind">Карточка товара</span>
             </div>

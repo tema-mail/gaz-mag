@@ -10,6 +10,9 @@ import { PRODUCTS_PATH, UPLOADS_DIR, buildOf, commit, humanError, fileToBase64, 
 // на Beget (~1–2 минуты). Без ключа – только просмотр.
 // Отличия по данным gaz-mag: «разделы» – списки товара (6 каталогов, «Специальные предложения», «HUBERT»), они заданы
 // в коде сайта, поэтому «+ Добавить раздел» нет; у товаров есть варианты и характеристики (см. ProductEditor).
+// Остатков в данных нет (магазин Тильды их не вёл) – колонка «Остаток» эталона заменена на «Варианты», в редакторе нет
+// «Количества» и «Кнопки на карточке» (у всех товаров одна логика: без вариантов – «В корзину», с вариантами – «Подробнее»).
+// Импорт CSV – как у эталона: окно с проверкой файла, без загрузки (демо стандарта, помечено в окне).
 
 const fmt = (n: number | null) => (n == null ? '–' : n.toLocaleString('ru-RU').replace(/[  ]/g, ' ') + ' ₽');
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -134,7 +137,7 @@ export default function ProductsAdmin({ items, lists, base }: { items: Product[]
       text: o && p.text === htmlToText(o.text) ? o.text : esc(p.text.trim()).replace(/\n/g, '<br />'),
       price: p.price, priceOld: p.priceOld, lists: p.lists, images, hidden: !p.visible,
       chars: p.chars.filter((c) => c.t.trim() && c.v.trim()).map((c) => ({ t: c.t.trim(), v: c.v.trim() })),
-      editions: p.editions,
+      options: p.options, editions: p.editions,
       ...(p.sku.trim() ? { sku: p.sku.trim() } : {}), ...(p.mark.trim() ? { mark: p.mark.trim() } : {}),
       ...(p.seoTitle ? { seoTitle: p.seoTitle } : {}), ...(p.seoDescr ? { seoDescr: p.seoDescr } : {}),
     } as Product);

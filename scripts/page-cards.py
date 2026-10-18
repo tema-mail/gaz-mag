@@ -30,7 +30,7 @@ CATALOG_NAMES = {
     "catalog_el_waterheaters": "Электрические водонагреватели", "catalog_indirect_boilers": "Бойлеры косвенного нагрева",
     "catalog_other": "Товары для отопления", "gas": "Датчики загазованности, счётчики газа и дымоходы",
 }
-PAGE_NAMES = {"about": "О компании", "rekvezit": "Реквизиты", "hubert-dy": "Акция на котёл HUBERT + монтаж"}
+PAGE_NAMES = {"about": "О компании", "hubert-dy": "Акция на котёл HUBERT + монтаж"}
 
 
 def cluster_of(route: str) -> str:
@@ -53,7 +53,7 @@ def cluster_of(route: str) -> str:
         return "Бренд: котлы HUBERT – купить, цены, подбор"
     if parts[0] == "akcii":
         return "Акции и скидки на газовое оборудование"
-    if parts[0] in ("policy", "agreement", "oferta", "cookie"):
+    if parts[0] in ("policy", "agreement", "oferta", "cookie", "rekvezit"):
         return "Юридические документы – вне поискового продвижения"
     if parts[0] in ("thanks", "fail", "souz"):
         return "Служебная страница – из поиска закрыта"
@@ -144,7 +144,7 @@ def card_html(p) -> str:
     head = head.replace('href="/admin"', f'href="{BASE}/admin/"')
     open_cluster = (f'<div class="panel"><h2>Кластер и запросы</h2>'
                     f'<div class="fld cluster-open"><div class="k">Кластер</div><div class="v">{cluster}</div></div>'
-                    f'<p style="margin:6px 0 0;font-size:13px;color:#55605d">Запросы кластера, спрос в Яндексе по Новосибирской области и показы в Яндексе и Google за месяц – в расширенном разборе ниже.</p></div>')
+                    f'<p style="margin:6px 0 0;font-size:13px;color:#55605d">Запросы кластера, спрос в Яндексе по Новосибирску и показы в Яндексе и Google за месяц – в расширенном разборе ниже.</p></div>')
     lock = (f'<div class="lockzone"><div class="lockzone__blur" aria-hidden="true">{locked}</div>'
             f'<div class="lockzone__card">{LOCK_ICON}<h2>Расширенный SEO-разбор страницы: раздел закрыт</h2>'
             f'<p>Доступно клиентам на постоянном SEO-ведении.</p><ul>'
