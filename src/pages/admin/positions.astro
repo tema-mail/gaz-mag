@@ -1,17 +1,10 @@
 ---
-/** Админка → Позиции – закрытый раздел во всех кабинетах (владелец 17.10.2026). Открытый вид – EV SIBIR /admin/positions. */
+/** Админка → «Позиции» – открыта владельцем 21.10.2026 («все срезы кроме нейросетей»). Экран – перенос TEYES Sibir
+    (islands/admin/Positions.tsx, WmMonth.tsx), данные приходят с сервера после входа (/api/admin/report/positions). */
 import Admin from '../../layouts/Admin.astro';
-import Locked from '../../components/admin/Locked.astro';
+import Positions from '../../islands/admin/Positions';
+import '../../styles/positions.css';
 ---
 <Admin title="Позиции" active="positions">
-  <Locked
-    title="Позиции"
-    about="Что откроется в разделе:"
-    items={[
-      'Позиции сайта в Яндексе и Google по ключевым запросам Новосибирска и Болотного – по каждой странице, раз в месяц',
-      'Видимость по каталогам: газовые котлы, колонки, водонагреватели, бойлеры, монтаж и подключение газа',
-      'Нейросети: называют ли «Магазин газового оборудования» ChatGPT, Perplexity, Gemini и Claude на вопросы вроде «где купить газовый котёл в Новосибирске»',
-      'Рост и падение позиций с прошлого среза и страницы, которые теряют поиск',
-    ]}
-  />
+  <Positions client:load />
 </Admin>
