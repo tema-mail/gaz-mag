@@ -32,7 +32,8 @@ scp -q -i "$KEY" "$HERE/receive.sh" "$HOST:/usr/local/bin/gazmag-receive"
 scp -q -i "$KEY" "$HERE/compose.yml" "$HERE/nginx.conf" "$HOST:/opt/gaz-mag/"
 scp -q -i "$KEY" "$HERE/builder/Dockerfile" "$HERE/builder/builder.mjs" "$HOST:/opt/gaz-mag/builder/"
 scp -q -i "$KEY" "$HERE/../server/lead.mjs" "$HOST:/opt/gaz-mag/server/lead.mjs"
-[ -d "$HERE/../analytics" ] && scp -q -r -i "$KEY" "$HERE/../analytics/." "$HOST:/opt/gaz-mag/analytics-app/"
+# только код сборщика – без локальных out/ и secrets/
+scp -q -r -i "$KEY" "$HERE/../analytics/collect.py" "$HERE/../analytics/phrases.json" "$HERE/../analytics/Dockerfile" "$HERE/../analytics/providers" "$HOST:/opt/gaz-mag/analytics-app/"
 "${SSH[@]}" "chmod 755 /usr/local/bin/gazmag-receive && chown root:root /usr/local/bin/gazmag-receive
   chmod 644 /opt/gaz-mag/server/lead.mjs
   printf 'command=\"/usr/local/bin/gazmag-receive\",restrict %s\n' \"$(cat "$DEPLOY_PUB")\" > /home/gazmag-deploy/.ssh/authorized_keys
