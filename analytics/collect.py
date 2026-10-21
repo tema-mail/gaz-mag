@@ -200,7 +200,7 @@ def nsk_view() -> dict:
             if "error" in s or not s:
                 item[e] = None
                 continue
-            if s["position"] and s["position"] > 20:  # снимок 21.10 смотрел топ-30 – экран считает топ-20
+            if (s["position"] or 0) > 20 or (not s["position"] and (s["depth"] or 0) > 20):  # снимок 21.10 смотрел топ-30 – экран считает топ-20
                 s = {**s, "position": None, "depth": 20}
             p = (old.get(r["query"]) or {}).get(e) or {}
             item[e] = {"position": s["position"], "depth": s["depth"], "url": s["url"], "at": s["at"],
