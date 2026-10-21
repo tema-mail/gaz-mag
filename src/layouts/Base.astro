@@ -43,6 +43,8 @@ const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
     <meta property="og:description" content={description} />
     {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
     <meta name="theme-color" content="#1e294e" />
+    {/* подтверждение прав в Яндекс Вебмастере (логин artemiy.galimov, 21.10.2026); Google – файл public/google8a8cbc5492746f08.html */}
+    <meta name="yandex-verification" content="a27933a9626f95c6" />
     <link rel="icon" href={u('/favicon.png')} type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
