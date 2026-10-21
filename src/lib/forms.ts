@@ -1,5 +1,6 @@
 import { R } from './routes';
 import { u } from './url';
+import { ecom, goal } from './metrika';
 
 // Куда уходят заявки и заказы. Владелец 18.10.2026: на боевом gaz-mag.ru – в Telegram через наш приёмник
 // на VPS Beget (server/lead.mjs: копия в базу + сообщение в Telegram). Включается только в сборке для Beget
@@ -42,6 +43,14 @@ export async function sendForm(formName: string, fields: Record<string, string>,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ form: formName, consent: true, source: source(), items, fields: { ...fields, Page: location.pathname } }),
     });
+    if (res.ok) {
+      // цели Метрики (только при согласии на аналитику): любая отправка – lead, заказ из корзины – ещё order и покупка
+      goal('lead');
+      if (formName === 'Заказ из корзины') {
+        goal('order');
+        ecom('purchase', items.map((i) => ({ id: i.uid, name: i.title, price: i.price, variant: i.variant, category: i.category, quantity: i.qty })), `gm-${Date.now()}`);
+      }
+    }
     return res.ok;
   } catch {
     return false;

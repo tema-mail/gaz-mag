@@ -2,6 +2,7 @@ import { catalogKeyOf } from '../lib/routes';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import type { Edition } from '../lib/catalog';
 import { addToCart, cart, favs, fmt, sheet, toggleFav } from '../lib/store';
+import { ecom } from '../lib/metrika';
 import { IconBag, IconHeart, IconMinus, IconPlus } from './icons';
 
 // Блок покупки на карточке товара: выбор варианта (мощность, объём бака), цена варианта,
@@ -15,7 +16,10 @@ export default function ProductBuy({ p }: { p: P }) {
   const [qty, setQty] = useState(1);
   const [pick, setPick] = useState<Record<string, string>>(() => p.editions[0]?.opts ?? {});
   const [ready, setReady] = useState(false);
-  useEffect(() => setReady(true), []);
+  useEffect(() => {
+    setReady(true);
+    ecom('detail', [{ id: p.id, name: p.title, price: p.price, category: catalogKeyOf(p.path) }]); // просмотр карточки – для «Товарного спроса»
+  }, []);
 
   const ed = useMemo(
     () => p.editions.find((e) => Object.entries(pick).every(([k, v]) => e.opts[k] === v)),

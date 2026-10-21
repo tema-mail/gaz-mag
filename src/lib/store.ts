@@ -1,4 +1,6 @@
 import { signal, computed, effect } from '@preact/signals';
+import { ecom, goal } from './metrika';
+import { catalogKeyOf } from './routes';
 
 // Корзина и избранное – общие для всех островов страницы и живут между страницами (localStorage).
 
@@ -52,6 +54,8 @@ export function addToCart(p: Omit<CartItem, 'qty'>, qty = 1) {
   if (i >= 0) list[i] = { ...list[i], qty: cap(list[i].qty + qty) };
   else list.push({ ...p, qty: cap(qty) });
   cart.value = list;
+  goal('cart_add');
+  ecom('add', [{ id: p.id, name: p.title, price: p.price, variant: p.variant, category: catalogKeyOf(p.path), quantity: qty }]);
   toast.value = { text: `«${p.title}» в корзине`, key: Date.now() };
 }
 

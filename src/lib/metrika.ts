@@ -13,6 +13,8 @@ export const METRIKA_ID = 97249745;
 declare global { interface Window { ym?: (...a: unknown[]) => void; dataLayer?: unknown[] } }
 
 let started = false;
+/** Счётчик запущен или его можно запустить сейчас (согласие уже дано, а окно cookie ещё не успело вызвать initMetrika). */
+const on = () => started || (!!readConsent()?.metrika && (start(), started));
 function start() {
   if (started || !PROD || location.hostname !== 'gaz-mag.ru') return;
   started = true;
@@ -29,14 +31,14 @@ function start() {
 
 /** Цель Метрики – только если счётчик запущен (есть согласие). */
 export function goal(name: string) {
-  if (!started) return;
+  if (!on()) return;
   try { window.ym?.(METRIKA_ID, 'reachGoal', name); } catch { /* счётчик не загрузился – без цели */ }
 }
 
 export interface EcomProduct { id: string; name: string; price: number; brand?: string; category?: string; variant?: string; quantity?: number }
 /** Событие электронной коммерции (detail – просмотр карточки, add – в корзину, purchase – заказ). */
 export function ecom(action: 'detail' | 'add' | 'remove' | 'purchase', products: EcomProduct[], orderId?: string) {
-  if (!started || !window.dataLayer) return;
+  if (!on() || !window.dataLayer) return;
   window.dataLayer.push({ ecommerce: { currencyCode: 'RUB', [action]: { ...(orderId ? { actionField: { id: orderId } } : {}), products } } });
 }
 
