@@ -37,6 +37,8 @@ services:
       - /opt/gaz-mag/content:/content
       - /opt/gaz-mag/queue:/queue
       - /opt/gaz-mag/state:/state:ro
+      # отчёты разделов кабинета (Метрика, Позиции, SEO, Рекомендации) – пишет gaz-mag-analytics, приёмник только читает
+      - /opt/gaz-mag/analytics:/analytics:ro
     read_only: true
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]
@@ -64,6 +66,26 @@ services:
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]
     mem_limit: 1536m
+    networks: [proxy]
+  # Сбор аналитики раз в день (cron на сервере, install.sh): Метрика, Search Console, Позиции. Разовый запуск, не служба.
+  # Ключи – только в /opt/gaz-mag/secrets (700, uid 10501): токен Яндекса, ключ Google, ключ XMLRiver.
+  gaz-mag-analytics:
+    profiles: [jobs]
+    build: ./analytics-app
+    image: gaz-mag-analytics:local
+    user: "10501:10501"
+    working_dir: /app
+    environment:
+      OUT_DIR: /out
+      SECRETS_DIR: /secrets
+    volumes:
+      - /opt/gaz-mag/analytics:/out
+      - /opt/gaz-mag/secrets:/secrets:ro
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 256m
     networks: [proxy]
 networks:
   proxy:

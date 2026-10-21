@@ -23,17 +23,23 @@ SSH=(ssh -i "$KEY" -o BatchMode=yes "$HOST")
   chown -R 10501:10501 /opt/gaz-mag/releases /opt/gaz-mag/repo /opt/gaz-mag/content /opt/gaz-mag/state /opt/gaz-mag/work /opt/gaz-mag/cache
   chown 10501:10501 /opt/gaz-mag/queue && chmod 1733 /opt/gaz-mag/queue && chmod 755 /opt/gaz-mag/state
   chmod 755 /opt/gaz-mag /opt/gaz-mag/releases /opt/gaz-mag/server
+  # разделы аналитики кабинета (21.10.2026): отчёты – analytics (читает приёмник), ключи – secrets (только сборщик аналитики)
+  mkdir -p /opt/gaz-mag/analytics /opt/gaz-mag/secrets /opt/gaz-mag/analytics-app
+  chown 10501:10501 /opt/gaz-mag/analytics /opt/gaz-mag/secrets && chmod 750 /opt/gaz-mag/analytics && chmod 700 /opt/gaz-mag/secrets
   [ -f /opt/gaz-mag/lead.env ] || { printf 'TG_TOKEN=\nTG_CHAT=\n' > /opt/gaz-mag/lead.env; }
   chmod 600 /opt/gaz-mag/lead.env"
 scp -q -i "$KEY" "$HERE/receive.sh" "$HOST:/usr/local/bin/gazmag-receive"
 scp -q -i "$KEY" "$HERE/compose.yml" "$HERE/nginx.conf" "$HOST:/opt/gaz-mag/"
 scp -q -i "$KEY" "$HERE/builder/Dockerfile" "$HERE/builder/builder.mjs" "$HOST:/opt/gaz-mag/builder/"
 scp -q -i "$KEY" "$HERE/../server/lead.mjs" "$HOST:/opt/gaz-mag/server/lead.mjs"
+[ -d "$HERE/../analytics" ] && scp -q -r -i "$KEY" "$HERE/../analytics/." "$HOST:/opt/gaz-mag/analytics-app/"
 "${SSH[@]}" "chmod 755 /usr/local/bin/gazmag-receive && chown root:root /usr/local/bin/gazmag-receive
   chmod 644 /opt/gaz-mag/server/lead.mjs
   printf 'command=\"/usr/local/bin/gazmag-receive\",restrict %s\n' \"$(cat "$DEPLOY_PUB")\" > /home/gazmag-deploy/.ssh/authorized_keys
   chown -R gazmag-deploy:gazmag-deploy /home/gazmag-deploy/.ssh && chmod 700 /home/gazmag-deploy/.ssh && chmod 600 /home/gazmag-deploy/.ssh/authorized_keys
-  cd /opt/gaz-mag && docker compose build -q gaz-mag-builder && docker compose up -d --remove-orphans >/dev/null && docker restart gaz-mag-api gaz-mag-web >/dev/null && docker ps --filter name=gaz-mag --format '{{.Names}} {{.Status}}'"
+  cd /opt/gaz-mag && docker compose build -q gaz-mag-builder && { [ ! -f analytics-app/Dockerfile ] || docker compose --profile jobs build -q gaz-mag-analytics; } && 
+  # сбор аналитики раз в день в 07:15 НСК (00:15 UTC); журнал – /var/log/gaz-mag-analytics.log
+  printf '15 0 * * * root cd /opt/gaz-mag && docker compose --profile jobs run --rm gaz-mag-analytics python3 collect.py daily >> /var/log/gaz-mag-analytics.log 2>&1\n' > /etc/cron.d/gaz-mag-analytics && chmod 644 /etc/cron.d/gaz-mag-analytics && docker compose up -d --remove-orphans >/dev/null && docker restart gaz-mag-api gaz-mag-web >/dev/null && docker ps --filter name=gaz-mag --format '{{.Names}} {{.Status}}'"
 
 # 2. Блок в общем Caddy: только при парных метках, с проверкой конфигурации и откатом при неудачной перезагрузке
 cat "$HERE/gaz-mag.caddy" | "${SSH[@]}" '

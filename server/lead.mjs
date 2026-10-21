@@ -3,6 +3,8 @@
 // Копия пишется всегда, даже если Telegram недоступен: заявка не теряется.
 // Кабинет (вкладка «Заявки»): GET /api/leads и PATCH /api/leads/<номер> {stage} – только с логином и паролем кабинета
 // (Basic, тот же вход, что у замка админки – правило стандарта 17.10.2026). Этапы и их история – /data/stages.json.
+// Разделы аналитики кабинета (Метрика, Позиции, SEO, Рекомендации): GET /api/admin/report/<раздел> – отчёт, который раз в день
+// собирает gaz-mag-analytics в /analytics (только чтение); PATCH /api/admin/recommendations/<id> {status} – решение владельца.
 // Окружение: TG_TOKEN, TG_CHAT (через запятую), ADMIN_LOGIN, ADMIN_PASS, PORT (8090), ORIGIN (https://gaz-mag.ru).
 import { createServer } from 'node:http';
 import { appendFile, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
@@ -75,6 +77,13 @@ const CONTENT = process.env.CONTENT_DIR || '/content';
 const QUEUE = process.env.QUEUE_DIR || '/queue';
 const STATE_DIR = process.env.STATE_DIR || '/state';
 const sha = (t) => createHash('sha1').update(t).digest('hex').slice(0, 16);
+const ANALYTICS = process.env.ANALYTICS_DIR || '/analytics';
+const REPORTS = ['metrika', 'positions', 'seo', 'recommendations', 'demand', 'pages'];
+// статусы рекомендаций – как у агента улучшений (~/.claude/skills/uluchsheniya): новое, в работе, сделано, не надо
+const REC_STATUSES = ['novoe', 'v_rabote', 'sdelano', 'ne_nado'];
+async function readJson(path, fallback) {
+  try { return JSON.parse(await readFile(path, 'utf8')); } catch { return fallback; }
+}
 async function readBody(req, limit) {
   let size = 0; const chunks = [];
   for await (const c of req) { size += c.length; if (size > limit) throw Object.assign(new Error('too big'), { code: 413 }); chunks.push(c); }
@@ -107,6 +116,28 @@ async function adminApi(req, res) {
     await mkdir(`${CONTENT}/uploads`, { recursive: true });
     await writeFile(`${CONTENT}/uploads/${name}`, Buffer.from(String(body.data || ''), 'base64'));
     return send(res, 200, { ok: true });
+  }
+  const rep = url.match(/^\/api\/admin\/report\/([a-z]+)$/);
+  if (rep && req.method === 'GET') {
+    if (!REPORTS.includes(rep[1])) return send(res, 404, { ok: false });
+    let text;
+    try { text = await readFile(`${ANALYTICS}/${rep[1]}.json`, 'utf8'); } catch { return send(res, 404, { ok: false, error: 'not_collected' }); }
+    const data = JSON.parse(text);
+    if (rep[1] === 'recommendations' && Array.isArray(data.items)) {
+      const st = await readJson(`${DATA}/rec-status.json`, {});
+      data.items = data.items.map((i) => (st[i.id] ? { ...i, status: st[i.id].status, status_at: st[i.id].at } : i));
+    }
+    return send(res, 200, data);
+  }
+  const rec = url.match(/^\/api\/admin\/recommendations\/([\w-]{1,80})$/);
+  if (rec && req.method === 'PATCH') {
+    const status = JSON.parse(await readBody(req, 2000)).status;
+    if (!REC_STATUSES.includes(status)) return send(res, 422, { ok: false });
+    const st = await readJson(`${DATA}/rec-status.json`, {});
+    st[rec[1]] = { status, at: new Date().toISOString() };
+    await writeFile(`${DATA}/rec-status.json.tmp`, JSON.stringify(st));
+    await rename(`${DATA}/rec-status.json.tmp`, `${DATA}/rec-status.json`);
+    return send(res, 200, { ok: true, status });
   }
   if (url === '/api/admin/build' && req.method === 'GET') {
     let st = {};
