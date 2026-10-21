@@ -7,7 +7,7 @@
   metrika          – «Метрика и каналы» (счётчик 97249745 + Search Console) → metrika.json в форме TEYES /api/metrika
   gsc-month        – месяц запросов Google из Search Console → months/google-0-<с>-<по>.json
   wm-import FILE   – месяц запросов Яндекса из кабинета Вебмастера (API Вебмастера не отвечает с 11.10) → months/
-  serp --paid      – ПЛАТНО: снимок выдачи Новосибирска XMLRiver по phrases.json, Яндекс и Google до топ-30 → serp/<дата>.json
+  serp --paid      – ПЛАТНО: снимок выдачи Новосибирска XMLRiver по phrases.json, Яндекс и Google до топ-20 → serp/<дата>.json
   positions        – собрать positions.json (форма TEYES /api/positions, без нейросетей) из months/ и serp/
   recommendations FILE – прогон агента улучшений (uluchsheniya.json) → recommendations.json
 Ключи – SECRETS_DIR: yandex-token, gsc-sa.json, xmlriver.env. Ошибка доступа пишется в отчёт честной причиной.
@@ -42,7 +42,7 @@ BRAND = re.compile(r"газ[- ]?маг|gaz[- ]?mag|забабонова", re.I)
 DIRECTIONS = [("Установка и монтаж", r"установ|монтаж|подключ|под ключ"), ("Котлы", r"котел|котёл|котл|навьен|navien|hubert|очаг"),
               ("Колонки, водонагреватели, бойлеры", r"колонк|водонагрев|бойлер"), ("Датчики, счётчики, дымоходы", r"счетчик|счётчик|датчик|дымоход")]
 MONTH_GAP = dt.timedelta(days=28)
-MAX_PAGES = 3  # топ-30
+MAX_PAGES = 2  # топ-20, как в эталоне TEYES (экран «Позиции» считает топ-20)
 
 
 def now() -> str:
@@ -200,6 +200,8 @@ def nsk_view() -> dict:
             if "error" in s or not s:
                 item[e] = None
                 continue
+            if s["position"] and s["position"] > 20:  # снимок 21.10 смотрел топ-30 – экран считает топ-20
+                s = {**s, "position": None, "depth": 20}
             p = (old.get(r["query"]) or {}).get(e) or {}
             item[e] = {"position": s["position"], "depth": s["depth"], "url": s["url"], "at": s["at"],
                        "prev": p.get("position") if prev and "error" not in p else None, "had_prev": bool(prev and p and "error" not in p)}
