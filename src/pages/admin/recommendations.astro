@@ -1,19 +1,26 @@
 ---
-/** Админка → Рекомендации – закрытый раздел во всех кабинетах (владелец 17.10.2026: «нарисую – потом пойдём его делать»). */
+/** Админка → «Рекомендации» – открыта владельцем 21.10.2026 («открыть ЛК все пункты»). Данные – прогон агента улучшений
+    (~/.claude/skills/uluchsheniya) с сервера после входа; вид и стили – страница прогона агента (svod.py → uluchsheniya.html),
+    привязаны к обёртке .rc: замок кабинета подменяет содержимое body. */
 import Admin from '../../layouts/Admin.astro';
-import Locked from '../../components/admin/Locked.astro';
+import Recs from '../../islands/admin/Recs';
 ---
 <Admin title="Рекомендации" active="recommendations">
-  <Locked
-    title="Рекомендации"
-    lead="Раздел закрыт. Доступен клиентам на постоянном SEO-ведении по расширенным тарифам."
-    about="Что будет в разделе – что сделать, чтобы росли заявки, по проверке всего, что есть:"
-    items={[
-      'Реклама: на что уходят деньги, какие объявления и запросы дают заявки, а какие сливают бюджет',
-      'SEO: какие страницы и запросы поднять в первую очередь, каких страниц не хватает под спрос',
-      'История сайта: что меняли и как это сказалось на трафике, позициях и заявках',
-      'Нейросети и карты: где о магазине говорят и где его не видно',
-      'Список задач по важности – с ожидаемым эффектом и сроком',
-    ]}
-  />
+  <div class="rc"><Recs client:load /></div>
 </Admin>
+<style is:global>
+.rc{--ink:#16203a;--mut:#5d667b;--line:#d9dde6;--bg:#f5f6f8;--card:#fff;--sr:#b3261e;--sr2:#fbe9e8;--va:#b5660a;--va2:#fbefdf;--mo:#0b7a83;--mo2:#e2f2f3;
+  margin:-18px -20px 0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:70vh}
+.rc *{box-sizing:border-box}
+.rc .w{max-width:980px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left)) 56px max(16px,env(safe-area-inset-right));display:grid;gap:18px}
+.rc h1{margin:0;font-size:clamp(24px,4vw,34px)}.rc h3{margin:6px 0 4px;font-size:17px}.rc p{margin:4px 0}.rc .m{color:var(--mut);font-size:13px}
+.rc .sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.rc .sum div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.rc .sum b{display:block;font-size:26px}.rc .it{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--mo);border-radius:12px;padding:14px 16px}
+.rc .it.srochno{border-left-color:var(--sr)}.rc .it.vazhno{border-left-color:var(--va)}.rc .st-sdelano,.rc .st-ne_nado{opacity:.55}
+.rc header{display:flex;flex-wrap:wrap;gap:6px}.rc header span{font:600 12px/1 ui-monospace,Menlo,monospace;padding:5px 8px;border-radius:999px;background:var(--bg)}
+.rc .srochno .pr{background:var(--sr2);color:var(--sr)}.rc .vazhno .pr{background:var(--va2);color:var(--va)}.rc .mozhno .pr{background:var(--mo2);color:var(--mo)}
+.rc footer{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.rc button{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;font:inherit;cursor:pointer;color:var(--ink)}
+.rc button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+@media(max-width:640px){.rc .sum{grid-template-columns:1fr 1fr}.rc{margin:-18px -12px 0}}
+</style>
