@@ -5,7 +5,7 @@ import CsvImport from './CsvImport';
 import GhConnect from './GhConnect';
 import { PRODUCTS_PATH, UPLOADS_DIR, buildOf, commit, humanError, fileToBase64, getToken, readJson, type FileChange } from './gh';
 import { productPath, uniqueSlug } from '../../lib/routes';
-import { productSeoDescr, productSeoTitle } from '../../lib/seo';
+import { isOldAutoDescr, isOldAutoTitle, productSeoDescr, productSeoTitle } from '../../lib/seo';
 import { PROD } from '../../lib/stage';
 
 // Раздел «Товары» – перенос с кабинета-стандарта Milovini (эталон Elite Rose, магазин Тильды). С подключённым ключом
@@ -24,7 +24,8 @@ const htmlToText = (h: string) => h.replace(/<br\s*\/?>/g, '\n').replace(/<[^>]+
 const toAdm = (p: Product): AdmProduct => ({
   id: p.id, title: p.title, brand: p.brand, sku: p.sku ?? '', price: p.price, priceOld: p.priceOld, mark: p.mark ?? '',
   descr: p.descr, text: htmlToText(p.text), images: p.images, lists: p.lists, path: p.path, visible: !p.hidden,
-  seoTitle: p.seoTitle ?? '', seoDescr: p.seoDescr ?? '', options: p.options, editions: p.editions, chars: p.chars,
+  // старый автошаблон (до 24.10.2026) – не ручной текст: в редакторе пусто, страница берёт живой шаблон
+  seoTitle: p.seoTitle && !isOldAutoTitle(p.seoTitle, p.title) ? p.seoTitle : '', seoDescr: p.seoDescr && !isOldAutoDescr(p.seoDescr, p.title, p.brand) ? p.seoDescr : '', options: p.options, editions: p.editions, chars: p.chars,
 });
 const minPrice = (p: AdmProduct) => Math.min(p.price ?? Infinity, ...p.editions.map((e) => e.price ?? Infinity));
 

@@ -199,7 +199,7 @@ export default function ProductEditor({ product, lists, base, onClose, onSave, o
             <div class="fgrid">
               <p class="muted f--wide" style="margin:0">Адрес, Title и Description заполняются сами из названия, марки и раздела – под поиск в Болотном. Поправьте, если нужно; пустое поле при сохранении снова заполнится автоматически.</p>
               <label class="f f--wide"><span>Адрес страницы <em>{p.path ? 'у опубликованного товара не меняется – позиции в поиске' : 'из названия и раздела'}</em></span><div class="url"><input value={pathShown} readOnly /></div></label>
-              <label class="f f--wide"><span>Title <em>{(p.seoTitle || autoTitle).length}/70{!p.seoTitle && ' · автоматически'}</em></span><input value={p.seoTitle} placeholder={autoTitle} onInput={set('seoTitle')} /></label>
+              <label class="f f--wide"><span>Title <em>{(p.seoTitle || autoTitle).length}/60{!p.seoTitle && ' · автоматически'}</em></span><input value={p.seoTitle} placeholder={autoTitle} onInput={set('seoTitle')} /></label>
               <label class="f f--wide"><span>Description <em>{(p.seoDescr || autoDescr).length}/160{!p.seoDescr && ' · автоматически'}</em></span><textarea rows={3} value={p.seoDescr} placeholder={autoDescr} onInput={set('seoDescr')} /></label>
               <div class="f--wide"><button type="button" class="btn" onClick={() => setP({ ...p, seoTitle: autoTitle, seoDescr: autoDescr })}>Заполнить автоматически</button></div>
               <div class="snip f--wide">

@@ -48,7 +48,9 @@ export function productSeoTitle(title: string, catalog = ''): string {
 
 export function productSeoDescr(title: string, brand = '', catalog = '', area = ''): string {
   const name = seoName(title, catalog);
-  const b = brand.trim() && !name.toLowerCase().includes(brand.trim().toLowerCase()) ? ` ${brand.trim()}` : '';
+  // марку не дописываем: поле brand в данных местами ошибочно (KRATS и Federica Bugatti записаны как Thermex) – ревизия 25.10.2026
+  void brand;
+  const b = '';
   const tail = catalog === 'catalog_boilers' ? 'Установка и подключение котла от 8 тыс. ₽.' : 'Заказ на сайте или по телефону.';
   const what = `цена, характеристики${area ? `, площадь до ${area} м²` : ''}`;
   for (const where of [' в Болотном, ул. Забабонова, 55А', ' в Болотном']) {

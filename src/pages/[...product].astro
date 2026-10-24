@@ -24,15 +24,17 @@ const prices = p.editions.length ? p.editions.map((e) => e.price ?? 0) : [p.pric
 const catKey = catalogKeyOf(p.path);
 const ch = Object.fromEntries(p.chars.map((c) => [c.t.toLowerCase(), c.v.trim()]));
 const pick = (...keys: string[]) => keys.map((k) => Object.entries(ch).find(([t]) => t.startsWith(k))?.[1]).find(Boolean) || '';
-const areaMax = (pick('отапливаемая площадь').match(/\d+/g) || []).map(Number).sort((a, b) => b - a)[0];
-const power = pick('мощность');
+// у товара с вариантами (серия 7–40 кВт и т.п.) характеристики описывают одну модель – мощность и площадь серии не пишем
+const series = p.options.length > 0;
+const areaMax = series ? undefined : (pick('отапливаемая площадь').match(/\d+/g) || []).map(Number).sort((a, b) => b - a)[0];
+const power = series ? '' : pick('мощность');
 const summary = [
   pick('количество контуров') || pick('тип котла'),
   pick('камера сгорания') && `камера сгорания ${pick('камера сгорания').toLowerCase()}`,
   pick('тип дымохода') && `дымоход ${pick('тип дымохода').toLowerCase()}`,
   power && `мощность ${power} кВт`,
   areaMax && `отапливает до ${areaMax} м²`,
-  pick('объем', 'объём') && `объём ${pick('объем', 'объём')}`,
+  pick('объем', 'объём') && `объём ${pick('объем', 'объём')}${/^[\d.,\s-]+$/.test(pick('объем', 'объём')) ? ' л' : ''}`,
   pick('страна') && `производство: ${pick('страна')}`,
 ].filter(Boolean).join(', ');
 const intro = summary ? `${summary.charAt(0).toUpperCase()}${summary.slice(1)}.` : '';
