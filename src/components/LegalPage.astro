@@ -7,7 +7,7 @@ import { SITE } from '../lib/site';
 const { doc, title } = Astro.props as { doc: 'policy' | 'oferta' | 'agreement'; title: string };
 const d = (legal as Record<string, { title: string; html: string }>)[doc];
 ---
-<Base title={title} description={`${title} – Магазин газового оборудования, gaz-mag.ru`} noContacts>
+<Base title={title.length < 30 ? `${title} – Магазин газового оборудования` : title} description={`${title} – Магазин газового оборудования, gaz-mag.ru`} noContacts>
   <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: title }]} title={title} />
   {doc !== 'oferta' && (
     <section class="section--tight container">
