@@ -148,8 +148,10 @@ export default function ProductsAdmin({ items, lists, base }: { items: Product[]
       chars: p.chars.filter((c) => c.t.trim() && c.v.trim()).map((c) => ({ t: c.t.trim(), v: c.v.trim() })),
       options: p.options, editions: p.editions,
       ...(p.sku.trim() ? { sku: p.sku.trim() } : {}), ...(p.mark.trim() ? { mark: p.mark.trim() } : {}),
-      // SEO: пусто – заполняем шаблоном (Болотное, src/lib/seo.ts)
-      seoTitle: p.seoTitle.trim() || productSeoTitle(p.title), seoDescr: p.seoDescr.trim() || productSeoDescr(p.title, p.brand),
+      // SEO: сохраняем только ручной текст; совпадает с шаблоном или пусто – в данных пусто, и страница берёт живой шаблон
+      // (src/lib/seo.ts: Болотное, тип по разделу) – при смене названия SEO обновится само (24.10.2026)
+      seoTitle: [productSeoTitle(p.title, (o?.catalog ?? firstCatalog)), ''].includes(p.seoTitle.trim()) ? '' : p.seoTitle.trim(),
+      seoDescr: [productSeoDescr(p.title, p.brand, (o?.catalog ?? firstCatalog)), ''].includes(p.seoDescr.trim()) ? '' : p.seoDescr.trim(),
     } as Product);
     setEdit(null);
     const next = build(old);

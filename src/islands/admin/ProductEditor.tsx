@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import type { Edition } from '../../lib/catalog';
-import { catalogPath, slugify } from '../../lib/routes';
+import { catalogPath, catalogKeyOf, slugify } from '../../lib/routes';
 import { productSeoDescr, productSeoTitle } from '../../lib/seo';
 
 // Редактор товара – перенос с кабинета-стандарта Milovini (эталон Elite Rose, «Магазин → товар» Тильды):
@@ -67,8 +67,10 @@ export default function ProductEditor({ product, lists, base, onClose, onSave, o
   const firstCat = p.lists.find((l) => !['specials', 'hubert'].includes(l));
   const slug = p.path ? p.path.split('/').pop() || '' : slugify(p.title || '');
   const pathShown = p.path || (firstCat ? `${catalogPath(firstCat)}/${slug}` : '/katalog/<раздел>/' + slug);
-  const autoTitle = productSeoTitle(p.title || 'Название товара');
-  const autoDescr = productSeoDescr(p.title || 'Название товара', p.brand);
+  // шаблон – как на странице товара: тип по разделу (src/lib/seo.ts, SEO 24.10.2026)
+  const cat = p.path ? catalogKeyOf(p.path) : firstCat || '';
+  const autoTitle = productSeoTitle(p.title || 'Название товара', cat);
+  const autoDescr = productSeoDescr(p.title || 'Название товара', p.brand, cat);
   const host = (typeof location !== 'undefined' ? location.host : 'gaz-mag.ru');
 
   return (
