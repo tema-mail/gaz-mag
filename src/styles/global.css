@@ -135,3 +135,8 @@ textarea.input { height: auto; min-height: 100px; padding: 14px 18px; resize: ve
 .form-err { color: #c23c55; font-size: 13px; }
 .form-note { font-size: 12px; color: var(--muted); }
 .link { background: none; border: 0; padding: 0; color: var(--navy); text-decoration: underline; text-underline-offset: 2px; font: inherit; cursor: pointer; }
+
+/* Телефон: поля ввода не мельче 16 px – иначе iPhone приближает страницу при вводе (site-tech 25.10.2026). */
+@media (max-width: 1023px) {
+  .input, .cat__search input, .cat__sort select, .flt__price .input, input[type=search], select { font-size: 16px !important; }
+}
