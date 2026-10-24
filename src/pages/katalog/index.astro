@@ -1,19 +1,14 @@
 ---
-// /catalogcentr – общий каталог, как на оригинале: плитки 6 каталогов. Ниже – «Специальные предложения».
+// /katalog – общий каталог: плитки 6 разделов. SEO 24.10.2026: «Специальные предложения» убраны – страница повторяла главную на 99%;
+// запрос «газовые котлы новосибирск» ведёт раздел котлов, здесь – «каталог газового оборудования».
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import CatTiles from '../../components/CatTiles.astro';
-import ProductRow from '../../components/ProductRow.astro';
+import { CATALOGS } from '../../lib/site';
 import { listCards } from '../../lib/catalog';
-const specials = listCards('specials');
+const total = CATALOGS.reduce((n, c) => n + listCards(c.slug).length, 0);
 ---
-<Base title="Каталог газового оборудования – Новосибирск и Болотное | Магазин газового оборудования" description="Каталог магазина газового оборудования (Болотное, работаем по Новосибирску): газовые котлы, газовые и электрические водонагреватели, бойлеры косвенного нагрева, радиаторы, датчики загазованности и модули управления.">
-  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог' }]} title="Каталог" />
+<Base title="Каталог газового оборудования с ценами – Новосибирск" description="Газовые котлы, газовые колонки, электрические водонагреватели, бойлеры косвенного нагрева, счётчики газа и стабилизаторы. Цены, фильтры, заказ в Болотном.">
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог' }]} title="Каталог газового оборудования" lead={`${total} ${total % 10 === 1 && total % 100 !== 11 ? 'товар' : total % 10 >= 2 && total % 10 <= 4 && (total % 100 < 10 || total % 100 >= 20) ? 'товара' : 'товаров'} в шести разделах – с ценами, характеристиками и фильтрами. Магазин в Болотном, работаем по Новосибирску и Болотному.`} />
   <section class="section--tight container"><CatTiles /></section>
-  {specials.length > 0 && (
-    <section class="section container">
-      <h2 class="h2" style="margin-bottom:28px">Специальные предложения</h2>
-      <ProductRow cards={specials} />
-    </section>
-  )}
 </Base>

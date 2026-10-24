@@ -5,7 +5,7 @@
   "title": "Газовый настенный двухконтурный котел Очаг 10-24E",
   "brand": "Очаг",
   "descr": "Новинка",
-  "text": "",
+  "text": "Оптимальная конструкция из качественных комплектующих унифицированная по размерам и подключениям, созданная с учетом российского опыта эксплуатации.<br />Закрытая камера сгорания (турбо) с принудительной вентиляцией и микропроцессорной системой управления.<br />Горелка из нержавеющей стали имеет 12 насадок для повышения эффективности сгорания и снижения уровня выбросов вредных газов.<br />Конструктив теплообменника отопительного контура оптимизирован для лучших характеристик теплоотдачи.<br />Применена дроссельная диафрагма для оптимизации работы котла с различными системами дымоудаления.<br />Высокая унификация узлов и компонентов для всех моделей настенных котлов Очаг серии Е.<br />Для улучшения сервисного обслуживания теплообменника ГВС выполнен проем в задней стенке котла.<br />В комплект поставки входит разметочный трафарет в масштабе 1:1 для удобства монтажа котла.<br />Эргономичный дизайн панели управления, большой ЖК дисплей.",
   "price": 47000,
   "priceOld": null,
   "sort": 1000625,
@@ -142,7 +142,10 @@
   "slug": "gazovyy-nastennyy-dvukhkonturnyy-kotel-ochag-10-24e",
   "legacy": [
    "/catalog_boilers/tproduct/709793657-930598661982-gazovii-nastennii-dvuhkonturnii-kotel-oc"
-  ]
+  ],
+  "hidden": false,
+  "seoTitle": "Газовый настенный двухконтурный котел Очаг 10-24E – купить в Болотном",
+  "seoDescr": "Газовый настенный двухконтурный котел Очаг 10-24E (Очаг) в магазине газового оборудования в Болотном, ул. Забабонова, 55А: цена, характеристики, установка и подключение."
  },
  {
   "id": "712633437052",
@@ -3381,7 +3384,8 @@
   "slug": "bochonok-15",
   "legacy": [
    "/catalog_other/tproduct/721475011-651075481781-bochonok-15"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "114781939811",
@@ -3404,7 +3408,8 @@
   "slug": "bochonok-25",
   "legacy": [
    "/catalog_other/tproduct/721475011-114781939811-bochonok-25"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "910083375221",
@@ -3450,17 +3455,18 @@
   "slug": "stabilizator-napryazheniya-frederica-bugatti-fb-500",
   "legacy": [
    "/catalog_other/tproduct/721475011-998131865721-stabilizator-napryazheniya-frederica-bug"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "431946405441",
   "path": "/katalog/tovary-dlya-otopleniya/stabilizator-napryazheniya-ivepr-teplocom-st-555",
-  "title": "Стабилизатор напряжения ИВЭПР TEPLOCOM ST-555",
-  "brand": "",
+  "title": "Стабилизатор напряжения RUCELF релейный SRW-550",
+  "brand": "RUCELF",
   "descr": "",
   "text": "",
-  "price": 6350,
-  "priceOld": null,
+  "price": 3500,
+  "priceOld": 4250,
   "sort": 1036450,
   "lists": [
    "catalog_other"
@@ -3468,12 +3474,17 @@
   "chars": [],
   "options": [],
   "editions": [],
-  "images": [],
+  "images": [
+   "/img/up/431946405441-0"
+  ],
   "catalog": "catalog_other",
   "slug": "stabilizator-napryazheniya-ivepr-teplocom-st-555",
   "legacy": [
    "/catalog_other/tproduct/721475011-431946405441-stabilizator-napryazheniya-ivepr-teploco"
-  ]
+  ],
+  "hidden": false,
+  "seoTitle": "Стабилизатор напряжения RUCELF релейный SRW-550 – купить в Болотном",
+  "seoDescr": "Стабилизатор напряжения RUCELF релейный SRW-550 (RUCELF) в магазине газового оборудования в Болотном, ул. Забабонова, 55А: цена, характеристики, установка и подключение."
  },
  {
   "id": "565545141491",
@@ -3519,7 +3530,8 @@
   "slug": "61030-santekhmaster-gel-zelenyy-tyubik-60gr-blister",
   "legacy": [
    "/catalog_other/tproduct/721475011-552216281211-61030-santehmaster-gel-zeleniityubik-60g"
-  ]
+  ],
+  "hidden": false
  },
  {
   "id": "436422446721",
@@ -3542,7 +3554,8 @@
   "slug": "61031-santekhmaster-gel-siniy-tyubik-60gr-blister",
   "legacy": [
    "/catalog_other/tproduct/721475011-436422446721-61031-santehmaster-gel-siniityubik-60grb"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "994024707991",
@@ -3565,7 +3578,8 @@
   "slug": "61037-stopmaster-gel-krasnyy-tyubik-60gr-blister",
   "legacy": [
    "/catalog_other/tproduct/721475011-994024707991-61037-stopmaster-gel-krasniityubik-60grb"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "372820755251",
@@ -3588,7 +3602,8 @@
   "slug": "santekhmaster-gel-zelenyy-tyubik-15gr-blister",
   "legacy": [
    "/catalog_other/tproduct/721475011-372820755251-santehmaster-gel-zeleniityubik-15grblist"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "241419639171",
@@ -3611,7 +3626,8 @@
   "slug": "santekhmaster-gel-siniy-tyubik-15gr-blister",
   "legacy": [
    "/catalog_other/tproduct/721475011-241419639171-santehmaster-gel-siniityubik-15grblister"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "788171122011",
@@ -3634,7 +3650,8 @@
   "slug": "fiksator-rezby-nerazemnyy-krasnyy-odis",
   "legacy": [
    "/catalog_other/tproduct/721475011-788171122011-fiksator-rezbi-nerazemnii-krasnii-odis"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "850106682941",
@@ -3657,7 +3674,8 @@
   "slug": "fiksator-rezby-razemnyy-siniy-odis",
   "legacy": [
    "/catalog_other/tproduct/721475011-850106682941-fiksator-rezbi-razemnii-sinii-odis"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "704379904611",
@@ -3680,7 +3698,8 @@
   "slug": "kholodnaya-svarka-kudo-ku-h104-dlya-remonta-batarey-60gr",
   "legacy": [
    "/catalog_other/tproduct/721475011-704379904611-holodnaya-svarka-kudo-ku-h104-dlya-remon"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "800648662181",
@@ -3703,7 +3722,8 @@
   "slug": "kholodnaya-svarka-ultima-strongfix-universalnaya-bystrogo-deystviya-58gr",
   "legacy": [
    "/catalog_other/tproduct/721475011-800648662181-holodnaya-svarka-ultima-strongfix-univer"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "487106056751",
@@ -3726,7 +3746,8 @@
   "slug": "germetik-dlya-pechey-penosil-1500",
   "legacy": [
    "/catalog_other/tproduct/721475011-487106056751-germetik-dlya-pechei-penosil-1500"
-  ]
+  ],
+  "hidden": true
  },
  {
   "id": "867349673122",
