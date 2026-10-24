@@ -6,6 +6,7 @@ import PageHead from '../../components/PageHead.astro';
 import Catalog from '../../islands/Catalog';
 import { CATALOGS, SITE } from '../../lib/site';
 import { filterDefs, listCards } from '../../lib/catalog';
+import { u } from '../../lib/url';
 
 export function getStaticPaths() {
   // адрес раздела – ЧПУ (src/lib/routes.ts CATALOG_URL), данные – по ключу раздела c.slug
@@ -13,10 +14,40 @@ export function getStaticPaths() {
 }
 const { c } = Astro.props;
 const cards = listCards(c.slug);
+const plural = (n: number, one: string, few: string, many: string) =>
+  n % 10 === 1 && n % 100 !== 11 ? one : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? few : many;
+// SEO 24.10.2026: первый абзац – ответ «что здесь и сколько стоит» из данных раздела (число, марки, цена «от»), без выдумок.
+const brands = [...new Set(cards.map((x) => x.brand).filter(Boolean))];
+const priced = cards.map((x) => x.price).filter((x) => x > 0);
+const from = priced.length ? Math.min(...priced).toLocaleString('ru-RU') : '';
+const lead = `${c.intro} В каталоге ${cards.length} ${plural(cards.length, 'товар', 'товара', 'товаров')}${brands.length ? ` – ${brands.join(', ')}` : ''}${from ? `, цены от ${from} ₽` : ''}. Магазин в Болотном, ${SITE.addressShort.replace('г. Болотное, ', '')}; работаем по Новосибирску и Болотному.`;
+// Котлы: «настенный или напольный, одно- или двухконтурный» («какой газовый котёл лучше» 177/кв.) – счёт по характеристикам товаров.
+const count = (key: string, rx: RegExp) => cards.filter((x) => rx.test(x.ch[key] || '')).length;
+const guide = c.slug === 'catalog_boilers' ? [
+  ['Настенный или напольный', `Настенный котёл компактный, со встроенными насосом и автоматикой – его вешают на кухне или в котельной. Напольный проще и мощнее, часть моделей работает без электричества. Сейчас в каталоге настенных – ${count('Количество контуров', /настенн/i)}, напольных – ${count('Количество контуров', /напольн/i)}.`],
+  ['Одноконтурный или двухконтурный', `Двухконтурный котёл и отапливает дом, и греет воду для крана и душа. Одноконтурный – только отопление; горячую воду к нему дают бойлер косвенного нагрева или водонагреватель. Двухконтурных в каталоге – ${count('Количество контуров', /двухконтурн/i)}, одноконтурных – ${count('Количество контуров', /одноконтурн/i)}.`],
+  ['Закрытая или открытая камера', `Котёл с закрытой камерой (турбо) берёт воздух с улицы через коаксиальный дымоход. С открытой камерой воздух идёт из помещения, нужен обычный дымоход и вентиляция. Закрытая камера – у ${count('Камера сгорания', /закрыт/i)} котлов, открытая – у ${count('Камера сгорания', /открыт/i)}.`],
+  ['Мощность по площади', 'В каждой карточке указана отапливаемая площадь – фильтр «Отапливаемая площадь» сразу оставит подходящие котлы. Не уверены – оставьте заявку, подберём под ваш дом.'],
+] : [];
+const ld = { '@context': 'https://schema.org', '@type': 'ItemList', name: c.h1, numberOfItems: cards.length,
+  itemListElement: cards.map((x, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(x.path, Astro.site).href, name: x.title })) };
 ---
 <Base title={c.seoTitle} description={c.seoDescr}>
-  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, { label: c.short }]} title={c.h1} lead={`${cards.length} ${cards.length % 10 === 1 && cards.length % 100 !== 11 ? 'товар' : cards.length % 10 >= 2 && cards.length % 10 <= 4 && (cards.length % 100 < 10 || cards.length % 100 >= 20) ? 'товара' : 'товаров'} в каталоге. Магазин в Болотном, ${SITE.addressShort.replace('г. Болотное, ', '')}; работаем по Новосибирску и Болотному.`} />
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, { label: c.short }]} title={c.h1} lead={lead} />
   <section class="section--tight container">
     <Catalog client:load cards={cards} filters={filterDefs(c.slug)} />
   </section>
+  {guide.length > 0 && (
+    <section class="section container prose cg">
+      <h2 class="h2">Какой газовый котёл выбрать</h2>
+      {guide.map(([t, x]) => <><h3 class="h3">{t}</h3><p>{x}</p></>)}
+      <p>Установку котла делаем сами – <a href={u(R.install)}>установка газового котла от 8 тыс. ₽</a>. Котлы HUBERT можно забрать в Новосибирске – <a href={u(R.hubert)}>подробнее о HUBERT</a>.</p>
+    </section>
+  )}
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 </Base>
+<style>
+  .cg { max-width: 860px; }
+  .cg .h3 { margin-top: 22px; }
+  .cg a { color: var(--navy); text-decoration: underline; }
+</style>
