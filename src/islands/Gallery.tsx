@@ -13,7 +13,7 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
         <div class="gal__thumbs">
           {images.map((src, n) => (
             <button type="button" class={`gal__th${n === i ? ' is-on' : ''}`} aria-label={`Фото ${n + 1}`} onClick={() => setI(n)}>
-              <img src={thumb(src)} alt="" loading="lazy" />
+              <img src={thumb(src)} alt={`${alt} – фото ${n + 1}`} loading="lazy" />
             </button>
           ))}
         </div>

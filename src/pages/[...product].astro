@@ -1,5 +1,5 @@
 ---
-import { R } from '../lib/routes';
+import { R, catalogKeyOf } from '../lib/routes';
 // Карточки товаров по ЧПУ: /katalog/<раздел>/<адрес из названия> (прежние тильдовские адреса – 301 по legacy[]).
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
@@ -9,7 +9,7 @@ import Gallery from '../islands/Gallery';
 import { CATALOGS, SITE } from '../lib/site';
 import { catalogOf, listCards, products, toCard } from '../lib/catalog';
 import { thumb, u } from '../lib/url';
-import { productSeoDescr, productSeoTitle } from '../lib/seo';
+import { isOldAutoDescr, isOldAutoTitle, productSeoDescr, productSeoTitle } from '../lib/seo';
 
 export function getStaticPaths() {
   return products.map((p) => ({ params: { product: p.path.slice(1) }, props: { p } }));
@@ -19,13 +19,36 @@ const cat = CATALOGS.find((c) => c.slug === catalogOf(p));
 const related = (cat ? listCards(cat.slug) : []).filter((c) => c.id !== p.id).slice(0, 4);
 const card = toCard(p);
 const prices = p.editions.length ? p.editions.map((e) => e.price ?? 0) : [p.price ?? 0];
+// SEO 24.10.2026: вводная фраза из характеристик (у 52 из 53 товаров нет описания – карточки серии совпадали на 84–86%),
+// Product с url, sku, description; Offer при одной цене, AggregateOffer – только когда цены вариантов разные.
+const catKey = catalogKeyOf(p.path);
+const ch = Object.fromEntries(p.chars.map((c) => [c.t.toLowerCase(), c.v.trim()]));
+const pick = (...keys: string[]) => keys.map((k) => Object.entries(ch).find(([t]) => t.startsWith(k))?.[1]).find(Boolean) || '';
+const areaMax = (pick('отапливаемая площадь').match(/\d+/g) || []).map(Number).sort((a, b) => b - a)[0];
+const power = pick('мощность');
+const summary = [
+  pick('количество контуров') || pick('тип котла'),
+  pick('камера сгорания') && `камера сгорания ${pick('камера сгорания').toLowerCase()}`,
+  pick('тип дымохода') && `дымоход ${pick('тип дымохода').toLowerCase()}`,
+  power && `мощность ${power} кВт`,
+  areaMax && `отапливает до ${areaMax} м²`,
+  pick('объем', 'объём') && `объём ${pick('объем', 'объём')}`,
+  pick('страна') && `производство: ${pick('страна')}`,
+].filter(Boolean).join(', ');
+const intro = summary ? `${summary.charAt(0).toUpperCase()}${summary.slice(1)}.` : '';
+const uniq = [...new Set(prices)];
+const url = new URL(p.path, Astro.site).href;
 const ld = {
-  '@context': 'https://schema.org', '@type': 'Product', name: p.title, image: p.images.map((i) => new URL(thumb(i, 1000), Astro.site).href),
+  '@context': 'https://schema.org', '@type': 'Product', name: p.title, url, sku: p.sku || p.id,
+  ...(intro || p.descr ? { description: intro || p.descr } : {}),
+  ...(p.images.length ? { image: p.images.map((i) => new URL(thumb(i, 1000), Astro.site).href) } : {}),
   ...(p.brand ? { brand: { '@type': 'Brand', name: p.brand } } : {}),
-  offers: { '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: prices.length },
+  offers: uniq.length > 1
+    ? { '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: Math.min(...uniq), highPrice: Math.max(...uniq), offerCount: uniq.length, url }
+    : { '@type': 'Offer', priceCurrency: 'RUB', price: uniq[0], url },
 };
 ---
-<Base title={p.seoTitle || productSeoTitle(p.title)} description={p.seoDescr || productSeoDescr(p.title, p.brand)} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
+<Base title={p.seoTitle && !isOldAutoTitle(p.seoTitle, p.title) ? p.seoTitle : productSeoTitle(p.title, catKey)} description={p.seoDescr && !isOldAutoDescr(p.seoDescr, p.title, p.brand) ? p.seoDescr : productSeoDescr(p.title, p.brand, catKey, areaMax ? String(areaMax) : '')} image={p.images[0] ? thumb(p.images[0], 1000) : undefined}>
   <div class="container pp">
     <Crumbs items={[{ label: 'Главная', href: '/' }, { label: 'Каталог', href: R.catalog }, ...(cat ? [{ label: cat.short, href: cat.href }] : []), { label: p.title }]} />
     <div class="pp__grid">
@@ -34,6 +57,7 @@ const ld = {
         {p.brand && <p class="pp__brand">{p.brand}</p>}
         <h1 class="pp__t">{p.title}</h1>
         {p.descr && <p class="pp__descr">{p.descr}</p>}
+        {intro && <p class="pp__sum">{intro}</p>}
         <ProductBuy client:load p={{ id: p.id, title: p.title, price: card.price, priceOld: p.priceOld, img: p.images[0] ?? '', path: p.path, options: p.options, editions: p.editions }} />
         <ul class="pp__perks">
           <li>Подключение газа и монтаж отопления – <a href={u(R.montag)}>подробнее</a></li>
@@ -67,6 +91,7 @@ const ld = {
   .pp__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; margin-top: 24px; align-items: start; }
   .pp__info { display: grid; gap: 18px; }
   .pp__brand { font: 700 12px/1 var(--body-font); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .pp__sum { color: var(--muted); font-size: 15px; line-height: 1.5; }
   .pp__t { font: 700 clamp(22px, 2.4vw, 32px)/1.25 var(--body-font); text-transform: none; }
   .pp__perks { list-style: none; margin: 4px 0 0; padding: 18px 20px; display: grid; gap: 8px; border-radius: var(--radius-m); background: var(--soft); font-size: 14px; }
   .pp__perks a { color: var(--navy); text-decoration: underline; }
