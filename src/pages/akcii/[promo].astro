@@ -21,7 +21,7 @@ const cats = CATALOGS.filter((c) => p.catalogs.includes(c.slug));
 const goods = (p.slug === 'stabilizator-v-podarok' ? listCards('hubert') : listCards('specials')).slice(0, 4);
 const others = PROMOS.filter((x) => x.slug !== p.slug);
 ---
-<Base title={`${p.title} – акция, Новосибирск и Болотное`} description={p.descr}>
+<Base title={/акци/i.test(p.title) ? p.title : `${p.title} – акция`} description={p.descr}>
   <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'Акции', href: R.promos }, { label: p.short }]} title={p.title} />
 
   <section class="section--tight container">

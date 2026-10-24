@@ -23,7 +23,7 @@ const perks = [
   ['Индивидуальный подход', 'Наши эксперты помогут вам подобрать оптимальное решение для вашего дома, учесть его площадь, особенности и ваши предпочтения.'],
 ];
 ---
-<Base title="Акция на котёл + монтаж – HUBERT Smart AGB 10-24DY со скидкой" description="Настенный газовый котёл HUBERT Smart AGB 10-24DY со скидкой: привезём, подключим газовое оборудование, установка со скидкой. Болотное." bare>
+<Base title="Котёл HUBERT Smart AGB 10-24DY с установкой – акция" description="Настенный газовый котёл HUBERT Smart AGB 10-24DY со скидкой: привезём, подключим газовое оборудование, установка со скидкой. Болотное." bare>
   <header class="dy-top container">
     <a class="dy-logo" href={u('/')}>Магазин газового оборудования</a>
     <div class="dy-phones">{SITE.phones.map((p) => <a href={p.href}>{p.text}</a>)}</div>
@@ -93,6 +93,8 @@ const perks = [
   .dy-phones a { padding: 10px 18px; border-radius: 999px; background: var(--navy); color: #fff; font: 700 12px/1 var(--body-font); letter-spacing: .06em; }
   .dy-hero { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 24px; padding: 56px 48px; }
   .dy-hero__text { display: grid; gap: 16px; justify-items: start; }
+  .dy-hero > * { min-width: 0; } /* 390 px: длинная модель в H1 обрезалась рамкой (site-tech 25.10.2026) */
+  .dy-hero .h1 { overflow-wrap: anywhere; }
   .dy-kicker { font: 500 22px/1 var(--head-font); text-transform: uppercase; color: #c9d3f5; }
   .dy-sub { font-size: 17px; color: #d0d9f3; }
   .dy-price { padding: 16px 20px; border-radius: 16px; background: rgba(255,255,255,.1); font-size: 16px; }
@@ -118,7 +120,9 @@ const perks = [
   .dy-foot a { text-decoration: underline; }
   @media (max-width: 1023px) {
     .dy-top { flex-direction: column; align-items: flex-start; }
-    .dy-hero { grid-template-columns: 1fr; padding: 28px 20px; }
+    .dy-hero { grid-template-columns: minmax(0, 1fr); padding: 28px 20px; }
+    .dy-hero .btn { white-space: normal; text-align: center; max-width: 100%; }
+    .dy-hero .h1 { font-size: clamp(22px, 6.4vw, 30px); }
     .dy-hero__img { max-height: 260px; }
     .dy-perks { grid-template-columns: 1fr 1fr; gap: 10px; }
     .dy-perk { padding: 18px 14px; }

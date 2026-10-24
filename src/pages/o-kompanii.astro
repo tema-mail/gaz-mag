@@ -5,10 +5,19 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import CatTiles from '../components/CatTiles.astro';
 import { u } from '../lib/url';
+import { NSK_POINT, SITE } from '../lib/site';
 ---
-<Base title="О компании – Магазин газового оборудования, Болотное и Новосибирск" description="Магазин газового оборудования в Болотном, работаем по Новосибирску: газовые котлы в наличии и под заказ, водонагреватели, аксессуары для монтажа. Работаем с юрлицами и монтажными организациями.">
-  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'О компании' }]} title="О компании" />
+<Base title="О магазине газового оборудования в Болотном" description="Магазин газового оборудования в Болотном, ул. Забабонова, 55А: котлы в наличии и под заказ, водонагреватели, монтаж. Работаем с юрлицами и монтажниками.">
+  <PageHead crumbs={[{ label: 'Главная', href: '/' }, { label: 'О компании' }]} title="О магазине газового оборудования" />
+  {/* SEO 24.10.2026: факты о магазине первым блоком – текст владельца с Тильды ниже без изменений */}
   <section class="section--tight container prose ab">
+    <ul class="ab__facts">
+      <li>Магазин – {SITE.addressShort}. Работаем по Новосибирску и Болотному.</li>
+      <li>Котлы HUBERT можно забрать в Новосибирске: {NSK_POINT.address}, {NSK_POINT.hours.toLowerCase()}.</li>
+      <li>Газовые котлы HUBERT, Navien, Haier, Очаг, Federica Bugatti, Kiturami, Daesung, газовые колонки, водонагреватели, бойлеры косвенного нагрева, счётчики газа.</li>
+      <li>Сами подключаем газ, монтируем отопление и ставим котлы – <a href={u(R.services)}>услуги</a>, установка котла от 8 тыс. ₽.</li>
+      <li>Юрлицам и монтажникам – скидка 7%: <a href={u('/akcii/yur-licam-i-montazhnikam')}>условия</a>. Реквизиты – <a href={u(R.requisites)}>здесь</a>; {SITE.owner}, ИНН {SITE.inn}.</li>
+    </ul>
     <p><b>Добро пожаловать в Магазин газового оборудования – ваш надёжный партнёр в мире тепла и комфорта!</b></p>
     <p>Мы предлагаем широкий ассортимент высококачественных товаров по низким ценам для обеспечения уюта в вашем доме.</p>
     <p>В нашем магазине всегда найдутся газовые котлы под любые запросы покупателя, как в наличии, так и под заказ. Мы поможем вам подобрать идеальный котёл, соответствующий вашим потребностям и бюджету. Кроме того, у нас вы найдёте электрические и газовые водонагреватели, чтобы наслаждаться горячей водой в любое время года.</p>
@@ -22,4 +31,4 @@ import { u } from '../lib/url';
     <p><a href={u(R.montag)}>Подключение газа и монтаж отопления</a> · <a href={u(R.promos)}>Акции</a> · <a href={u(R.requisites)}>Реквизиты</a></p>
   </section>
 </Base>
-<style>.ab a { color: var(--navy); text-decoration: underline; }</style>
+<style>.ab a { color: var(--navy); text-decoration: underline; } .ab__facts { margin: 0 0 22px; padding-left: 20px; display: grid; gap: 6px; }</style>
