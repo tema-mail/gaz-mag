@@ -8,6 +8,10 @@ import Contacts from '../components/Contacts.astro';
 import Sheets from '../islands/Sheets';
 import CookieConsent from '../islands/CookieConsent';
 import { u } from '../lib/url';
+import { img } from '../lib/img';
+import { storeLd } from '../lib/schema';
+// превью в мессенджерах для страниц без своей картинки – первый экран главной (SEO 24.10.2026: 26 страниц были без og:image)
+const OG_DEFAULT = 'https://static.tildacdn.com/tild3032-6337-4166-b464-643130313366/Group_554.png';
 
 interface Props {
   title: string;
@@ -41,7 +45,10 @@ const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    <meta property="og:image" content={new URL(image || img(OG_DEFAULT), Astro.site)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Магазин газового оборудования" />
     <meta name="theme-color" content="#1e294e" />
     {/* подтверждение прав в Яндекс Вебмастере (логин artemiy.galimov, 21.10.2026); Google – файл public/google8a8cbc5492746f08.html */}
     <meta name="yandex-verification" content="a27933a9626f95c6" />
@@ -60,6 +67,7 @@ const closed = noindex || import.meta.env.PUBLIC_NOINDEX === '1';
     {!bare && <Footer />}
     <Sheets client:idle />
     <CookieConsent client:load />
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(storeLd(new URL('/', Astro.site).href))} />}
     <script>
       // Появление секций при прокрутке; кнопки «Настройки cookie» открывают окно согласия.
       document.addEventListener('click', (e) => {
