@@ -72,7 +72,7 @@ server {
     listen 80;
     listen [::]:80;
     server_name gaz-mag.ru www.gaz-mag.ru;
-    location ^~ /.well-known/acme-challenge/ { alias /var/www/certbot/; default_type "text/plain"; try_files \$uri =404; }
+    location ^~ /.well-known/acme-challenge/ { root /var/www/certbot; default_type "text/plain"; }
     proxy_set_header Host \$host;
     proxy_set_header X-Forwarded-For \$remote_addr;
     client_max_body_size 16m;

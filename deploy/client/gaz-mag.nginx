@@ -6,10 +6,10 @@ server {
     listen [::]:80;
     server_name gaz-mag.ru www.gaz-mag.ru;
 
+    # certbot --webroot кладёт файлы в <webroot>/.well-known/acme-challenge/ – поэтому root, не alias
     location ^~ /.well-known/acme-challenge/ {
-        alias /var/www/certbot/;
+        root /var/www/certbot;
         default_type "text/plain";
-        try_files $uri =404;
     }
 
     location / {
