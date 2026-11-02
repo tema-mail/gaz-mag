@@ -1,0 +1,11 @@
+# Сервер заказчика (FirstVDS 62.109.0.63, с 02.11.2026 после аварии Beget): общего Caddy нет, снаружи – nginx хоста
+# (рядом живёт kruvassan.ru). Контейнеры отдают порты только на 127.0.0.1; сеть своя – gaz-mag.
+# На сервере лежит как /opt/gaz-mag/compose.override.yml – docker compose подхватывает его сам (и в cron аналитики).
+services:
+  gaz-mag-web:
+    ports: ["127.0.0.1:18080:8080"]
+  gaz-mag-api:
+    ports: ["127.0.0.1:18090:8090"]
+networks:
+  proxy:
+    name: gaz-mag
