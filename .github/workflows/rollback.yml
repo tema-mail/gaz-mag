@@ -14,10 +14,11 @@ jobs:
       - name: Ключ выкладки
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          # отпечаток сервера заказчика (FirstVDS, с 02.11.2026) – открытые данные, не секрет
+          DEPLOY_KNOWN_HOSTS: "62.109.0.63 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHzGzZN9rSW/NYs9jSpisI7hMnc53NthT92UgS34rLIh"
         run: |
           install -d -m 700 ~/.ssh
           printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
-      - run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@45.12.72.227 rollback
-      - run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@45.12.72.227 status
+      - run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@62.109.0.63 rollback
+      - run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@62.109.0.63 status

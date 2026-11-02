@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-beget
+  group: deploy-server
   cancel-in-progress: false
 
 jobs:
@@ -23,18 +23,19 @@ jobs:
       - name: Ключ выкладки
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          # отпечаток сервера заказчика (FirstVDS, с 02.11.2026) – открытые данные, не секрет
+          DEPLOY_KNOWN_HOSTS: "62.109.0.63 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHzGzZN9rSW/NYs9jSpisI7hMnc53NthT92UgS34rLIh"
         run: |
           install -d -m 700 ~/.ssh
           printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
       - name: Задание серверу – забрать код и пересобрать
-        run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@45.12.72.227 "update ${GITHUB_SHA::12}"
+        run: ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@62.109.0.63 "update ${GITHUB_SHA::12}"
       - name: Дождаться сборки на сервере
         run: |
           for i in $(seq 1 60); do
             sleep 10
-            st=$(ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@45.12.72.227 status)
+            st=$(ssh -i ~/.ssh/deploy -o BatchMode=yes gazmag-deploy@62.109.0.63 status)
             echo "$st" | head -1
             echo "$st" | grep -q '"state":"done"' && echo "$st" | grep -q "${GITHUB_SHA::12}" && { echo "$st" | grep -q '"ok":true' && exit 0 || exit 1; }
           done

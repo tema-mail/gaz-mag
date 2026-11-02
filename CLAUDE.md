@@ -12,8 +12,9 @@
 - **Сайт в бою с 18.10.2026** (src/lib/stage.ts). Данные (товары, фото) – на сервере `/opt/gaz-mag/content` (история – git там же),
   их правит админка через `/api/admin/*`. Сайт собирает `gaz-mag-builder` на сервере. Пуш кода в main → Actions шлёт серверу
   `update` → сервер забирает код и пересобирает с данными сервера. Откат – workflow «Откат сайта». `src/data/products.json`
-  в репозитории в бою НЕ источник правды; свежие данные на мак: `scp root@45.12.72.227:/opt/gaz-mag/content/products.json src/data/`.
-  Приёмник/сборщик/nginx обновляются `DEPLOY_PUB=~/.config/gaz-mag/deploy_ed25519.pub zsh deploy/install.sh`.
+  в репозитории в бою НЕ источник правды; свежие данные на мак: `scp gazmag-client:/opt/gaz-mag/content/products.json src/data/`.
+  **С 02.11.2026 сервер – у заказчика: FirstVDS 62.109.0.63** (ssh-алиас `gazmag-client`, nginx хоста рядом с kruvassan.ru).
+  Приёмник/сборщик/nginx обновляются `zsh deploy/client/install.sh` (старый `deploy/install.sh` – для Beget 45.12.72.227).
 
 ## Структура
 - `src/pages` – ЧПУ (`/katalog/<раздел>/<товар>`, `/uslugi/…`), все адреса – в `src/lib/routes.ts`; прежние адреса Тильды – 301 (`dist/redirects.json`).
