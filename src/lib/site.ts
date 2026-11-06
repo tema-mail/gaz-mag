@@ -28,7 +28,6 @@ export const NSK_POINT = {
 
 export const SOCIALS = [
   { id: 'tg', label: 'Telegram', href: 'https://t.me/+79134584567' },
-  { id: 'wa', label: 'WhatsApp', href: 'https://wa.me/79134584567' },
   { id: 'vk', label: 'ВКонтакте', href: 'https://vk.com/public221944882' },
 ] as const;
 

@@ -6,7 +6,7 @@ import { PROD } from './stage';
 // до согласия Яндекс ничего не получает, цели и события электронной коммерции молча пропускаются.
 // Цели (JS-цели с этими идентификаторами заводятся в самой Метрике): lead – отправлена форма заявки,
 // order – оформлен заказ из корзины, cart_add – товар в корзине, phone_click – нажали на телефон,
-// messenger_click – Telegram, WhatsApp или ВКонтакте. Имена lead / phone_click / messenger_click – как у EV SIBIR,
+// messenger_click – Telegram или ВКонтакте. Имена lead / phone_click / messenger_click – как у EV SIBIR,
 // чтобы раздел «Метрика и каналы» кабинета брал их без подмены.
 export const METRIKA_ID = 97249745;
 
@@ -53,6 +53,6 @@ export function initMetrika() {
     const a = (e.target as HTMLElement | null)?.closest?.('a');
     const h = a?.getAttribute('href') || '';
     if (h.startsWith('tel:')) goal('phone_click');
-    else if (/^https?:\/\/(wa\.me|api\.whatsapp\.com|t\.me|vk\.com)\//.test(h)) goal('messenger_click');
+    else if (/^https?:\/\/(t\.me|vk\.com)\//.test(h)) goal('messenger_click');
   }, true);
 }
