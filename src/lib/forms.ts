@@ -1,6 +1,7 @@
 import { R } from './routes';
 import { u } from './url';
 import { ecom, goal } from './metrika';
+import { leadFields } from './attribution';
 
 // Куда уходят заявки и заказы. Владелец 18.10.2026: на боевом gaz-mag.ru – в Telegram через наш приёмник
 // на VPS Beget (server/lead.mjs: копия в базу + сообщение в Telegram). Включается только в сборке для Beget
@@ -11,23 +12,6 @@ const ENDPOINT = '/api/lead';
 /** Товар заявки – для вкладки «Заявки» и спроса по товарам: категория = каталог из адреса товара. */
 export interface LeadItem { uid: string; title: string; variant?: string; category: string; qty: number; price: number }
 
-/** Источник заявки по первому заходу в этой вкладке: utm_source, поисковик или сайт-реферер, иначе «Прямые заходы». */
-function source(): string {
-  try {
-    const saved = sessionStorage.getItem('gm_src');
-    if (saved) return saved;
-    const utm = new URLSearchParams(location.search).get('utm_source');
-    const ref = document.referrer ? new URL(document.referrer).hostname : '';
-    const s = utm ? `Реклама: ${utm}`
-      : /yandex\./.test(ref) ? 'Поиск Яндекса' : /google\./.test(ref) ? 'Поиск Google'
-      : /(vk\.com|t\.me|telegram|ok\.ru|instagram)/.test(ref) ? 'Соцсети и мессенджеры'
-      : ref && !ref.endsWith(location.hostname) ? `Сайт ${ref}` : 'Прямые заходы';
-    sessionStorage.setItem('gm_src', s);
-    return s;
-  } catch { return ''; }
-}
-if (typeof window !== 'undefined') source();
-
 /**
  * Отправка формы. Вызывается только после отмеченной галочки согласия – поэтому consent: true;
  * сервер без согласия заявку не примет (152-ФЗ, ст. 9).
@@ -37,11 +21,13 @@ export async function sendForm(formName: string, fields: Record<string, string>,
     console.info('[заявки выключены]', formName, fields, items);
     return true;
   }
+  const { 'Источник': source, 'Страница заявки': _page, ...rest } = leadFields();
+  const extra = { 'Источник': source, ...rest };
   try {
     const res = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ form: formName, consent: true, source: source(), items, fields: { ...fields, Page: location.pathname } }),
+      body: JSON.stringify({ form: formName, consent: true, source, items, fields: { ...fields, ...extra, Page: location.pathname } }),
     });
     if (res.ok) {
       // цели Метрики (только при согласии на аналитику): любая отправка – lead, заказ из корзины – ещё order и покупка
